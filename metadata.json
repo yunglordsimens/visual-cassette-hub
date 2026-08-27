@@ -1,0 +1,6 @@
+{
+  "name": "Personal Art Playground",
+  "description": "Visual art vault and interactive runner for creative code experiments (p5.js, Three.js, Canvas, HTML, React)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
