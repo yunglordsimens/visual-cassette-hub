@@ -1,4 +1,4 @@
-# 🎨 Personal Art Playground
+# Personal Art Playground
 
 A lightweight, high-performance web vault and interactive runner for your creative code experiments (**«кассеты»** / cassettes). Store, preview, filter, live-edit, and bundle your visual sketches (Processing/p5.js, Three.js 3D scenes, Canvas 2D / Shaders, Pure HTML/CSS, and React JSX).
 
@@ -6,7 +6,7 @@ Designed for artists: add new experiments from your phone, remix existing sketch
 
 ---
 
-## 📦 How Cassettes Are Structured
+## How Cassettes Are Structured
 
 Every visual experiment is a self-contained cassette located in `/src/cassettes/<cassette-id>/`:
 
@@ -48,28 +48,28 @@ src/cassettes/
 
 ---
 
-## 🚀 How to Add & Edit Cassettes
+## How to Add & Edit Cassettes
 
-### 📱 Method 1: Right from the Web UI (Phone or Desktop)
+### Method 1: Right from the Web UI (Phone or Desktop)
 1. Open the app and tap **"+ New Cassette"** (or the floating **"+" button** on mobile).
 2. Choose a starter template or write your code.
 3. Use the live **Test Preview** to check the visual output in real-time.
 4. Tap **"Save to Library"** (instant local persistence) or **"Push to GitHub"** (commits directly to your repository if you configured a GitHub Token in Settings).
 
-### 💻 Method 2: Directly via GitHub Web (Zero Setup)
+### Method 2: Directly via GitHub Web (Zero Setup)
 1. In your GitHub repository, navigate to `src/cassettes/`.
 2. Click **Add file -> Create new file**.
 3. Create `src/cassettes/<your-id>/manifest.json` and paste your metadata.
 4. Create `src/cassettes/<your-id>/code.js` (or `.html` / `.jsx`) and paste your sketch code.
 5. Commit to `main` — your deployed site will automatically update!
 
-### 📦 Method 3: Mix Basket & ZIP Export
+### Method 3: Mix Basket & ZIP Export
 - Click the **Mix Basket (Layers)** icon on any card to collect sketches.
 - Open the Mix Basket to **Export all selected sketches as a ZIP archive** or copy a merged code bundle for downstream production projects.
 
 ---
 
-## 🌐 Free 1-Click Deployment
+## Free 1-Click Deployment
 
 ### Option A: GitHub Pages (Automatic on push to `main`)
 1. Push your repository to GitHub.
@@ -86,7 +86,7 @@ src/cassettes/
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ```bash
 # Install dependencies
