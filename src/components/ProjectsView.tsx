@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { withCode } from '../utils/library';
 import {
   Plus,
   Layers,
@@ -213,6 +214,11 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
     setIsAssembling(true);
     setErrorMsg('');
 
+    const codeById = new Map(
+      (await withCode(selectedElements.filter((e) => e.kind === 'cassette').map((e) => cassetteMap.get(e.id)!))).map(
+        (c) => [c.manifest.id, c.code] as const
+      )
+    );
     const res = await assembleProject({
       projectName: projectTitle,
       description: projectDescription,
@@ -222,7 +228,7 @@ export const ProjectsView: React.FC<ProjectsViewProps> = ({
         title: item.title,
         kind: item.kind,
         type: item.type,
-        code: item.code,
+        code: codeById.get(item.id) ?? item.code,
         comments: item.comments,
         tags: item.tags,
         description: item.description

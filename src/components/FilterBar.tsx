@@ -20,6 +20,7 @@ interface FilterBarProps {
   availableTags: { tag: string; count: number }[];
   typeCounts: Record<string, number>;
   totalCount: number;
+  availableGroups?: { group: string; count: number }[];
 }
 
 const TYPE_OPTIONS: { id: string; label: string; icon: React.FC<{ className?: string }> }[] = [
@@ -36,8 +37,14 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   onFilterChange,
   availableTags,
   typeCounts,
-  totalCount
+  totalCount,
+  availableGroups = []
 }) => {
+  const selectedGroups = filters.selectedGroups || [];
+  const toggleGroup = (group: string) => {
+    const next = selectedGroups.includes(group) ? [] : [group];
+    onFilterChange({ ...filters, selectedGroups: next });
+  };
   const toggleTag = (tag: string) => {
     const exists = filters.selectedTags.includes(tag);
     const newTags = exists
@@ -50,6 +57,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     filters.search ||
     filters.type !== 'all' ||
     filters.selectedTags.length > 0 ||
+    selectedGroups.length > 0 ||
     filters.favoritesOnly;
 
   const clearAllFilters = () => {
@@ -57,6 +65,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
       search: '',
       type: 'all',
       selectedTags: [],
+      selectedGroups: [],
       sortBy: 'newest',
       favoritesOnly: false
     });
@@ -85,6 +94,30 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           )}
         </div>
       </div>
+
+      {/* Collections (semantic groups) */}
+      {availableGroups.length > 0 && (
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full no-scrollbar">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mr-1 shrink-0">Коллекции</span>
+          {availableGroups.map(({ group, count }) => {
+            const isSelected = selectedGroups.includes(group);
+            return (
+              <button
+                key={group}
+                onClick={() => toggleGroup(group)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+                  isSelected
+                    ? 'bg-fuchsia-600 text-white shadow-md shadow-fuchsia-600/30'
+                    : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 hover:border-slate-700'
+                }`}
+              >
+                <span>{group}</span>
+                <span className={`text-[10px] px-1.5 rounded-full ${isSelected ? 'bg-white/20' : 'bg-slate-800 text-slate-400'}`}>{count}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {/* Main Filter Row: Type Pills & Sort */}
       <div className="flex flex-wrap items-center justify-between gap-3">

@@ -43,6 +43,7 @@ import {
 } from './utils/storage';
 import { Header } from './components/Header';
 import { FilterBar } from './components/FilterBar';
+import { loadLibraryIndex } from './utils/library';
 import { CassetteCard } from './components/CassetteCard';
 import { CassetteViewerModal } from './components/CassetteViewerModal';
 import { NewCassetteModal } from './components/NewCassetteModal';
@@ -99,6 +100,18 @@ export default function App() {
   useEffect(() => {
     const loadedCassettes = loadAllCassettes();
     setCassettes(loadedCassettes);
+    // Library cassettes (static files in /public/library) arrive asynchronously
+    loadLibraryIndex().then(() => {
+      const all = loadAllCassettes();
+      setCassettes(all);
+      try {
+        const savedMix = localStorage.getItem('art_playground_mix_basket_v1');
+        if (savedMix) {
+          const ids: string[] = JSON.parse(savedMix);
+          setMixList(all.filter((c) => ids.includes(c.manifest.id)));
+        }
+      } catch {}
+    });
     setReferences(loadAllReferences());
     setProjects(loadAllProjects());
     setFavorites(getFavoriteIds());
@@ -223,6 +236,14 @@ export default function App() {
     return { availableTags: sortedTags, typeCounts: typeCountMap };
   }, [cassettes]);
 
+  const availableGroups = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const c of cassettes) for (const g of c.manifest.groups || []) m.set(g, (m.get(g) || 0) + 1);
+    return Array.from(m.entries())
+      .map(([group, count]) => ({ group, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [cassettes]);
+
   // Filter and sort cassettes
   const filteredCassettes = useMemo(() => {
     return cassettes
@@ -248,6 +269,11 @@ export default function App() {
           if (!hasAllTags) return false;
         }
 
+        if (filters.selectedGroups && filters.selectedGroups.length > 0) {
+          const g = c.manifest.groups || [];
+          if (!filters.selectedGroups.some((sg) => g.includes(sg))) return false;
+        }
+
         if (filters.favoritesOnly && !favorites.has(c.manifest.id)) {
           return false;
         }
@@ -256,7 +282,7 @@ export default function App() {
       })
       .sort((a, b) => {
         if (filters.sortBy === 'newest') {
-          return (b.manifest.created || '').localeCompare(a.manifest.created || '');
+          return (b.manifest.created || '').localeCompare(a.manifest.created || '') || a.manifest.title.localeCompare(b.manifest.title);
         }
         if (filters.sortBy === 'oldest') {
           return (a.manifest.created || '').localeCompare(b.manifest.created || '');
@@ -310,6 +336,7 @@ export default function App() {
               availableTags={availableTags}
               typeCounts={typeCounts}
               totalCount={cassettes.length}
+              availableGroups={availableGroups}
             />
 
             {/* Gallery Section Header & Count */}

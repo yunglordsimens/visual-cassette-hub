@@ -1,5 +1,6 @@
 import JSZip from 'jszip';
 import { BUILTIN_CASSETTES } from '../cassettes/data';
+import { getLibraryCassettes, withCode } from './library';
 import { BUILTIN_REFERENCES } from '../references/data';
 import { BUILTIN_PROJECTS } from '../projects/data';
 import { Cassette, ReferenceItem, ProjectItem, GitHubSyncConfig } from '../types';
@@ -94,7 +95,7 @@ export function loadAllCassettes(): Cassette[] {
 
   const combined: Cassette[] = [];
 
-  for (const builtin of BUILTIN_CASSETTES) {
+  for (const builtin of [...BUILTIN_CASSETTES, ...getLibraryCassettes()]) {
     if (deletedIds.has(builtin.manifest.id)) continue;
     
     if (customMap.has(builtin.manifest.id)) {
@@ -371,6 +372,7 @@ export function saveGitHubConfig(config: GitHubSyncConfig): void {
 }
 
 export async function downloadCassetteZip(cassette: Cassette): Promise<void> {
+  [cassette] = await withCode([cassette]);
   const zip = new JSZip();
   const folder = zip.folder(cassette.manifest.id) || zip;
   
@@ -396,6 +398,7 @@ export async function downloadAllCassettesZip(
   references: ReferenceItem[] = [],
   projects: ProjectItem[] = []
 ): Promise<void> {
+  cassettes = await withCode(cassettes);
   const zip = new JSZip();
   const root = zip.folder('src')!;
   const cassettesFolder = root.folder('cassettes')!;

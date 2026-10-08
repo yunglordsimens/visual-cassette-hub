@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { withCode } from '../utils/library';
 import {
   X,
   Layers,
@@ -40,8 +41,9 @@ export const MixBasketDrawer: React.FC<MixBasketDrawerProps> = ({
     downloadAllCassettesZip(mixList);
   };
 
-  const handleCopyBundle = () => {
-    const bundleText = mixList
+  const handleCopyBundle = async () => {
+    const resolved = await withCode(mixList);
+    const bundleText = resolved
       .map(
         (c) =>
           `/* =========================================================\n` +

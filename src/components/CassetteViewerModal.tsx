@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Cassette, GitHubSyncConfig } from '../types';
 import { buildSandboxedHtml } from '../utils/runner';
+import { getCassetteCode, resolveLibraryUrl } from '../utils/library';
 import { downloadCassetteZip } from '../utils/storage';
 import { pushCassetteToGitHub, getGitHubWebUrl } from '../utils/github';
 import { autoTagAsset } from '../utils/gemini';
@@ -42,6 +43,7 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'preview' | 'code'>('preview');
   const [editedCode, setEditedCode] = useState(cassette.code);
+  const [originalCode, setOriginalCode] = useState(cassette.code);
   const [comments, setComments] = useState<string[]>(cassette.manifest.comments || []);
   const [newComment, setNewComment] = useState('');
   const [tags, setTags] = useState<string[]>(cassette.manifest.tags || []);
@@ -62,10 +64,22 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
 
   useEffect(() => {
     setEditedCode(cassette.code);
+    setOriginalCode(cassette.code);
     setComments(cassette.manifest.comments || []);
     setTags(cassette.manifest.tags || []);
     setGroups(cassette.manifest.groups || []);
     setKeyCounter((k) => k + 1);
+    if (!cassette.code) {
+      let alive = true;
+      getCassetteCode(cassette).then((c) => {
+        if (!alive) return;
+        setOriginalCode(c);
+        setEditedCode(c);
+      });
+      return () => {
+        alive = false;
+      };
+    }
   }, [cassette]);
 
   useEffect(() => {
@@ -76,9 +90,14 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  // Unedited library cassettes run from their prebuilt page
+  const previewSrc =
+    cassette.manifest.previewUrl && editedCode === originalCode ? resolveLibraryUrl(cassette.manifest.previewUrl) : null;
+
   const sandboxedSrcDoc = useMemo(() => {
+    if (previewSrc) return '';
     return buildSandboxedHtml(cassette.manifest.type, editedCode);
-  }, [cassette.manifest.type, editedCode, keyCounter]);
+  }, [cassette.manifest.type, editedCode, keyCounter, previewSrc]);
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(editedCode);
@@ -425,7 +444,7 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
                 <iframe
                   key={keyCounter}
                   ref={iframeRef}
-                  srcDoc={sandboxedSrcDoc}
+                  {...(previewSrc ? { src: previewSrc } : { srcDoc: sandboxedSrcDoc })}
                   title={cassette.manifest.title}
                   sandbox="allow-scripts allow-same-origin"
                   className={`w-full h-full border-none ${
@@ -470,7 +489,7 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
               <div className="flex items-center gap-2 text-slate-300">
                 <Code2 className="w-4 h-4 text-violet-400" />
                 <span>source.{cassette.manifest.type === 'html' ? 'html' : cassette.manifest.type === 'react' ? 'jsx' : 'js'}</span>
-                {editedCode !== cassette.code && (
+                {editedCode !== originalCode && (
                   <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" title="Unsaved edits" />
                 )}
               </div>
@@ -479,9 +498,9 @@ export const CassetteViewerModal: React.FC<CassetteViewerModalProps> = ({
                 {/* Save Local */}
                 <button
                   onClick={handleSaveLocal}
-                  disabled={editedCode === cassette.code}
+                  disabled={editedCode === originalCode}
                   className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
-                    editedCode !== cassette.code
+                    editedCode !== originalCode
                       ? 'bg-violet-600 hover:bg-violet-500 text-white shadow-sm'
                       : 'bg-slate-800 text-slate-500 cursor-not-allowed'
                   }`}

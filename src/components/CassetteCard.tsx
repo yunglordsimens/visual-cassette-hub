@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
   Play,
   Pause,
@@ -18,6 +18,7 @@ import {
 import { Cassette, CassetteType } from '../types';
 import { buildSandboxedHtml } from '../utils/runner';
 import { downloadCassetteZip } from '../utils/storage';
+import { getCassetteCode, resolveLibraryUrl } from '../utils/library';
 
 interface CassetteCardProps {
   cassette: Cassette;
@@ -44,13 +45,39 @@ export const CassetteCard: React.FC<CassetteCardProps> = ({
 
   const { manifest, code, isCustom } = cassette;
 
-  const sandboxedSrcDoc = useMemo(() => {
-    return buildSandboxedHtml(manifest.type, code);
-  }, [manifest.type, code]);
+  // Library cassettes run from a prebuilt page; inline ones are built on the fly
+  const previewSrc = !code && manifest.previewUrl ? resolveLibraryUrl(manifest.previewUrl) : null;
 
-  const handleCopyCode = (e: React.MouseEvent) => {
+  const sandboxedSrcDoc = useMemo(() => {
+    if (previewSrc) return '';
+    return buildSandboxedHtml(manifest.type, code);
+  }, [manifest.type, code, previewSrc]);
+
+  // Only mount the live preview while the card is near the viewport
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [stageWidth, setStageWidth] = useState(0);
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { rootMargin: '300px 0px' });
+    const ro = new ResizeObserver(([entry]) => setStageWidth(entry.contentRect.width));
+    io.observe(el);
+    ro.observe(el);
+    return () => {
+      io.disconnect();
+      ro.disconnect();
+    };
+  }, []);
+
+  // Full pages (landings, apps) are rendered at desktop size and scaled down like a screenshot
+  const isPage = !!previewSrc && (manifest.type === 'html' || manifest.type === 'react');
+  const PAGE_W = 1280;
+  const pageScale = stageWidth ? stageWidth / PAGE_W : 0.2;
+
+  const handleCopyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(await getCassetteCode(cassette));
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -107,18 +134,23 @@ export const CassetteCard: React.FC<CassetteCardProps> = ({
       className="group relative flex flex-col bg-[#12151d] hover:bg-[#161a24] rounded-2xl border border-slate-800/80 hover:border-violet-500/50 shadow-lg shadow-black/40 hover:shadow-violet-950/20 transition-all duration-300 overflow-hidden"
     >
       {/* Visual Canvas Stage / Sandbox Thumbnail */}
-      <div className="relative w-full aspect-[16/10] bg-[#0a0c10] overflow-hidden cursor-pointer" onClick={() => onSelect(cassette)}>
+      <div ref={stageRef} className="relative w-full aspect-[16/10] bg-[#0a0c10] overflow-hidden cursor-pointer" onClick={() => onSelect(cassette)}>
         {/* The Sandboxed Iframe Preview */}
-        <iframe
-          srcDoc={sandboxedSrcDoc}
-          title={manifest.title}
-          sandbox="allow-scripts allow-same-origin"
-          loading="lazy"
-          className={`w-full h-full border-none transition-opacity duration-300 ${
-            isPlaying ? 'opacity-100' : 'opacity-40 grayscale'
-          }`}
-          style={{ pointerEvents: isHovered ? 'auto' : 'none' }}
-        />
+        {inView && (
+          <iframe
+            {...(previewSrc ? { src: previewSrc } : { srcDoc: sandboxedSrcDoc })}
+            title={manifest.title}
+            sandbox="allow-scripts allow-same-origin"
+            loading="lazy"
+            className={`border-none transition-opacity duration-300 ${isPage ? 'absolute top-0 left-0 origin-top-left' : 'w-full h-full'} ${
+              isPlaying ? 'opacity-100' : 'opacity-40 grayscale'
+            }`}
+            style={{
+              pointerEvents: isHovered && !isPage ? 'auto' : 'none',
+              ...(isPage ? { width: PAGE_W, height: PAGE_W * 10 / 16, transform: `scale(${pageScale})` } : {})
+            }}
+          />
+        )}
 
         {/* Top Badges Overlay */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none">

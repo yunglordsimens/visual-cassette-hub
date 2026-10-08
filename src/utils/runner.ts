@@ -10,6 +10,71 @@ export interface RunnerOptions {
  * Builds a standalone HTML document to be injected into an iframe srcdoc.
  * Injects required CDNs, CSS resets, error wrappers, and handles resize properly.
  */
+
+/** True when React code is written as an ES module (imports / export default), e.g. Gemini Canvas output. */
+export function isModuleReactCode(code: string): boolean {
+  return /^\s*import\s[\s\S]*?from\s+['"]|^\s*export\s+default\b/m.test(code);
+}
+
+export const REACT_IMPORT_MAP = {
+  imports: {
+    react: 'https://esm.sh/react@18.3.1',
+    'react/': 'https://esm.sh/react@18.3.1/',
+    'react-dom': 'https://esm.sh/react-dom@18.3.1',
+    'react-dom/': 'https://esm.sh/react-dom@18.3.1/'
+  }
+};
+
+/**
+ * Builds a page for module-style React/TSX code. Babel (TS + JSX) runs in the
+ * iframe, bare imports go to esm.sh with React kept external, and the default
+ * export (or App) is mounted into #root. Pages can scroll like real sites.
+ */
+export function buildReactModuleHtml(code: string, errorCatcherScript = ''): string {
+  const json = JSON.stringify(code).replace(/</g, '\\u003c');
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+  <script type="importmap">${JSON.stringify(REACT_IMPORT_MAP)}</script>
+  <style>
+    html, body { margin: 0; min-height: 100%; }
+    #runtime-error-toast { display:none; position:fixed; bottom:12px; left:12px; right:12px; background:rgba(225,29,72,.9); color:#fff; padding:8px 12px; border-radius:6px; font:11px monospace; z-index:999999; }
+  </style>
+  ${errorCatcherScript}
+</head>
+<body>
+  <div id="runtime-error-toast"></div>
+  <div id="root"></div>
+  <script type="module">
+    const src = ${json};
+    const show = (m) => { const t = document.getElementById('runtime-error-toast'); t.style.display = 'block'; t.innerText = m; };
+    try {
+      let out = Babel.transform(src, {
+        filename: 'App.tsx',
+        presets: [['typescript', { isTSX: true, allExtensions: true }], ['react', { runtime: 'automatic' }]]
+      }).code;
+      out = out.replace(/(from\\s*|import\\s*\\(\\s*|import\\s+)(['"])([^'"./][^'"]*)\\2/g, (m, pre, q, spec) => {
+        if (/^(react|react-dom)(\\/|$)/.test(spec) || /^https?:/.test(spec)) return m;
+        return pre + q + 'https://esm.sh/' + spec + '?external=react,react-dom' + q;
+      });
+      const url = URL.createObjectURL(new Blob([out], { type: 'text/javascript' }));
+      const mod = await import(url);
+      const C = mod.default || mod.App;
+      if (C) {
+        const React = await import('react');
+        const { createRoot } = await import('react-dom/client');
+        createRoot(document.getElementById('root')).render(React.createElement(C));
+      }
+    } catch (err) { show('Runtime Error: ' + (err && err.message || err)); console.error(err); }
+  </script>
+</body>
+</html>`;
+}
+
 export function buildSandboxedHtml(
   type: CassetteType,
   code: string,
@@ -145,6 +210,10 @@ export function buildSandboxedHtml(
   </script>
 </body>
 </html>`;
+  }
+
+  if (type === 'react' && isModuleReactCode(code)) {
+    return buildReactModuleHtml(code, errorCatcherScript);
   }
 
   if (type === 'react') {

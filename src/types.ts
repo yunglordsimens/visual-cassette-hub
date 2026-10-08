@@ -15,6 +15,10 @@ export interface CassetteManifest {
   thumbnail?: string; // Data URL or 'auto'
   version?: string;
   sourceUrl?: string;
+  codeUrl?: string; // Library cassettes: lazily fetched source file
+  previewUrl?: string; // Library cassettes: standalone runnable page
+  lang?: string; // Original source language (html, typescript, javascript…)
+  source?: string; // Where the cassette came from (e.g. 'gemini')
 }
 
 export interface Cassette {
