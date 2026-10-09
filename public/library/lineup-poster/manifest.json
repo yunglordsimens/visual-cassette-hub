@@ -1,0 +1,21 @@
+{
+  "id": "lineup-poster",
+  "title": "Lineup Poster",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/lineup-poster/code.tsx",
+  "previewUrl": "library/lineup-poster/preview.html"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "animaciya-pogloscheniya-kapel",
+  "title": "Анимация Поглощения Капель",
+  "tags": [
+    "gemini",
+    "html",
+    "svg"
+  ],
+  "groups": [
+    "3D / WebGL",
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/animaciya-pogloscheniya-kapel/code.html",
+  "previewUrl": "library/animaciya-pogloscheniya-kapel/code.html"
+}

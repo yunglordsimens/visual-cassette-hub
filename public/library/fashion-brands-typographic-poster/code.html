@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Brands - Coming Soon</title>
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter as a base, but we'll try to emulate the varied weights -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles to match the poster aesthetic */
+        body {
+            background-color: #000; /* Outer dark border */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .poster-container {
+            background-color: #f4f4f4; /* Off-white poster background */
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 4 / 5; /* Approximate aspect ratio of the image */
+            position: relative;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* 
+         * Typographic variations to mimic the different font weights and styles
+         * seen in the reference image. We use Tailwind classes inline mostly, 
+         * but defining some custom specific tweaks here if needed.
+         */
+        
+        .brand-list {
+            text-align: center;
+            width: 100%;
+            line-height: 1.1;
+            /* Using flex column to easily control spacing between items */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .brand-name {
+            /* General styling for brand names */
+            margin: 0;
+            padding: 0;
+            letter-spacing: -0.02em; /* Tighter letter spacing common in this style */
+            transition: all 0.3s ease;
+        }
+        
+        .brand-name:hover {
+            color: #ff521b;
+            transform: scale(1.05);
+            cursor: default;
+        }
+
+        /* Specific style tweaks to match the image closely */
+        .style-light { font-weight: 200; }
+        .style-normal { font-weight: 400; }
+        .style-medium { font-weight: 500; }
+        .style-semibold { font-weight: 600; }
+        .style-bold { font-weight: 700; }
+        .style-extrabold { font-weight: 800; }
+        .style-black { font-weight: 900; }
+        
+        .style-italic { font-style: italic; }
+        .style-outlined {
+            color: transparent;
+            -webkit-text-stroke: 1px black;
+        }
+
+        /* 
+         * Central Orange Sticker / Form Area
+         */
+        .orange-sticker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ff521b; /* Vibrant orange */
+            color: black;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10; /* Ensure it's above the text */
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: 0 10px 25px rgba(255, 82, 27, 0.4);
+            /* Slightly irregular shape to look like a sticker */
+            border-radius: 4px;
+            width: 80%;
+            max-width: 400px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -52%); }
+            100% { transform: translate(-50%, -50%); }
+        }
+
+        .orange-sticker-top {
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        .orange-sticker-main {
+            font-size: 2rem;
+            font-weight: 900;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        
+        /* Countdown Timer Styles */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .countdown-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: rgba(0,0,0,0.1);
+            padding: 0.5rem;
+            border-radius: 4px;
+            min-width: 3rem;
+        }
+        
+        .countdown-label {
+            font-size: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 0.2rem;
+        }
+
+        /* Subscription Form */
+        .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .subscribe-input {
+            padding: 0.75rem;
+            border: 2px solid black;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: black;
+            outline: none;
+        }
+        
+        .subscribe-input::placeholder {
+            color: rgba(0,0,0,0.6);
+        }
+        
+        .subscribe-btn {
+            padding: 0.75rem;
+            background: black;
+            color: #ff521b;
+            border: none;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        
+        .subscribe-btn:hover {
+            background: white;
+            color: black;
+        }
+
+        .orange-sticker-bottom {
+            font-size: 0.5rem;
+            font-weight: 700;
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+        .sticker-icon {
+            font-size: 1.5rem;
+            margin: 0.2rem 0;
+        }
+
+        /* Overlay to dim background slightly when form is focused */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(244, 244, 244, 0.7);
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .poster-container:has(.subscribe-input:focus) .overlay {
+            opacity: 1;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .poster-container { padding: 1.5rem; aspect-ratio: auto; min-height: 80vh; }
+            .brand-name { font-size: clamp(1.5rem, 8vw, 3rem) !important; }
+            .top-left-info { display: none; /* Hide on very small screens for cleaner look */ }
+            .orange-sticker { padding: 1rem 1.5rem; }
+            .orange-sticker-main { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="poster-container">
+        
+        <!-- Top Left Information Block (simulating the font weights list) -->
+        <div class="top-left-info">
+            <p><span>Waldenburg Fein</span><span>Schmal</span></p>
+            <p><span>Waldenburg Mager</span><span>Schmal</span></p>
+            <p><span>Waldenburg</span><span>Schmal</span></p>
+            <p><span>Waldenburg Halbfett</span><span>Schmal</span></p>
+            <p><span>Waldenburg Fett</span><span>Schmal</span></p>
+            <p><span>Waldenburg Schwer</span><span>Schmal</span></p>
+            <p><span>Waldenburg Schwarz</span><span>Schmal</span></p>
+            <p><span>Waldenburg Fein</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Mager</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Halbfett</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Fett</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Schwer</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Schwarz</span><span>Halbschmal</span></p>
+            <p><span>Waldenburg Fein</span></p>
+            <p><span>Waldenburg Mager</span></p>
+            <p><span>Waldenburg Normal</span></p>
+            <p><span>Waldenburg Halbfett</span></p>
+            <p><span>Waldenburg Fett</span></p>
+            <p><span>Waldenburg Schwer</span></p>
+            <p><span>Waldenburg Schwarz</span></p>
+        </div>
+
+        <!-- Main Brand List -->
+        <div class="brand-list">
+            <div class="overlay"></div>
+            <!-- Emulating varied sizes and weights -->
+            <h1 class="brand-name style-light" style="font-size: 2.8rem;">Balenciaga</h1>
+            <h1 class="brand-name style-normal" style="font-size: 3.2rem;">Gucci</h1>
+            <h1 class="brand-name style-medium" style="font-size: 3.5rem;">JW Anderson</h1>
+            <h1 class="brand-name style-bold" style="font-size: 3.8rem;">Balmain</h1>
+            <h1 class="brand-name style-extrabold" style="font-size: 4.2rem;">Louis Vuitton</h1>
+            <h1 class="brand-name style-black" style="font-size: 3.6rem;">Prada</h1>
+            <h1 class="brand-name style-black" style="font-size: 4rem; letter-spacing: -0.05em;">Helmut Lang</h1>
+            <h1 class="brand-name style-light" style="font-size: 4.5rem; letter-spacing: -0.03em;">Givenchy</h1>
+            <h1 class="brand-name style-normal" style="font-size: 3.8rem;">Raf Simons</h1>
+            
+            <!-- This space is partially covered by the sticker, but we keep the text flow -->
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin: 1rem 0;">
+                <h1 class="brand-name style-medium" style="font-size: 3.5rem;">Maison</h1>
+                <h1 class="brand-name style-medium" style="font-size: 3.5rem;">Margiela</h1>
+            </div>
+
+            <h1 class="brand-name style-extrabold" style="font-size: 3.8rem;">Acne Studios</h1>
+            <h1 class="brand-name style-black" style="font-size: 4.5rem;">Reebok</h1>
+            <h1 class="brand-name style-light style-italic" style="font-size: 3.5rem;">1017 ALYX 9SM</h1>
+            <h1 class="brand-name style-light" style="font-size: 3.2rem;">Aries</h1>
+            <h1 class="brand-name style-medium" style="font-size: 3.8rem;">Jil Sander</h1>
+            <h1 class="brand-name style-bold" style="font-size: 4rem;">A.P.C</h1>
+            <h1 class="brand-name style-extrabold" style="font-size: 4.2rem;">Rick Owens</h1>
+            <h1 class="brand-name style-black" style="font-size: 3.8rem;">032c</h1>
+            <h1 class="brand-name style-black" style="font-size: 4.5rem; letter-spacing: -0.04em;">Affix Works</h1>
+        </div>
+
+        <!-- Central Orange Sticker / Form -->
+        <div class="orange-sticker">
+            <div class="orange-sticker-top">
+                New Collection<br>Dropping Soon
+            </div>
+            <div class="orange-sticker-main">
+                Major Update
+            </div>
+            
+            <div class="countdown" id="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-value" id="days">00</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="hours">00</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="mins">00</span>
+                    <span class="countdown-label">Mins</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-value" id="secs">00</span>
+                    <span class="countdown-label">Secs</span>
+                </div>
+            </div>
+
+            <form class="subscribe-form" onsubmit="event.preventDefault(); alert('Thanks for subscribing! We will notify you when we launch.');">
+                <input type="email" class="subscribe-input" placeholder="ENTER EMAIL FOR EARLY ACCESS" required>
+                <button type="submit" class="subscribe-btn">Notify Me</button>
+            </form>
+
+            <div class="orange-sticker-bottom">
+                EXPECTED LAUNCH: Q4 2026<br>
+                ©FASHIONARCHIVE2026
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function updateCountdown() {
+            // Set launch date 14 days from now for demonstration
+            const now = new Date();
+            const launchDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+            
+            const currentTime = new Date();
+            const difference = launchDate - currentTime;
+
+            const d = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const h = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d < 10 ? '0' + d : d;
+            document.getElementById('hours').innerText = h < 10 ? '0' + h : h;
+            document.getElementById('mins').innerText = m < 10 ? '0' + m : m;
+            document.getElementById('secs').innerText = s < 10 ? '0' + s : s;
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+    </script>
+</body>
+</html>

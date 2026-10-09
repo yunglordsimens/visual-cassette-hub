@@ -1,0 +1,20 @@
+{
+  "id": "archive-3d-cross-preview",
+  "title": "Archive & 3D Cross Preview",
+  "tags": [
+    "gemini",
+    "react"
+  ],
+  "groups": [
+    "3D / WebGL",
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/archive-3d-cross-preview/code.tsx",
+  "previewUrl": "library/archive-3d-cross-preview/preview.html"
+}

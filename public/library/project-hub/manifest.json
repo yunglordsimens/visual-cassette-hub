@@ -1,0 +1,19 @@
+{
+  "id": "project-hub",
+  "title": "Project Hub",
+  "tags": [
+    "gemini",
+    "react"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/project-hub/code.tsx",
+  "previewUrl": "library/project-hub/preview.html"
+}

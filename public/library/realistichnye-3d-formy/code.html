@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реалистичные 3D Формы</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            pointer-events: none;
+            letter-spacing: 1px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 300;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+    <!-- Подключаем Three.js через Import Maps -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading">Инициализация 3D среды...</div>
+    <div id="ui">Используйте мышь для вращения • Скролл для зума</div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        // 1. Базовая настройка сцены
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000); // Глубокий черный фон
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 15);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Оптимизация для Retina дисплеев
+        renderer.toneMapping = THREE.ACESFilmicToneMapping; // Реалистичный маппинг тонов
+        renderer.toneMappingExposure = 1.2;
+        document.body.appendChild(renderer.domElement);
+
+        // Убираем экран загрузки
+        document.getElementById('loading').style.opacity = '0';
+
+        // 2. Настройка физически корректного материала (Стекло / Объем)
+        const glassMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 0.1,
+            roughness: 0.15, // Легкая матовость для мягких бликов
+            transmission: 1.0, // Полная прозрачность (эффект стекла)
+            thickness: 2.5, // Глубина объема для преломления
+            ior: 1.5, // Индекс преломления
+            side: THREE.DoubleSide,
+            transparent: true,
+            opacity: 1.0,
+            clearcoat: 0.2, // Легкий глянцевый слой сверху
+            clearcoatRoughness: 0.1
+        });
+
+        // 3. Создание геометрии (Используем сплюснутые сферы для эффекта линз/дисков)
+        // Геометрия с большим количеством сегментов для идеальной гладкости
+        const geometry = new THREE.SphereGeometry(4, 128, 128);
+
+        const topShape = new THREE.Mesh(geometry, glassMaterial);
+        topShape.scale.set(1, 1, 0.15); // Сплющиваем сферу в диск
+        topShape.position.set(0, 2.8, 0);
+        topShape.rotation.x = Math.PI / 12; // Небольшой наклон для красивых бликов
+        scene.add(topShape);
+
+        const bottomShape = new THREE.Mesh(geometry, glassMaterial);
+        bottomShape.scale.set(1, 1, 0.15);
+        bottomShape.position.set(0, -2.8, 0);
+        bottomShape.rotation.x = -Math.PI / 12;
+        scene.add(bottomShape);
+
+        // Объединяем их в одну группу для удобного вращения
+        const shapesGroup = new THREE.Group();
+        shapesGroup.add(topShape);
+        shapesGroup.add(bottomShape);
+        scene.add(shapesGroup);
+
+        // 4. Освещение (Ключевой элемент для создания цвета и глубины)
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+        scene.add(ambientLight);
+
+        // Бирюзовый / Циановый свет (Сверху слева)
+        const cyanLight = new THREE.PointLight(0x2ae1d5, 200, 20);
+        cyanLight.position.set(-5, 5, 3);
+        scene.add(cyanLight);
+
+        // Фиолетовый свет (Справа по центру)
+        const purpleLight = new THREE.PointLight(0x9d4edd, 150, 20);
+        purpleLight.position.set(5, 0, 2);
+        scene.add(purpleLight);
+
+        // Розовый / Синий свет (Снизу)
+        const pinkLight = new THREE.PointLight(0xff4b91, 150, 20);
+        pinkLight.position.set(-3, -5, 3);
+        scene.add(pinkLight);
+
+        // Яркий белый свет по центру для резких внутренних бликов
+        const centerHighlight = new THREE.PointLight(0xffffff, 80, 10);
+        centerHighlight.position.set(0, 0, 1);
+        scene.add(centerHighlight);
+
+        // 5. Пост-обработка (Эффект свечения / Bloom)
+        const renderScene = new RenderPass(scene, camera);
+        
+        const bloomPass = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.2,  // Интенсивность (strength)
+            0.6,  // Радиус (radius)
+            0.4   // Порог (threshold) - светятся только яркие элементы
+        );
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // 6. Управление камерой
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Плавность движения
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 8;
+        controls.maxDistance = 30;
+
+        // 7. Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // 8. Анимация
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            // Плавное парящее движение
+            shapesGroup.rotation.y = Math.sin(elapsedTime * 0.2) * 0.2;
+            shapesGroup.rotation.x = Math.cos(elapsedTime * 0.2) * 0.1;
+
+            // Медленное вращение самих дисков
+            topShape.rotation.z = elapsedTime * 0.1;
+            bottomShape.rotation.z = -elapsedTime * 0.1;
+
+            // Легкое движение света для динамики градиентов
+            cyanLight.position.x = -5 + Math.sin(elapsedTime * 0.5);
+            purpleLight.position.z = 2 + Math.cos(elapsedTime * 0.5);
+
+            controls.update();
+            composer.render(); // Используем composer вместо обычного renderer для работы Bloom
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Flow-Field Typography</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #2b3990;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #text-canvas {
+            display: none;
+        }
+        
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            gap: 15px;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+        }
+        
+        input[type="text"] {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            outline: none;
+            font-family: monospace;
+            text-align: center;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+        
+        input[type="text"]:focus {
+            border-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="canvas-container">
+        <canvas id="main-canvas"></canvas>
+        <canvas id="text-canvas"></canvas>
+        
+        <div id="controls">
+            <input type="text" id="text-input" value="JAN" maxlength="6">
+        </div>
+    </div>
+
+    <script>
+        const mainCanvas = document.getElementById('main-canvas');
+        const ctx = mainCanvas.getContext('2d', { willReadFrequently: true });
+        
+        const textCanvas = document.getElementById('text-canvas');
+        const tCtx = textCanvas.getContext('2d', { willReadFrequently: true });
+        
+        const textInput = document.getElementById('text-input');
+
+        let width, height;
+        let imgData = null; 
+        
+        const config = {
+            cellW: 120, // Размер ячейки сетки (пирамиды)
+            cellH: 120,
+            linesPerCell: 72, // Плотность лучей
+            textScale: 0.8,
+            font: '900 Arial Black, sans-serif',
+            color: '#ffffff',
+            bgColor: '#2b3990',
+            time: 0
+        };
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            
+            if (width <= 0 || height <= 0) return;
+            
+            mainCanvas.width = width;
+            mainCanvas.height = height;
+            textCanvas.width = width;
+            textCanvas.height = height;
+            
+            renderText();
+        }
+
+        window.addEventListener('resize', resize);
+
+        function renderText() {
+            if (width <= 0 || height <= 0) return;
+
+            const text = textInput.value.toUpperCase() || "A";
+            const fontSize = Math.min(width, height) * config.textScale;
+            
+            // Черный фон для маски
+            tCtx.fillStyle = '#000000';
+            tCtx.fillRect(0, 0, width, height);
+            
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            tCtx.font = `${fontSize}px ${config.font}`;
+            
+            // Создаем градиентную маску, чтобы лучи "понимали", куда течь
+            tCtx.fillStyle = '#ffffff';
+            
+            // Внешний контур (плавный вход лучей)
+            tCtx.filter = 'blur(15px)';
+            tCtx.fillText(text, width / 2, height / 2);
+            
+            // Внутренний контур
+            tCtx.filter = 'blur(4px)';
+            tCtx.fillText(text, width / 2, height / 2);
+            
+            tCtx.filter = 'none';
+            
+            extractTextPixels();
+        }
+
+        function extractTextPixels() {
+            if (width <= 0 || height <= 0) return;
+            imgData = tCtx.getImageData(0, 0, width, height).data;
+        }
+
+        // Ультра-быстрое чтение пикселей
+        function getLumaFast(x, y) {
+            let ix = x | 0;
+            let iy = y | 0;
+            if (ix < 0 || ix >= width || iy < 0 || iy >= height) return 0;
+            // Умножение на 4 через битовый сдвиг для скорости
+            return imgData[(iy * width + ix) << 2]; 
+        }
+
+        // Поиск точки на периметре квадрата (для формирования треугольников)
+        function getPerimeterPoint(cx, cy, size, progress) {
+            let p = progress * 4;
+            let half = size / 2;
+            if (p < 1) return { x: cx - half + p * size, y: cy - half };
+            if (p < 2) return { x: cx + half, y: cy - half + (p - 1) * size };
+            if (p < 3) return { x: cx + half - (p - 2) * size, y: cy + half };
+            return { x: cx - half, y: cy + half - (p - 3) * size };
+        }
+
+        function drawFlowFieldTypography() {
+            if (width <= 0 || height <= 0 || !imgData) return;
+
+            // Очистка фона
+            ctx.fillStyle = config.bgColor;
+            ctx.fillRect(0, 0, width, height);
+            
+            ctx.strokeStyle = config.color;
+            ctx.lineWidth = 1.2;
+            ctx.lineJoin = 'miter'; // Острые углы при зигзагах
+            ctx.miterLimit = 2;
+
+            config.time += 0.04; 
+
+            const cols = Math.ceil(width / config.cellW);
+            const rows = Math.ceil(height / config.cellH);
+            
+            ctx.beginPath();
+            
+            // Проходим по всей сетке
+            for (let i = 0; i <= cols; i++) {
+                for (let j = 0; j <= rows; j++) {
+                    const cx = i * config.cellW;
+                    const cy = j * config.cellH;
+                    
+                    // Выпускаем лучи из каждого центра
+                    for (let k = 0; k < config.linesPerCell; k++) {
+                        let progress = k / config.linesPerCell;
+                        let edgePt = getPerimeterPoint(cx, cy, config.cellW, progress);
+                        
+                        // Базовое направление луча
+                        let baseDx = edgePt.x - cx;
+                        let baseDy = edgePt.y - cy;
+                        let maxDist = Math.hypot(baseDx, baseDy);
+                        let baseDirX = baseDx / maxDist;
+                        let baseDirY = baseDy / maxDist;
+                        
+                        ctx.moveTo(cx, cy);
+                        
+                        // Состояние луча
+                        let px = cx;
+                        let py = cy;
+                        let currentDirX = baseDirX;
+                        let currentDirY = baseDirY;
+                        
+                        let stepSize = 2; // Шаг трассировки
+                        
+                        // Трассировка луча (Raymarching)
+                        for (let d = 0; d <= maxDist; d += stepSize) {
+                            let luma = getLumaFast(px, py) / 255;
+                            
+                            // Если луч зашел в область текста
+                            if (luma > 0.03) {
+                                // Вычисляем градиент текста (куда направлен склон)
+                                let gStep = 3;
+                                let gx = (getLumaFast(px + gStep, py) - getLumaFast(px - gStep, py)) / 255;
+                                let gy = (getLumaFast(px, py + gStep) - getLumaFast(px, py - gStep)) / 255;
+                                
+                                // Вектор контура (перпендикулярен градиенту)
+                                let contourX = -gy;
+                                let contourY = gx;
+                                
+                                let cLen = Math.hypot(contourX, contourY);
+                                if (cLen > 0.001) {
+                                    contourX /= cLen;
+                                    contourY /= cLen;
+                                    
+                                    // Сохраняем направление потока луча
+                                    if (currentDirX * contourX + currentDirY * contourY < 0) {
+                                        contourX = -contourX;
+                                        contourY = -contourY;
+                                    }
+                                    
+                                    // ГЕНЕРАЦИЯ ПРЕЛОМЛЕНИЯ / ЗИГЗАГА
+                                    // Используем треугольную волну для острых углов
+                                    let wavePeriod = 12;
+                                    let phase = config.time * 25;
+                                    let waveMod = ((d - phase) % wavePeriod + wavePeriod) % wavePeriod; 
+                                    let triWave = Math.abs(waveMod - wavePeriod/2) - wavePeriod/4;
+                                    
+                                    // Отклоняем луч перпендикулярно контуру (создаем "прыжки")
+                                    let bounceX = gx * triWave * 2.0;
+                                    let bounceY = gy * triWave * 2.0;
+                                    
+                                    // Чем глубже в тексте, тем сильнее луч подчиняется контуру
+                                    let blend = Math.min(luma * 1.8, 0.92);
+                                    
+                                    let targetDirX = contourX + bounceX;
+                                    let targetDirY = contourY + bounceY;
+                                    
+                                    let tLen = Math.hypot(targetDirX, targetDirY);
+                                    targetDirX /= tLen;
+                                    targetDirY /= tLen;
+                                    
+                                    // Инерция луча: плавно меняем вектор (дает красивые изгибы)
+                                    currentDirX = currentDirX * (1 - blend) + targetDirX * blend;
+                                    currentDirY = currentDirY * (1 - blend) + targetDirY * blend;
+                                }
+                            } else {
+                                // Вне текста луч стремится вернуться к прямой линии сетки
+                                currentDirX = currentDirX * 0.4 + baseDirX * 0.6;
+                                currentDirY = currentDirY * 0.4 + baseDirY * 0.6;
+                            }
+                            
+                            // Нормализация текущего направления
+                            let nLen = Math.hypot(currentDirX, currentDirY);
+                            currentDirX /= nLen;
+                            currentDirY /= nLen;
+                            
+                            // Шагаем вперед
+                            px += currentDirX * stepSize;
+                            py += currentDirY * stepSize;
+                            
+                            ctx.lineTo(px, py);
+                        }
+                    }
+                }
+            }
+            ctx.stroke();
+            
+            // Тонкий контур, чтобы буквы лучше читались
+            const text = textInput.value.toUpperCase() || "A";
+            const fontSize = Math.min(width, height) * config.textScale;
+            ctx.font = `900 ${fontSize}px Arial Black, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.lineWidth = 1; 
+            ctx.strokeText(text, width / 2, height / 2);
+        }
+
+        function animate() {
+            drawFlowFieldTypography();
+            requestAnimationFrame(animate);
+        }
+
+        textInput.addEventListener('input', () => {
+            renderText();
+        });
+
+        // Initialize
+        window.onload = () => {
+            resize();
+            animate();
+        };
+
+    </script>
+</body>
+</html>

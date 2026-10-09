@@ -1,0 +1,21 @@
+{
+  "id": "chrome-layers-3d",
+  "title": "Chrome Layers 3D",
+  "tags": [
+    "gemini",
+    "html",
+    "threejs",
+    "canvas"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/chrome-layers-3d/code.html",
+  "previewUrl": "library/chrome-layers-3d/code.html"
+}

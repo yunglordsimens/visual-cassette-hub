@@ -1,0 +1,20 @@
+{
+  "id": "maket-oblozhki-umprum",
+  "title": "Макет обложки UMPRUM",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-02-22",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maket-oblozhki-umprum/code.html",
+  "previewUrl": "library/maket-oblozhki-umprum/code.html"
+}

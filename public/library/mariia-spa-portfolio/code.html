@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MARIIA CHERNOBAI — ARCHIVE</title>
+
+<style>
+  :root {
+    --bg: #000000;
+    --text: #ffffff;
+    --muted: #666666;
+    --border: #222222;
+  }
+
+  [data-theme="light"] {
+    --bg: #f2f2f2;
+    --text: #050505;
+    --muted: #999999;
+    --border: #d0d0d0;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  ::selection {
+    background: var(--text);
+    color: var(--bg);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.2;
+    overflow: hidden; /* Мы управляем скроллом внутри слоев */
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  a, button { 
+    color: inherit; 
+    text-decoration: none; 
+    cursor: pointer; 
+    border: none; 
+    background: none; 
+    font-family: inherit;
+  }
+
+  /* ═══════════════════════════════════
+     VIEW CONTROLLER (SLIDE MECHANICS)
+  ═══════════════════════════════════ */
+  .view {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    will-change: transform, opacity;
+    /* Ультра-плавная анимация скольжения */
+    transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  /* Index View (Список/Плитка) */
+  #index-view {
+    z-index: 10;
+    transform: translateX(0);
+    opacity: 1;
+  }
+  #index-view.slide-out {
+    transform: translateX(-30vw) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Project View (Открытый проект) */
+  #project-view {
+    z-index: 20;
+    transform: translateX(100vw);
+    background: var(--bg);
+  }
+  #project-view.slide-in {
+    transform: translateX(0);
+  }
+
+  /* ═══════════════════════════════════
+     GLOBAL NAVIGATION (INDEX)
+  ═══════════════════════════════════ */
+  .index-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5vw 2vw;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    z-index: 50;
+    mix-blend-mode: difference;
+    color: #fff;
+    pointer-events: none;
+  }
+  .index-nav > * { pointer-events: auto; }
+
+  .nav-toggles { display: flex; gap: 2vw; }
+  .toggle-btn { opacity: 0.4; transition: opacity 0.2s; }
+  .toggle-btn.active { opacity: 1; font-weight: bold; border-bottom: 1px solid #fff; }
+
+  /* ═══════════════════════════════════
+     INDEX: LIST & GRID
+  ═══════════════════════════════════ */
+  .items-container {
+    margin-top: 10vh;
+    padding-bottom: 10vh;
+  }
+
+  .item {
+    display: block;
+    position: relative;
+    color: var(--text);
+    transition: color 0.3s;
+  }
+
+  /* === РЕЖИМ СПИСКА (LIST) === */
+  .is-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .is-list .item {
+    padding: 3vw 2vw;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    z-index: 2;
+  }
+  .is-list .item:first-child { border-top: 1px solid var(--border); }
+  
+  .is-list .item-title {
+    font-size: clamp(40px, 9vw, 160px);
+    font-weight: bold;
+    letter-spacing: -0.04em;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .is-list .item-meta {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Эффект заливки фона картинкой (только в List Mode) */
+  .list-takeover {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .list-takeover img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%) contrast(1.2) brightness(0.4);
+  }
+  .is-list.has-hover .item:not(:hover) { opacity: 0.2; }
+  .is-list .item:hover { color: #fff; } /* Инверсия на фоне темной картинки */
+
+  /* === РЕЖИМ ПЛИТКИ (GRID) === */
+  .is-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 0;
+  }
+  @media (max-width: 800px) { .is-grid { grid-template-columns: 1fr; } }
+
+  .is-grid .item {
+    aspect-ratio: 1;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .is-grid .item:nth-child(2n) { border-right: none; }
+
+  .is-grid .item-img-wrapper {
+    position: absolute;
+    inset: 0;
+    background: var(--border);
+  }
+  .is-grid .item-img-wrapper img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    transition: filter 0.5s, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .is-grid .item:hover .item-img-wrapper img {
+    filter: grayscale(0%);
+    transform: scale(1.05);
+  }
+
+  /* Огромный шрифт в плитке для type design */
+  .is-grid .item-type-display {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20vw;
+    line-height: 1;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  .is-grid .item-overlay {
+    position: absolute;
+    inset: 0;
+    padding: 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent 50%);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .is-grid .item:hover .item-overlay { opacity: 1; }
+  .is-grid .item-title { font-size: 2vw; font-weight: bold; text-transform: uppercase; }
+  .is-grid .item-meta { font-size: 10px; text-transform: uppercase; color: #ccc; }
+
+  /* ═══════════════════════════════════
+     PROJECT VIEW (OPENED PROJECT)
+  ═══════════════════════════════════ */
+  /* Плавающая всегда на виду навигация */
+  .project-floating-nav {
+    position: fixed;
+    top: 2vw; right: 2vw;
+    display: flex;
+    gap: 1vw;
+    z-index: 100;
+  }
+  .proj-btn {
+    background: var(--text);
+    color: var(--bg);
+    padding: 1vw 2vw;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    border-radius: 40px;
+    transition: transform 0.2s;
+  }
+  .proj-btn:hover { transform: scale(1.05); }
+
+  /* Контент проекта */
+  #project-content {
+    width: 100%;
+    min-height: 100vh;
+    padding-bottom: 10vh;
+  }
+
+  /* Header проекта */
+  .p-header {
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4vw;
+  }
+  .p-header-title {
+    font-size: clamp(60px, 12vw, 200px);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+    line-height: 0.8;
+    margin-bottom: 2vw;
+  }
+  .p-header-info {
+    display: flex;
+    gap: 4vw;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+
+  /* БЛОКИ ПРОЕКТА (БЕЗ-АРОЧНЫЕ) */
+  .b-img {
+    width: 100vw; /* От края до края */
+    margin: 5vh 0;
+  }
+  .b-img img {
+    width: 100%;
+    display: block;
+  }
+
+  .b-text {
+    width: 100%;
+    padding: 5vw 4vw;
+    font-size: clamp(24px, 4vw, 56px);
+    font-weight: bold;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    max-width: 1400px;
+  }
+
+  .b-specimen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--text);
+    color: var(--bg);
+    font-size: clamp(100px, 30vw, 500px);
+    line-height: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ INDEX LAYER ═══ -->
+<main id="index-view" class="view">
+  
+  <nav class="index-nav">
+    <div>Mariia Chernobai — Archive</div>
+    <div class="nav-toggles">
+      <button class="toggle-btn active" onclick="setMode('list')">List</button>
+      <button class="toggle-btn" onclick="setMode('grid')">Grid</button>
+    </div>
+    <button class="toggle-btn active" onclick="toggleTheme()">Theme</button>
+  </nav>
+
+  <!-- Фон для List Takeover -->
+  <div id="list-takeover" class="list-takeover"><img src="" id="takeover-img" alt=""></div>
+
+  <!-- Контейнер проектов (Тут генерируется плитка/список) -->
+  <div id="items-container" class="items-container is-list"></div>
+
+</main>
+
+
+<!-- ═══ PROJECT LAYER ═══ -->
+<article id="project-view" class="view">
+  
+  <div class="project-floating-nav">
+    <button class="proj-btn" onclick="closeProject()">Index ✕</button>
+    <button class="proj-btn" onclick="nextProject()">Next →</button>
+  </div>
+
+  <div id="project-content">
+    <!-- Сюда динамически рендерится контент выбранного проекта -->
+  </div>
+
+</article>
+
+<script>
+  // ═══════════════════════════════════════════════════
+  // 1. БАЗА ДАННЫХ ПРОЕКТОВ (JSON ARRAY)
+  // Мы можем легко менять контент, добавляя блоки: {type: 'img'/'text'/'specimen', src/val: '...'}
+  // ═══════════════════════════════════════════════════
+  const projects = [
+    {
+      id: 'maso',
+      title: 'MASO.CORP',
+      meta: 'B2B Platform · CMS',
+      year: '2024',
+      thumb: 'assets/images/maso.jpg',
+      content: [
+        { type: 'text', val: 'Fully engineered B2B platform with print production tools and a custom CMS workflow.' },
+        { type: 'img', src: 'assets/images/maso-full1.jpg', fallback: 'MASO+WEB+1' },
+        { type: 'img', src: 'assets/images/maso-full2.jpg', fallback: 'MASO+WEB+2' }
+      ]
+    },
+    {
+      id: 'ligature',
+      title: 'Ligature Disp.',
+      meta: 'Typeface · 4 Glyph Sets',
+      year: '2024',
+      thumb: 'assets/images/ligature.jpg', // Для Grid Mode (можно оставить пустым, если юзаем specimen-thumb)
+      specimenThumb: 'æœ', // Гигантский шрифт для Grid
+      content: [
+        { type: 'specimen', val: 'æœ Rg' },
+        { type: 'text', val: 'Contextual alternates and complex ligature systems developed at UMPRUM. Latin + Cyrillic.' },
+        { type: 'img', src: 'assets/images/ligature-poster.jpg', fallback: 'TYPE+POSTER' }
+      ]
+    },
+    {
+      id: 'puffmi',
+      title: 'Puffmi Pitch',
+      meta: 'Creative Direction',
+      year: 'Draft',
+      thumb: 'assets/images/puffmi.jpg',
+      content: [
+        { type: 'text', val: 'Speculative redesign and creative direction. Stripping away conventional patterns for raw structure.' },
+        { type: 'img', src: 'assets/images/puffmi-deck.jpg', fallback: 'PITCH+DECK+1' }
+      ]
+    },
+    {
+      id: 'berlin',
+      title: 'Berlin Exh.',
+      meta: 'Object · Print',
+      year: '2024',
+      thumb: 'assets/images/berlin.jpg',
+      content: [
+        { type: 'img', src: 'assets/images/berlin-wide.jpg', fallback: 'EXHIBITION+VIEW' },
+        { type: 'text', val: 'Spatial design concept and object showcase, including a self-published zine. Presented twice.' },
+        { type: 'img', src: 'assets/images/berlin-zine.jpg', fallback: 'ZINE+SPREAD' }
+      ]
+    },
+    {
+      id: 'lab',
+      title: 'Typo Lab',
+      meta: 'Interactive Tool · D3',
+      year: '2024',
+      thumb: 'assets/images/lab.jpg',
+      content: [
+        { type: 'text', val: 'Research tool for analyzing typography patterns built with D3.js and p5.js.' },
+        { type: 'img', src: 'assets/images/lab-screen.jpg', fallback: 'LAB+INTERFACE' }
+      ]
+    }
+  ];
+
+  // ═══════════════════════════════════════════════════
+  // 2. РЕНДЕР ИНДЕКСА (СПИСОК/ПЛИТКА)
+  // ═══════════════════════════════════════════════════
+  const container = document.getElementById('items-container');
+  const takeoverLayer = document.getElementById('list-takeover');
+  const takeoverImg = document.getElementById('takeover-img');
+
+  function renderIndex() {
+    container.innerHTML = '';
+    projects.forEach((proj, index) => {
+      const el = document.createElement('a');
+      el.className = 'item';
+      el.onclick = () => openProject(index);
+
+      // Контент внутри элемента зависит от того, что у нас есть (картинка или чистый шрифт)
+      const fallbackUrl = `https://placehold.co/1200x800/111/444?text=${proj.title.replace(' ', '+')}`;
+      
+      let gridMedia = '';
+      if (proj.specimenThumb) {
+        gridMedia = `<div class="item-type-display" style="font-family: serif;">${proj.specimenThumb}</div>`;
+      } else {
+        gridMedia = `
+          <div class="item-img-wrapper">
+            <img src="${proj.thumb}" onerror="this.src='${fallbackUrl}'" alt="">
+          </div>
+        `;
+      }
+
+      el.innerHTML = `
+        ${gridMedia}
+        <div class="item-title">${proj.title}</div>
+        <div class="item-overlay">
+          <div class="item-title">${proj.title}</div>
+          <div class="item-meta">${proj.meta}</div>
+        </div>
+        <div class="item-meta">${proj.meta} · ${proj.year}</div>
+      `;
+
+      // Hover Effect (Takeover) для List Mode
+      el.addEventListener('mouseenter', () => {
+        if (container.classList.contains('is-list')) {
+          container.classList.add('has-hover');
+          takeoverImg.src = proj.thumb;
+          takeoverImg.onerror = () => takeoverImg.src = fallbackUrl;
+          takeoverLayer.style.opacity = '1';
+        }
+      });
+
+      el.addEventListener('mouseleave', () => {
+        container.classList.remove('has-hover');
+        takeoverLayer.style.opacity = '0';
+      });
+
+      container.appendChild(el);
+    });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 3. ЛОГИКА ПЕРЕКЛЮЧЕНИЯ РЕЖИМОВ (LIST / GRID)
+  // ═══════════════════════════════════════════════════
+  function setMode(mode) {
+    const btns = document.querySelectorAll('.nav-toggles .toggle-btn');
+    btns.forEach(b => b.classList.remove('active'));
+    
+    if (mode === 'list') {
+      container.classList.remove('is-grid');
+      container.classList.add('is-list');
+      btns[0].classList.add('active');
+    } else {
+      container.classList.remove('is-list');
+      container.classList.add('is-grid');
+      btns[1].classList.add('active');
+      takeoverLayer.style.opacity = '0'; // Прячем takeover в grid mode
+    }
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 4. SPA ЛОГИКА (ОТКРЫТЬ / ЗАКРЫТЬ / NEXT ПРОЕКТ)
+  // ═══════════════════════════════════════════════════
+  const indexView = document.getElementById('index-view');
+  const projectView = document.getElementById('project-view');
+  const projectContent = document.getElementById('project-content');
+  let currentProjectIdx = 0;
+
+  function renderProjectData(idx) {
+    const proj = projects[idx];
+    
+    // Блок Header
+    let html = `
+      <header class="p-header">
+        <h1 class="p-header-title">${proj.title}</h1>
+        <div class="p-header-info">
+          <div>${proj.meta}</div>
+          <div>${proj.year}</div>
+        </div>
+      </header>
+    `;
+
+    // Блоки Контента (БЕЗ-АРОЧНЫЕ)
+    proj.content.forEach(block => {
+      if (block.type === 'text') {
+        html += `<div class="b-text">${block.val}</div>`;
+      } else if (block.type === 'img') {
+        const fb = `https://placehold.co/1920x1080/222/555?text=${block.fallback}`;
+        html += `
+          <div class="b-img">
+            <img src="${block.src}" onerror="this.src='${fb}'" alt="">
+          </div>
+        `;
+      } else if (block.type === 'specimen') {
+        html += `
+          <div class="b-specimen" style="font-family: serif;">
+            ${block.val}
+          </div>
+        `;
+      }
+    });
+
+    // Чтобы анимация nextProject была плавной, мы делаем легкий fade-in контента
+    projectContent.style.opacity = 0;
+    setTimeout(() => {
+      projectContent.innerHTML = html;
+      projectView.scrollTo(0, 0); // Сбрасываем скролл наверх
+      projectContent.style.transition = 'opacity 0.5s ease';
+      projectContent.style.opacity = 1;
+    }, 200);
+  }
+
+  function openProject(idx) {
+    currentProjectIdx = idx;
+    renderProjectData(idx);
+    
+    // Анимация скольжения
+    indexView.classList.add('slide-out');
+    projectView.classList.add('slide-in');
+  }
+
+  function closeProject() {
+    indexView.classList.remove('slide-out');
+    projectView.classList.remove('slide-in');
+  }
+
+  function nextProject() {
+    currentProjectIdx = (currentProjectIdx + 1) % projects.length;
+    renderProjectData(currentProjectIdx);
+  }
+
+  // ═══════════════════════════════════════════════════
+  // 5. ТЕМА (DARK / LIGHT)
+  // ═══════════════════════════════════════════════════
+  function toggleTheme() {
+    const isLight = document.body.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      document.body.removeAttribute('data-theme');
+    } else {
+      document.body.setAttribute('data-theme', 'light');
+    }
+  }
+
+  // ИНИЦИАЛИЗАЦИЯ
+  renderIndex();
+
+</script>
+
+</body>
+</html>

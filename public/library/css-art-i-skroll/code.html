@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Art Layers & Scroll Interaction</title>
+    <style>
+        /* Базовые настройки */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            height: 400vh; /* Высота для скролла */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Контейнер сцены */
+        .scene {
+            position: sticky;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+        }
+
+        /* Типографика на заднем плане */
+        .typography {
+            position: absolute;
+            z-index: 1;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.7) translateZ(-200px);
+            filter: blur(15px);
+            will-change: transform, opacity, filter;
+        }
+
+        .typography h1 {
+            font-size: clamp(3rem, 10vw, 12rem);
+            font-weight: 300;
+            letter-spacing: -0.05em;
+            line-height: 0.9;
+            margin: 0 0 1rem 0;
+            text-transform: lowercase;
+        }
+
+        .typography p {
+            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-weight: 400;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        /* Общие стили для оберток слоев */
+        .shape-wrapper {
+            position: absolute;
+            width: 100vmin;
+            height: 100vmin;
+            left: 50%;
+            top: 50%;
+            margin-left: -50vmin;
+            margin-top: -50vmin;
+            will-change: transform, filter;
+            /* Центр трансформации в середине экрана */
+            transform-origin: center center;
+        }
+
+        /* Верхняя фигура: вырезаем нижнюю-правую четверть */
+        .layer-top {
+            z-index: 3;
+            clip-path: polygon(0 0, 100% 0, 100% 50%, 50% 50%, 50% 100%, 0 100%);
+        }
+
+        /* Нижняя фигура: вырезаем верхнюю-левую четверть */
+        .layer-bottom {
+            z-index: 4;
+            clip-path: polygon(50% 0, 100% 0, 100% 100%, 0 100%, 0 50%, 50% 50%);
+        }
+
+        /* Контейнер для самой сферы (круга) */
+        .sphere {
+            position: absolute;
+            width: 50vmin;
+            height: 50vmin;
+            left: 50%;
+            margin-left: -25vmin;
+            border-radius: 50%;
+            background-color: transparent;
+        }
+
+        /* Позиционирование сфер внутри своих оберток, чтобы они слегка пересекались в центре */
+        .sphere-top {
+            top: 22%;
+        }
+
+        .sphere-bottom {
+            bottom: 22%;
+        }
+
+        /* --- CSS АРТ: Воссоздание градиентов и свечения --- */
+        
+        .glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(8vmin);
+        }
+
+        /* Свечения для ВЕРХНЕЙ сферы */
+        .glow-top-blue {
+            width: 60vmin; height: 60vmin;
+            top: -10vmin; left: -15vmin;
+            background: radial-gradient(circle, #0022ff 0%, transparent 60%);
+            mix-blend-mode: screen;
+        }
+        .glow-top-orange {
+            width: 45vmin; height: 45vmin;
+            bottom: -5vmin; right: -5vmin;
+            background: radial-gradient(circle, #ff8855 0%, transparent 70%);
+            mix-blend-mode: screen;
+        }
+        .core-top {
+            position: absolute;
+            width: 46vmin; height: 46vmin;
+            top: 2vmin; left: 2vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle at 40% 60%, #ffffff 0%, #b3d1ff 35%, transparent 70%);
+            filter: blur(1.5vmin);
+        }
+
+        /* Свечения для НИЖНЕЙ сферы */
+        .glow-bottom-cyan {
+            width: 55vmin; height: 55vmin;
+            top: -10vmin; left: -10vmin;
+            background: radial-gradient(circle, #00bbff 0%, transparent 60%);
+            mix-blend-mode: screen;
+        }
+        .glow-bottom-purple {
+            width: 60vmin; height: 60vmin;
+            bottom: -15vmin; right: -15vmin;
+            background: radial-gradient(circle, #2200dd 0%, transparent 65%);
+            mix-blend-mode: screen;
+        }
+        .core-bottom {
+            position: absolute;
+            width: 46vmin; height: 46vmin;
+            top: 2vmin; left: 2vmin;
+            border-radius: 50%;
+            background: radial-gradient(circle at 60% 40%, #ffffff 0%, #ffddcc 35%, transparent 70%);
+            filter: blur(1.5vmin);
+        }
+
+        /* Фоновое амбиентное свечение сцены */
+        .ambient-glow {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at 50% 50%, #001133 0%, #000000 70%);
+            z-index: 0;
+            opacity: 0.5;
+            transition: opacity 0.5s;
+        }
+
+        /* Индикатор скролла */
+        .scroll-hint {
+            position: absolute;
+            bottom: 5vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            letter-spacing: 0.3em;
+            color: rgba(255, 255, 255, 0.4);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scene">
+        <div class="ambient-glow" id="ambient"></div>
+
+        <!-- Типографика, проявляющаяся из-под форм -->
+        <div class="typography" id="text">
+            <h1>Форма &<br>Контрформа</h1>
+            <p>Динамический CSS-арт</p>
+        </div>
+
+        <!-- Верхний слой (с обрезанным правым нижним углом) -->
+        <div class="shape-wrapper layer-top" id="layerTop">
+            <div class="sphere sphere-top">
+                <div class="glow glow-top-blue"></div>
+                <div class="glow glow-top-orange"></div>
+                <div class="core core-top"></div>
+            </div>
+        </div>
+
+        <!-- Нижний слой (с обрезанным левым верхним углом) -->
+        <div class="shape-wrapper layer-bottom" id="layerBottom">
+            <div class="sphere sphere-bottom">
+                <div class="glow glow-bottom-cyan"></div>
+                <div class="glow glow-bottom-purple"></div>
+                <div class="core core-bottom"></div>
+            </div>
+        </div>
+
+        <div class="scroll-hint">SCROLL DOWN</div>
+    </div>
+
+    <script>
+        const layerTop = document.getElementById('layerTop');
+        const layerBottom = document.getElementById('layerBottom');
+        const textElement = document.getElementById('text');
+        
+        // Текущий и целевой прогресс для плавности (lerp)
+        let currentProgress = 0;
+        let targetProgress = 0;
+
+        function render() {
+            // Инерция (ease)
+            currentProgress += (targetProgress - currentProgress) * 0.07;
+
+            // --- АНИМАЦИЯ ВЕРХНЕГО СЛОЯ ---
+            // Уходит вверх и влево, поворачивается
+            const topX = currentProgress * -25; // Смещение в vw
+            const topY = currentProgress * -20; // Смещение в vh
+            const topRot = currentProgress * -15; // Градусы
+            // Специфичный блюр для верхнего слоя
+            const topBlur = currentProgress * 15; // Размывается до 15px
+            
+            layerTop.style.transform = `translate(${topX}vw, ${topY}vh) rotate(${topRot}deg) scale(${1 + currentProgress * 0.2})`;
+            layerTop.style.filter = `blur(${topBlur}px)`;
+
+            // --- АНИМАЦИЯ НИЖНЕГО СЛОЯ ---
+            // Уходит вниз и вправо, поворачивается
+            const botX = currentProgress * 25; // Смещение в vw
+            const botY = currentProgress * 20; // Смещение в vh
+            const botRot = currentProgress * 15; // Градусы
+            // РАЗНАЯ степень блюра: нижний слой размывается намного сильнее (до 35px)
+            const botBlur = currentProgress * 35; 
+            
+            layerBottom.style.transform = `translate(${botX}vw, ${botY}vh) rotate(${botRot}deg) scale(${1 + currentProgress * 0.1})`;
+            layerBottom.style.filter = `blur(${botBlur}px)`;
+
+            // --- АНИМАЦИЯ ТИПОГРАФИКИ ---
+            // Появляется из размытия, приближается по оси Z
+            const textOpacity = Math.min(1, currentProgress * 2.5);
+            const textZ = -200 + (currentProgress * 200); // Выезжает вперед
+            const textBlur = Math.max(0, 15 - (currentProgress * 15)); // Фокусируется
+            
+            textElement.style.opacity = textOpacity;
+            textElement.style.transform = `scale(${0.7 + currentProgress * 0.3}) translateZ(${textZ}px)`;
+            textElement.style.filter = `blur(${textBlur}px)`;
+
+            requestAnimationFrame(render);
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            targetProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
+        });
+
+        // Запуск цикла анимации
+        render();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оптика и Освещение</title>
+    <style>
+        :root {
+            /* Палитра окружения */
+            --bg-light: #f4f6ff;
+            --bg-base: #e1e5ff;
+            --bg-dark: #b5bef5;
+            
+            /* Цвета сферы для сложного освещения */
+            --sphere-pure-light: #ffffff;
+            --sphere-soft-light: #aab5ff;
+            --sphere-base: #000c8f;
+            --sphere-shadow: #000230;
+            --sphere-bounce-light: rgba(140, 160, 255, 0.45); /* Мягкий свет снизу справа */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 30% 20%, var(--bg-light) 0%, var(--bg-base) 50%, var(--bg-dark) 100%);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            perspective: 1200px;
+        }
+
+        /* Центральная сфера с новым светом */
+        .sphere {
+            position: absolute;
+            width: 55vmin;
+            height: 55vmin;
+            border-radius: 50%;
+            /* Резкий блик слева сверху и глубокая тень */
+            background: radial-gradient(
+                circle at 15% 15%, 
+                var(--sphere-pure-light) 0%, 
+                var(--sphere-soft-light) 12%, 
+                var(--sphere-base) 55%, 
+                var(--sphere-shadow) 100%
+            );
+            box-shadow: 
+                /* Мягкий отраженный свет (bounce light) снизу справа */
+                inset -35px -35px 70px var(--sphere-bounce-light), 
+                /* Легкое затемнение у самого края слева сверху для объема */
+                inset 10px 10px 20px rgba(0,0,0,0.1),
+                /* Падающая тень на фон */
+                0 40px 80px rgba(0,0,40,0.5);
+            
+            left: 50%;
+            top: 50%;
+            margin-left: -5vmin;
+            margin-top: -27.5vmin;
+            will-change: transform;
+        }
+
+        /* Контейнер для панелей */
+        .glass-wrapper {
+            position: absolute;
+            top: -10%;
+            left: 10vw; 
+            height: 120%;
+            display: flex;
+            will-change: transform;
+            z-index: 10;
+        }
+
+        /* Стеклянная панель (Рифленое стекло) */
+        .glass-panel {
+            width: 6.5vmin;
+            height: 100%;
+            /* Цилиндрический градиент для создания оптического искажения (линзы) */
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.7) 0%, 
+                rgba(255,255,255,0.1) 15%, 
+                rgba(0,0,0,0.02) 50%, 
+                rgba(0,0,0,0.1) 85%, 
+                rgba(255,255,255,0.5) 100%
+            );
+            
+            /* Резкая грань слева, как срез стекла */
+            border-left: 1.5px solid rgba(255, 255, 255, 0.95);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
+            
+            box-shadow: 
+                -12px 0 30px rgba(0,0,50,0.15), /* Тень от панели на соседей/фон */
+                inset 12px 0 25px rgba(255,255,255,0.5), /* Внутренний блик рефракции */
+                inset -5px 0 15px rgba(0,0,0,0.1); /* Затенение правой грани */
+
+            /* Добавляем saturate для усиления цвета сквозь стекло */
+            backdrop-filter: blur(var(--blur-amount)) brightness(var(--bright-amount)) contrast(var(--contrast-amount)) saturate(var(--saturate-amount));
+            -webkit-backdrop-filter: blur(var(--blur-amount)) brightness(var(--bright-amount)) contrast(var(--contrast-amount)) saturate(var(--saturate-amount));
+            
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Шум (Noise) */
+        .glass-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+        }
+
+        /* Типографика */
+        .typography-overlay {
+            position: absolute;
+            bottom: 5vh;
+            left: 5vw;
+            color: #4a5596;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .subtitle {
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            font-weight: 300;
+            margin-top: 5px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="scene">
+        <div class="sphere" id="sphere" data-depth="0.04"></div>
+        <div class="glass-wrapper" id="glass-wrapper" data-depth="0.12">
+            <!-- Панели генерируются через JS -->
+        </div>
+    </div>
+
+    <div class="typography-overlay">
+        <p class="title">Refraction & Light</p>
+        <p class="subtitle">Искажение через рифленое стекло</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const glassWrapper = document.getElementById('glass-wrapper');
+            const numPanels = 8;
+            
+            // Генерация панелей с усиленными параметрами искажения
+            for (let i = 0; i < numPanels; i++) {
+                const panel = document.createElement('div');
+                panel.classList.add('glass-panel');
+
+                // Усиливаем блюр и контраст, чтобы шар "ломался" на гранях
+                const blurAmount = 28 - (i * 3.2); 
+                const brightnessAmount = 1.05 + (i * 0.015);
+                const contrastAmount = 1.35 - (i * 0.02); // Высокий контраст имитирует толщину стекла
+                const saturateAmount = 1.5 - (i * 0.04);  // Сатурация усиливает синий цвет при преломлении
+
+                panel.style.setProperty('--blur-amount', `${Math.max(blurAmount, 0)}px`);
+                panel.style.setProperty('--bright-amount', `${brightnessAmount}`);
+                panel.style.setProperty('--contrast-amount', `${contrastAmount}`);
+                panel.style.setProperty('--saturate-amount', `${Math.max(saturateAmount, 1)}`);
+
+                glassWrapper.appendChild(panel);
+            }
+
+            // Логика параллакса
+            const sphere = document.getElementById('sphere');
+            const wrapper = document.getElementById('glass-wrapper');
+
+            let targetX = 0; let targetY = 0;
+            let currentX = 0; let currentY = 0;
+
+            window.addEventListener('mousemove', (e) => {
+                targetX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+                targetY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+            });
+
+            function render() {
+                // Плавная интерполяция
+                currentX += (targetX - currentX) * 0.08;
+                currentY += (targetY - currentY) * 0.08;
+
+                const sphereDepth = parseFloat(sphere.getAttribute('data-depth'));
+                sphere.style.transform = `translate(${currentX * sphereDepth * 100}vw, ${currentY * sphereDepth * 100}vh)`;
+
+                const glassDepth = parseFloat(wrapper.getAttribute('data-depth'));
+                wrapper.style.transform = `translate(${currentX * glassDepth * 100}vw, ${currentY * glassDepth * 100}vh)`;
+
+                requestAnimationFrame(render);
+            }
+
+            render();
+        });
+    </script>
+</body>
+</html>

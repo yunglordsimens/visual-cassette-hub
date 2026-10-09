@@ -1,0 +1,20 @@
+{
+  "id": "lee-s-tea-proposal",
+  "title": "Lee's Tea - Proposal",
+  "tags": [
+    "gemini",
+    "html",
+    "scroll"
+  ],
+  "groups": [
+    "Клиенты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-09",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lee-s-tea-proposal/code.html",
+  "previewUrl": "library/lee-s-tea-proposal/code.html"
+}

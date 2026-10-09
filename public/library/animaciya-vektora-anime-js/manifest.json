@@ -1,0 +1,22 @@
+{
+  "id": "animaciya-vektora-anime-js",
+  "title": "Анимация вектора Anime.js",
+  "tags": [
+    "gemini",
+    "html",
+    "animejs",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · animejs",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/animaciya-vektora-anime-js/code.html",
+  "previewUrl": "library/animaciya-vektora-anime-js/code.html"
+}

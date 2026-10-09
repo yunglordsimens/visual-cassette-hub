@@ -1,0 +1,20 @@
+{
+  "id": "organic-tissue-webgl",
+  "title": "Organic Tissue WebGL",
+  "tags": [
+    "gemini",
+    "html",
+    "webgl"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · webgl",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/organic-tissue-webgl/code.html",
+  "previewUrl": "library/organic-tissue-webgl/code.html"
+}

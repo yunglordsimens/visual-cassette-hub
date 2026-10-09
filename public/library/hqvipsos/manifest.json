@@ -1,0 +1,21 @@
+{
+  "id": "hqvipsos",
+  "title": "HQVIPSOS",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas",
+    "scroll"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hqvipsos/code.html",
+  "previewUrl": "library/hqvipsos/code.html"
+}

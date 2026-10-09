@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE VOID - Immersive Landing</title>
+    
+    <!-- Cinematic Typography & Grunge Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;500&family=Rock+Salt&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --transition-speed: 0.5s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #050403;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- SVG ФИЛЬТРЫ И ГРАНЖ СТИЛИ --- */
+        .font-grunge { 
+            font-family: 'Rock Salt', cursive; 
+        }
+        .paper-strip { 
+            filter: drop-shadow(3px 4px 0px rgba(0,0,0,0.9)); 
+        }
+        .torn-edges { 
+            filter: url(#torn-edges-filter); 
+        }
+
+        /* --- КНОПКА-БУМАЖКА --- */
+        .btn-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            pointer-events: auto;
+            transition: transform 0.2s ease-out;
+            transform: rotate(-1deg); /* Изначальный легкий наклон */
+        }
+        .btn-wrapper:hover {
+            transform: scale(1.1) rotate(-3deg);
+        }
+        
+        .enter-btn {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            cursor: inherit;
+        }
+
+        .paper-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ffffff;
+            z-index: 1;
+        }
+
+        .paper-text {
+            position: relative;
+            z-index: 2;
+            color: #000000;
+            font-size: 1.2rem;
+            padding: 12px 35px;
+            display: block;
+            text-transform: uppercase;
+            white-space: nowrap;
+            letter-spacing: 2px;
+        }
+
+        /* --- SECTION 1: HERO --- */
+        #hero-wrap {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #canvas-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .cinematic-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        #vignette { box-shadow: inset 0 0 200px rgba(10, 5, 0, 0.85); }
+        #film-grain {
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            animation: grain 0.5s steps(2) infinite;
+        }
+        @keyframes grain {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(-2px, 2px); }
+            100% { transform: translate(2px, -2px); }
+        }
+
+        .hero-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            pointer-events: auto;
+        }
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .menu-links {
+            display: flex;
+            gap: 30px;
+        }
+        .menu-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+        .menu-links a:hover { color: #ffd699; }
+
+        .hero-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: auto;
+            width: 100%;
+        }
+        h1.main-title {
+            font-family: 'Cinzel', serif;
+            font-size: 5rem;
+            letter-spacing: 20px;
+            margin-bottom: 40px; /* Увеличил отступ до кнопки */
+            margin-right: -20px;
+            text-shadow: 0 5px 25px rgba(0,0,0,0.9);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translate(-50%, 0); }
+            50% { transform: translate(-50%, 10px); }
+        }
+
+        /* --- SECTION 1.5: SCROLL CONTENT --- */
+        .hero-scroll-content {
+            position: relative;
+            min-height: 100vh;
+            background: #050403;
+            padding: 150px 10vw;
+            display: flex;
+            flex-direction: column;
+            gap: 150px;
+            z-index: 4;
+        }
+        .hero-scroll-content h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            color: #ffe6cc;
+            margin-bottom: 20px;
+        }
+        .hero-scroll-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 600px;
+            color: #bbbbbb;
+        }
+
+        /* --- WHITE FLASH --- */
+        #white-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #ffffff;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+            transition: opacity 2s ease-in-out;
+        }
+
+        /* --- SECTION 2: INSIDE SITE --- */
+        #inside-section {
+            position: relative;
+            display: none; 
+            width: 100%;
+            min-height: 100vh;
+            background: #050505;
+            z-index: 20;
+        }
+
+        .video-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            object-fit: cover;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .content-container {
+            position: relative;
+            padding: 100px 10vw;
+            z-index: 2;
+        }
+        .content-block {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .content-block h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 4rem;
+            margin-bottom: 30px;
+        }
+        .content-block p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 600px;
+            color: #cccccc;
+        }
+
+        #inner-nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 30;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            opacity: 0;
+            transition: opacity 2s ease;
+        }
+    </style>
+
+    <!-- Three.js & Post-Processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+</head>
+<body>
+
+    <!-- SVG фильтр для рваных краев -->
+    <svg width="0" height="0" style="position: absolute; display: none;">
+        <defs>
+            <filter id="torn-edges-filter" x="-2%" y="-5%" width="104%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04 0.1" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- ================= SECTION 1: HERO ================= -->
+    <section id="hero-wrap">
+        <div id="canvas-container"></div>
+        <div class="cinematic-layer" id="film-grain"></div>
+        <div class="cinematic-layer" id="vignette"></div>
+
+        <div class="hero-screen" id="hero-ui">
+            <nav>
+                <div class="logo">THE VOID</div>
+                <div class="menu-links">
+                    <a href="#">Works</a>
+                    <a href="#">Studio</a>
+                    <a href="#">Contact</a>
+                </div>
+            </nav>
+
+            <div class="hero-center">
+                <h1 class="main-title">THE VOID</h1>
+                
+                <!-- Новая гранжевая кнопка DIVE IN -->
+                <div class="btn-wrapper paper-strip" id="enter-btn">
+                    <button class="enter-btn">
+                        <div class="paper-bg torn-edges"></div>
+                        <span class="paper-text font-grunge">Dive In</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="scroll-indicator">Scroll to explore</div>
+        </div>
+    </section>
+
+    <!-- КОНТЕНТ ПОД ДВЕРЯМИ -->
+    <section class="hero-scroll-content" id="hero-scroll-content">
+        <div>
+            <h2>Beyond the Doors</h2>
+            <p>Welcome to our spatial typography experiment. Before entering, you can scroll down to read about our studio's philosophy. The light seeping through the cracks is just a glimpse of the sunlit void within.</p>
+        </div>
+        <div>
+            <h2>Visual Communications</h2>
+            <p>Formed in Prague, bridging the gap between traditional letterforms and immersive digital experiences. We believe that type should not just be read, but felt and navigated.</p>
+        </div>
+    </section>
+
+    <div id="white-flash"></div>
+
+    <!-- ================= SECTION 2: INSIDE SITE ================= -->
+    <section id="inside-section">
+        <nav id="inner-nav">
+            <div class="logo">THE VOID</div>
+            <div class="menu-links">
+                <a href="#">Back</a>
+                <a href="#">Menu</a>
+            </div>
+        </nav>
+
+        <video class="video-bg" autoplay loop muted playsinline>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+
+        <div class="content-container">
+            <div class="content-block">
+                <h2>Welcome Inside</h2>
+                <p>You have crossed the threshold into the light. This is the main body of your landing page. As the user scrolls down, the video plays in the background, and typography drives the narrative forward.</p>
+            </div>
+            
+            <div class="content-block">
+                <h2>Typography & Form</h2>
+                <p>Drawing from the roots of visual communications, every letterforms interacts with the spatial grid. The contrast between the heavy 3D entrance and the fluid scrolling experience creates a memorable user journey.</p>
+            </div>
+
+            <div class="content-block" style="padding-bottom: 20vh;">
+                <h2>Get in touch</h2>
+                <p>Ready to collaborate? Let's build something extraordinary.</p>
+                
+                <!-- Новая гранжевая кнопка CONTACT US -->
+                <div class="btn-wrapper paper-strip" style="margin-top: 40px; transform: rotate(1deg);">
+                    <button class="enter-btn">
+                        <div class="paper-bg torn-edges"></div>
+                        <span class="paper-text font-grunge">Contact Us</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // ========================================================
+        // НАСТРОЙКА 3D СЦЕНЫ
+        // ========================================================
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x0a0806, 0.04); 
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 14);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        container.appendChild(renderer.domElement);
+
+        // --- ПОСТОБРАБОТКА (Bloom) ---
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.2; 
+        bloomPass.strength = 1.4; 
+        bloomPass.radius = 0.6;
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // --- ОСВЕЩЕНИЕ ---
+        const hemiLight = new THREE.HemisphereLight(0x2a201a, 0x050403, 0.5);
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+        dirLight.position.set(-10, 10, 15);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        const voidLight = new THREE.PointLight(0xffddaa, 8, 40);
+        voidLight.position.set(0, 0, -1); 
+        scene.add(voidLight);
+
+        // --- ГЕНЕРАЦИЯ ТЕКСТУР ---
+        function createWoodTextures(type) {
+            const canvas = document.createElement('canvas');
+            const bumpCanvas = document.createElement('canvas');
+            canvas.width = bumpCanvas.width = 1024;
+            canvas.height = bumpCanvas.height = 2048;
+            const ctx = canvas.getContext('2d');
+            const bumpCtx = bumpCanvas.getContext('2d');
+
+            ctx.fillStyle = '#1e1a18'; 
+            ctx.fillRect(0, 0, 1024, 2048);
+            bumpCtx.fillStyle = '#808080';
+            bumpCtx.fillRect(0, 0, 1024, 2048);
+
+            for(let i = 0; i < 4000; i++) {
+                let isDark = Math.random() > 0.5;
+                ctx.fillStyle = isDark ? 'rgba(15,10,8,0.3)' : 'rgba(60,50,40,0.2)';
+                bumpCtx.fillStyle = isDark ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+                let w = Math.random() * 3 + 1;
+                let h = Math.random() * 250 + 50;
+                let x = Math.random() * 1024;
+                let y = Math.random() * 2048;
+                ctx.fillRect(x, y, w, h);
+                bumpCtx.fillRect(x, y, w, h);
+            }
+
+            ctx.lineWidth = 4;
+            bumpCtx.lineWidth = 8;
+            
+            for(let i = 0; i <= 1024; i += 128) {
+                ctx.strokeStyle = '#0a0805';
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 2048); ctx.stroke();
+                
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                ctx.beginPath(); ctx.moveTo(i + 2, 0); ctx.lineTo(i + 2, 2048); ctx.stroke();
+                ctx.lineWidth = 4;
+
+                bumpCtx.strokeStyle = '#000000';
+                bumpCtx.beginPath(); bumpCtx.moveTo(i, 0); bumpCtx.lineTo(i, 2048); bumpCtx.stroke();
+            }
+
+            if (type > 0) {
+                const drawPlank = (x, y, w, h) => {
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                    ctx.fillRect(x + 15, y + 15, w, h);
+                    
+                    ctx.fillStyle = '#221d1a';
+                    ctx.fillRect(x, y, w, h);
+                    ctx.lineWidth = 8;
+                    ctx.strokeStyle = '#100c0a';
+                    ctx.strokeRect(x, y, w, h);
+
+                    bumpCtx.fillStyle = '#d0d0d0';
+                    bumpCtx.fillRect(x, y, w, h);
+                    bumpCtx.lineWidth = 8;
+                    bumpCtx.strokeStyle = '#303030'; 
+                    bumpCtx.strokeRect(x, y, w, h);
+                };
+
+                drawPlank(0, 0, 120, 2048);
+                drawPlank(1024 - 120, 0, 120, 2048);
+                drawPlank(0, 0, 1024, 180);
+                drawPlank(0, 900, 1024, 180);
+                drawPlank(0, 2048 - 180, 1024, 180);
+
+                const drawX = (isBump) => {
+                    const c = isBump ? bumpCtx : ctx;
+                    c.save();
+                    c.lineWidth = 140;
+                    c.lineCap = 'square';
+                    
+                    if (!isBump) {
+                        c.beginPath();
+                        c.moveTo(130, 1090); c.lineTo(914, 1878);
+                        c.moveTo(914, 1090); c.lineTo(130, 1878);
+                        c.strokeStyle = 'rgba(0,0,0,0.7)';
+                        c.stroke();
+                    }
+
+                    c.beginPath();
+                    c.moveTo(120, 1080); c.lineTo(904, 1868);
+                    c.moveTo(904, 1080); c.lineTo(120, 1868);
+                    c.strokeStyle = isBump ? '#d0d0d0' : '#221d1a';
+                    c.stroke();
+
+                    c.lineWidth = 10;
+                    c.strokeStyle = isBump ? '#303030' : '#100c0a';
+                    c.stroke();
+                    c.restore();
+                };
+                
+                drawX(false);
+                drawX(true); 
+
+                ctx.fillStyle = '#111';
+                bumpCtx.fillStyle = '#ffffff'; 
+                
+                const drawHinges = (xPos) => {
+                    [300, 950, 1600].forEach(y => {
+                        ctx.fillRect(xPos, y, 40, 150);
+                        bumpCtx.fillRect(xPos, y, 40, 150);
+                    });
+                };
+
+                if (type === 1) drawHinges(0);
+                if (type === 2) drawHinges(1024 - 40);
+            }
+
+            const map = new THREE.CanvasTexture(canvas);
+            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
+            map.wrapS = bumpMap.wrapS = THREE.RepeatWrapping;
+            map.wrapT = bumpMap.wrapT = THREE.RepeatWrapping;
+            
+            return { map, bumpMap };
+        }
+
+        const texWall = createWoodTextures(0);
+        const texLeft = createWoodTextures(1);
+        const texRight = createWoodTextures(2);
+
+        const matConfig = { roughness: 0.7, metalness: 0.1, bumpScale: 0.15 };
+
+        const woodMaterial = new THREE.MeshStandardMaterial({ map: texWall.map, bumpMap: texWall.bumpMap, ...matConfig, color: 0x999999 });
+        const leftDoorMaterial = new THREE.MeshStandardMaterial({ map: texLeft.map, bumpMap: texLeft.bumpMap, ...matConfig, color: 0xaaaaaa });
+        const rightDoorMaterial = new THREE.MeshStandardMaterial({ map: texRight.map, bumpMap: texRight.bumpMap, ...matConfig, color: 0xaaaaaa });
+
+        const wallGroup = new THREE.Group();
+        const wallGeoV = new THREE.BoxGeometry(10, 10, 1);
+        const wallGeoH = new THREE.BoxGeometry(30, 5, 1);
+        
+        const leftWall = new THREE.Mesh(wallGeoV, woodMaterial); leftWall.position.set(-10, 0, 0); 
+        const rightWall = new THREE.Mesh(wallGeoV, woodMaterial); rightWall.position.set(10, 0, 0); 
+        const topWall = new THREE.Mesh(wallGeoH, woodMaterial); topWall.position.set(0, 7.5, 0); 
+        const bottomWall = new THREE.Mesh(wallGeoH, woodMaterial); bottomWall.position.set(0, -7.5, 0); 
+
+        wallGroup.add(leftWall, rightWall, topWall, bottomWall);
+        scene.add(wallGroup);
+
+        // --- ДВЕРИ ---
+        const doorGeo = new THREE.BoxGeometry(5, 10, 0.4);
+        
+        const leftPivot = new THREE.Group(); leftPivot.position.set(-5.015, 0, 0); scene.add(leftPivot);
+        const leftDoor = new THREE.Mesh(doorGeo, leftDoorMaterial); leftDoor.position.set(2.5, 0, 0); 
+        leftPivot.add(leftDoor);
+
+        const rightPivot = new THREE.Group(); rightPivot.position.set(5.015, 0, 0); scene.add(rightPivot);
+        const rightDoor = new THREE.Mesh(doorGeo, rightDoorMaterial); rightDoor.position.set(-2.5, 0, 0);
+        rightPivot.add(rightDoor);
+
+        // --- ВНУТРЕННИЙ ШЕЙДЕР ---
+        const noiseUniforms = { u_time: { value: 0.0 }, u_intensity: { value: 0.0 } };
+        const noiseMaterial = new THREE.ShaderMaterial({
+            uniforms: noiseUniforms,
+            vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+            fragmentShader: `
+                uniform float u_time; uniform float u_intensity; varying vec2 vUv;
+                float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123); }
+                void main() {
+                    vec2 st = vUv * 200.0;
+                    float noise = random(st + fract(u_time * 0.3));
+                    float wave = sin(vUv.y * 5.0 - u_time * 2.0) * 0.5 + 0.5;
+                    
+                    vec3 baseColor = vec3(0.5, 0.4, 0.2); 
+                    vec3 glowColor = vec3(1.0, 0.9, 0.6); 
+                    
+                    vec3 color = baseColor * noise + (glowColor * wave * 0.7);
+                    float dist = distance(vUv, vec2(0.5));
+                    color *= smoothstep(0.9, 0.1, dist);
+                    
+                    gl_FragColor = vec4(mix(color * u_intensity, vec3(1.0), smoothstep(10.0, 20.0, u_intensity)), 1.0);
+                }
+            `
+        });
+        const noisePlane = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), noiseMaterial);
+        noisePlane.position.set(0, 0, -15);
+        scene.add(noisePlane);
+
+        // ========================================================
+        // АУДИО
+        // ========================================================
+        let audioCtx, noiseGain, filter, subOsc, subGain;
+        let audioInitialized = false;
+
+        function initAudio() {
+            if (audioInitialized) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const bufferSize = audioCtx.sampleRate * 2;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = buffer;
+            noiseSource.loop = true;
+
+            filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass'; filter.frequency.value = 150;
+
+            noiseGain = audioCtx.createGain(); noiseGain.gain.value = 0.02;
+
+            subOsc = audioCtx.createOscillator();
+            subOsc.type = 'sine'; subOsc.frequency.value = 40; 
+            subGain = audioCtx.createGain(); subGain.gain.value = 0;
+
+            noiseSource.connect(filter).connect(noiseGain).connect(audioCtx.destination);
+            subOsc.connect(subGain).connect(audioCtx.destination);
+            
+            noiseSource.start(); subOsc.start();
+            audioInitialized = true;
+        }
+
+        function playDiveAudio() {
+            if (!audioInitialized) return;
+            const time = audioCtx.currentTime;
+            
+            noiseGain.gain.setTargetAtTime(0.4, time, 1.5);
+            filter.frequency.setTargetAtTime(10000, time, 1.0);
+            subGain.gain.setTargetAtTime(1.0, time, 1.5); 
+            
+            setTimeout(() => {
+                const fadeTime = audioCtx.currentTime;
+                noiseGain.gain.setTargetAtTime(0.0, fadeTime, 1.0);
+                subGain.gain.setTargetAtTime(0.0, fadeTime, 1.0);
+            }, 2000);
+        }
+
+        // ========================================================
+        // ЛОГИКА ВЗАИМОДЕЙСТВИЯ (Клик и Погружение)
+        // ========================================================
+        let isDiving = false;
+        let renderingActive = true;
+        
+        let targetAngleLeft = 0;
+        let targetAngleRight = 0;
+        let targetVoidLight = 8; 
+        let targetCameraZ = 14;
+        let targetBloom = 1.4;
+
+        const enterBtn = document.getElementById('enter-btn');
+        
+        enterBtn.addEventListener('click', () => {
+            if (isDiving) return;
+            isDiving = true;
+
+            document.body.style.overflow = 'hidden';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            setTimeout(() => {
+                playDiveAudio();
+                
+                document.getElementById('hero-ui').style.opacity = '0';
+                document.getElementById('hero-ui').style.transition = 'opacity 1s ease';
+
+                targetAngleLeft = Math.PI * 0.75;
+                targetAngleRight = -Math.PI * 0.75;
+                
+                voidLight.color.setHex(0xffffff); 
+                targetVoidLight = 80;
+                targetBloom = 4.0; 
+
+                setTimeout(() => { targetCameraZ = -5; }, 400);
+
+                setTimeout(() => {
+                    const flash = document.getElementById('white-flash');
+                    flash.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        document.getElementById('hero-wrap').style.display = 'none';
+                        document.getElementById('hero-scroll-content').style.display = 'none';
+                        renderingActive = false; 
+
+                        const insideSection = document.getElementById('inside-section');
+                        insideSection.style.display = 'block';
+                        
+                        document.body.style.overflow = 'auto';
+                        document.body.style.overflowX = 'hidden';
+                        
+                        flash.style.opacity = '0';
+
+                        setTimeout(() => {
+                            document.getElementById('inner-nav').style.opacity = '1';
+                        }, 500);
+
+                    }, 2000); 
+                }, 2200); 
+            }, 300); 
+        });
+
+        window.addEventListener('resize', () => {
+            if(!renderingActive) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ========================================================
+        // ЦИКЛ АНИМАЦИИ
+        // ========================================================
+        const clock = new THREE.Clock();
+
+        function animate() {
+            if (!renderingActive) return; 
+            
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            noiseUniforms.u_time.value = time;
+            
+            noiseUniforms.u_intensity.value += ( (isDiving ? 20.0 : 1.0) - noiseUniforms.u_intensity.value ) * 0.02;
+            
+            leftPivot.rotation.y += (targetAngleLeft - leftPivot.rotation.y) * 0.03;
+            rightPivot.rotation.y += (targetAngleRight - rightPivot.rotation.y) * 0.03;
+
+            camera.position.z += (targetCameraZ - camera.position.z) * 0.02;
+            bloomPass.strength += (targetBloom - bloomPass.strength) * 0.02;
+
+            voidLight.intensity += (targetVoidLight - voidLight.intensity) * 0.02;
+
+            let shake = isDiving ? 0.05 : 0.01;
+            camera.position.x = Math.sin(time * 2.0) * shake;
+            camera.position.y = Math.cos(time * 2.5) * shake;
+            camera.lookAt(0, 0, targetCameraZ === 14 ? 0 : -15); 
+
+            composer.render();
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bento Infinite Loop Motion</title>
+    <style>
+        /* Базовые настройки страницы */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow-y: hidden; /* Отключаем вертикальный скролл */
+            overflow-x: hidden; /* Скроллить будем внутренний контейнер */
+        }
+
+        /* Главный контейнер с горизонтальным скроллом */
+        .scroll-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
+            height: 100vh;
+            box-sizing: border-box;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Кастомизация скроллбара (чтобы выглядело стильно) */
+        .scroll-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+        .scroll-wrapper::-webkit-scrollbar-track {
+            background: #111;
+            border-radius: 4px;
+        }
+        .scroll-wrapper::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        .scroll-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Строка (один из горизонтальных рядов) */
+        .gallery-row {
+            display: flex;
+            flex: 1; /* Занимает равную долю высоты экрана */
+            gap: 16px;
+            width: 350vw; /* Делаем контент значительно шире экрана для горизонтального скролла */
+            min-height: 0;
+        }
+
+        /* Сам анимируемый блок */
+        .bento-block {
+            /* Базовые параметры flex-box для плавной растяжки */
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 0%;
+            height: 100%;
+            border-radius: 24px;
+            background-color: #1a1a1a;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            
+            /* Главная магия: плавно анимируем изменения ширины (flex-grow и flex-basis) */
+            transition: flex-grow 2s cubic-bezier(0.25, 1, 0.5, 1), 
+                        flex-basis 2s cubic-bezier(0.25, 1, 0.5, 1), 
+                        filter 0.4s ease;
+        }
+
+        /* Эффект при наведении мышкой */
+        .bento-block:hover {
+            /* Фиксируем блок на 50% ширины экрана (50vw) */
+            flex-grow: 0 !important;
+            flex-shrink: 0 !important;
+            flex-basis: 50vw !important;
+            filter: brightness(1.15); /* Немного подсвечиваем */
+        }
+
+        /* --- Внутреннее оформление (плейсхолдеры для контента) --- */
+        
+        .bento-block .content-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 24px;
+            opacity: 0.7;
+            transition: opacity 0.4s ease;
+        }
+
+        .bento-block:hover .content-placeholder {
+            opacity: 1;
+        }
+
+        /* Теги с отсылкой к типографике и визуальным коммуникациям */
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        /* Абстрактные фоны для имитации картинок из референса */
+        .bg-red-glow { background: radial-gradient(circle at top left, #5a0000, #050505 70%); }
+        .bg-blue-neon { background: radial-gradient(circle at bottom right, #0033cc, #050505 80%); }
+        .bg-silver-abstract { background: linear-gradient(135deg, #2a2a2a, #111 60%); }
+        .bg-dark-grid {
+            background-color: #0a0a0a;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Главный скроллируемый контейнер -->
+    <div class="scroll-wrapper">
+        
+        <!-- Ряд 1 -->
+        <div class="gallery-row">
+            <!-- Сюда можно будет вставить свой контент (шрифты, изображения, видео) -->
+            <div class="bento-block bg-red-glow">
+                <div class="content-placeholder"><div class="tag">Typography Sandbox</div></div>
+            </div>
+            <div class="bento-block bg-dark-grid"></div>
+            <div class="bento-block bg-blue-neon">
+                <div class="content-placeholder"><div class="tag">UMPRUM / Visual Comms</div></div>
+            </div>
+            <div class="bento-block bg-silver-abstract"></div>
+            <div class="bento-block bg-red-glow"></div>
+            <div class="bento-block bg-dark-grid"></div>
+            <div class="bento-block bg-silver-abstract"></div>
+        </div>
+
+        <!-- Ряд 2 -->
+        <div class="gallery-row">
+            <div class="bento-block bg-dark-grid"></div>
+            <div class="bento-block bg-silver-abstract">
+                <div class="content-placeholder"><div class="tag">Font Design</div></div>
+            </div>
+            <div class="bento-block bg-red-glow"></div>
+            <div class="bento-block bg-dark-grid">
+                <div class="content-placeholder"><div class="tag">Bilingual Data</div></div>
+            </div>
+            <div class="bento-block bg-blue-neon"></div>
+            <div class="bento-block bg-silver-abstract"></div>
+            <div class="bento-block bg-red-glow"></div>
+        </div>
+
+        <!-- Ряд 3 -->
+        <div class="gallery-row">
+            <div class="bento-block bg-blue-neon"></div>
+            <div class="bento-block bg-dark-grid"></div>
+            <div class="bento-block bg-silver-abstract">
+                <div class="content-placeholder"><div class="tag">Interactive Layout</div></div>
+            </div>
+            <div class="bento-block bg-red-glow"></div>
+            <div class="bento-block bg-blue-neon"></div>
+            <div class="bento-block bg-dark-grid">
+                <div class="content-placeholder"><div class="tag">CS & Design</div></div>
+            </div>
+            <div class="bento-block bg-silver-abstract"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Скрипт для бесконечной анимации блоков
+        document.addEventListener('DOMContentLoaded', () => {
+            const blocks = document.querySelectorAll('.bento-block');
+            const intervalTime = 2000; // Обновление каждые 2 секунды
+
+            function animateBlocks() {
+                blocks.forEach(block => {
+                    // Если мышка сейчас на блоке, мы не меняем его flex-grow скриптом.
+                    // (Хотя CSS !important в :hover все равно бы перекрыл, такая проверка делает анимацию чище после увода мыши).
+                    if (!block.matches(':hover')) {
+                        // Генерируем случайное значение flex-grow от 1 до 5
+                        // Это заставит блоки постоянно менять свои пропорции по отношению друг к другу
+                        const randomGrow = (Math.random() * 4 + 1).toFixed(2);
+                        block.style.flexGrow = randomGrow;
+                    }
+                });
+            }
+
+            // Запускаем первую генерацию размеров
+            animateBlocks();
+
+            // Ставим на бесконечный цикл
+            setInterval(animateBlocks, intervalTime);
+        });
+    </script>
+
+</body>
+</html>

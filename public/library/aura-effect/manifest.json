@@ -1,0 +1,20 @@
+{
+  "id": "aura-effect",
+  "title": "Aura Effect",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-effect/code.tsx",
+  "previewUrl": "library/aura-effect/preview.html"
+}

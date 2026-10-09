@@ -1,0 +1,21 @@
+{
+  "id": "hello-klean-landing-page",
+  "title": "Hello Klean Landing Page",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hello-klean-landing-page/code.html",
+  "previewUrl": "library/hello-klean-landing-page/code.html"
+}

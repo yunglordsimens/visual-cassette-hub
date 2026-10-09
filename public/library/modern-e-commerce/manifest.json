@@ -1,0 +1,22 @@
+{
+  "id": "modern-e-commerce",
+  "title": "Modern E-commerce",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "svg",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/modern-e-commerce/code.tsx",
+  "previewUrl": "library/modern-e-commerce/preview.html"
+}

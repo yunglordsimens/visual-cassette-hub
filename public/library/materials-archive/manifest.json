@@ -1,0 +1,19 @@
+{
+  "id": "materials-archive",
+  "title": "Materials Archive",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/materials-archive/code.html",
+  "previewUrl": "library/materials-archive/code.html"
+}

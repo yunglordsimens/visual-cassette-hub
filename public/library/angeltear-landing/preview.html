@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Angeltear Landing</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script type="importmap">{"imports":{"react":"https://esm.sh/react@18.3.1","react/":"https://esm.sh/react@18.3.1/","react-dom":"https://esm.sh/react-dom@18.3.1","react-dom/":"https://esm.sh/react-dom@18.3.1/"}}</script>
+<style>html,body{margin:0;min-height:100%}#runtime-error-toast{display:none;position:fixed;bottom:12px;left:12px;right:12px;background:rgba(225,29,72,.9);color:#fff;padding:8px 12px;border-radius:6px;font:11px monospace;z-index:999999}</style>
+</head>
+<body>
+<div id="runtime-error-toast"></div>
+<div id="root"></div>
+<script type="module">
+const show = (m) => { const t = document.getElementById('runtime-error-toast'); t.style.display = 'block'; t.innerText = m; };
+window.addEventListener('error', (e) => show('Runtime Error: ' + e.message));
+try {
+  const url = URL.createObjectURL(new Blob(["import { jsx, jsxs } from \"react/jsx-runtime\";\nconst projects = [\n  { title: \"ANGELTEAR - UNDERWORLD\", subtitle: \"DIRECTION - CAMERA - EDITING\" },\n  { title: \"ANGELTEAR - GANTZ\" },\n  { title: \"MARO DEL LOVE - WW3\" },\n  { title: \"ANGELTEAR - FASHION3STYLE\" },\n  { title: \"1MADONNA - UNRELEASED\" },\n  { title: \"TMTM - DARKSIDE\" },\n  { title: \"VENKTOVKA - MIKE DEAN\" },\n  { title: \"GORETEX - DR MAX\" },\n  { title: \"TRASHBAGFACE - HEALER\" },\n  { title: \"ANGELTEAR - ADIDAS\" },\n  { title: \"YUNG GREX - MOVE\" },\n  { title: \"ANGELTEAR - DARK PEGAS\" }\n];\nfunction App() {\n  return /* @__PURE__ */ jsxs(\"div\", { className: \"min-h-screen bg-white text-black font-sans selection:bg-black selection:text-white pb-24\", children: [\n    /* @__PURE__ */ jsx(\"style\", { dangerouslySetInnerHTML: { __html: `\n        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@700&display=swap');\n        \n        .font-logo {\n          font-family: 'Anton', sans-serif;\n          /* \\u042D\\u043A\\u0441\\u0442\\u0440\\u0435\\u043C\\u0430\\u043B\\u044C\\u043D\\u043E \\u0432\\u044B\\u0442\\u044F\\u0433\\u0438\\u0432\\u0430\\u0435\\u043C \\u0448\\u0440\\u0438\\u0444\\u0442 \\u043F\\u043E \\u0432\\u0435\\u0440\\u0442\\u0438\\u043A\\u0430\\u043B\\u0438 \\u0434\\u043B\\u044F \\u0434\\u043E\\u0441\\u0442\\u0438\\u0436\\u0435\\u043D\\u0438\\u044F \\u044D\\u0444\\u0444\\u0435\\u043A\\u0442\\u0430 \\u0441\\u043E \\u0441\\u043A\\u0440\\u0438\\u043D\\u0448\\u043E\\u0442\\u0430 */\n          transform: scaleY(2.2);\n          transform-origin: center;\n          letter-spacing: -0.01em;\n        }\n        \n        .font-list {\n          font-family: 'Oswald', sans-serif;\n          letter-spacing: 0.01em;\n        }\n      ` } }),\n    /* @__PURE__ */ jsxs(\"main\", { className: \"max-w-xl mx-auto px-5 sm:px-8 pt-16 flex flex-col items-center\", children: [\n      /* @__PURE__ */ jsx(\"header\", { className: \"w-full flex justify-center mt-12 mb-32 h-20 sm:h-32\", children: /* @__PURE__ */ jsx(\"h1\", { className: \"font-logo text-[5.5rem] sm:text-[8rem] uppercase text-center leading-none text-black\", children: \"Angeltear\" }) }),\n      /* @__PURE__ */ jsx(\"section\", { className: \"w-full flex flex-col gap-6 sm:gap-8 mb-20\", children: [1, 2, 3, 4].map((item) => /* @__PURE__ */ jsx(\n        \"div\",\n        {\n          className: \"w-full aspect-[4/5] sm:aspect-[3/4] relative overflow-hidden flex items-center justify-center bg-[#0a0a0a]\",\n          children: /* @__PURE__ */ jsx(\"div\", { className: \"absolute inset-0 flex flex-col items-center justify-center border border-neutral-800\", children: /* @__PURE__ */ jsxs(\"span\", { className: \"text-neutral-800 font-logo text-5xl tracking-widest scale-y-150\", children: [\n            \"IMAGE \",\n            item\n          ] }) })\n        },\n        item\n      )) }),\n      /* @__PURE__ */ jsx(\"section\", { className: \"w-full flex flex-col items-start gap-5 sm:gap-7 mt-8 px-1\", children: projects.map((project, idx) => /* @__PURE__ */ jsxs(\"div\", { className: \"flex flex-col\", children: [\n        /* @__PURE__ */ jsx(\"h2\", { className: \"font-list text-3xl sm:text-4xl uppercase font-bold text-black leading-none\", children: project.title }),\n        project.subtitle && /* @__PURE__ */ jsx(\"p\", { className: \"font-sans text-[0.65rem] sm:text-xs tracking-[0.3em] uppercase font-bold text-black mt-2\", children: project.subtitle })\n      ] }, idx)) })\n    ] })\n  ] });\n}\nexport {\n  App as default\n};\n"], { type: 'text/javascript' }));
+  const mod = await import(url);
+  const C = mod.default || mod.App;
+  if (C) {
+    const React = await import('react');
+    const { createRoot } = await import('react-dom/client');
+    createRoot(document.getElementById('root')).render(React.createElement(C));
+  }
+} catch (err) { show('Runtime Error: ' + (err && err.message || err)); console.error(err); }
+</script>
+</body>
+</html>

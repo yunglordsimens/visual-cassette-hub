@@ -1,0 +1,21 @@
+{
+  "id": "trenirovka-pesochnye-chasy",
+  "title": "Тренировка \"Песочные часы\"",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-07-31",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/trenirovka-pesochnye-chasy/code.html",
+  "previewUrl": "library/trenirovka-pesochnye-chasy/code.html"
+}

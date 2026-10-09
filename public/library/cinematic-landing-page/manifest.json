@@ -1,0 +1,23 @@
+{
+  "id": "cinematic-landing-page",
+  "title": "Cinematic Landing Page",
+  "tags": [
+    "gemini",
+    "html",
+    "threejs",
+    "webgl",
+    "canvas",
+    "audio"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/cinematic-landing-page/code.html",
+  "previewUrl": "library/cinematic-landing-page/code.html"
+}

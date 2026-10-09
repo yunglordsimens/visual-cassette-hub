@@ -1,0 +1,21 @@
+{
+  "id": "arhiv-knig-graf",
+  "title": "Архив Книг (Граф)",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/arhiv-knig-graf/code.html",
+  "previewUrl": "library/arhiv-knig-graf/code.html"
+}

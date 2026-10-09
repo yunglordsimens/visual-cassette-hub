@@ -1,0 +1,20 @@
+{
+  "id": "lee-s-tea-design-builder",
+  "title": "Lee's Tea - Design Builder",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Клиенты",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lee-s-tea-design-builder/code.html",
+  "previewUrl": "library/lee-s-tea-design-builder/code.html"
+}

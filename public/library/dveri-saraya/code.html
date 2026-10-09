@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Двери Сарая - WebGL</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            z-index: 10;
+            cursor: pointer;
+            transition: opacity 1s ease;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+        p {
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+            50% { opacity: 0.5; text-shadow: none; }
+        }
+    </style>
+    <!-- Подключаем Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="overlay">
+        <div>
+            <h1>Нажмите, чтобы открыть</h1>
+            <p>(Включите звук)</p>
+        </div>
+    </div>
+
+    <script>
+        // --- ПРОЦЕДУРНАЯ ГЕНЕРАЦИЯ ТЕКСТУРЫ И КАРТЫ ВЫСОТ (BUMP MAP) ---
+        function createWoodTextures(type) {
+            const canvas = document.createElement('canvas');
+            const bumpCanvas = document.createElement('canvas');
+            canvas.width = bumpCanvas.width = 1024;
+            canvas.height = bumpCanvas.height = 2048;
+            const ctx = canvas.getContext('2d');
+            const bumpCtx = bumpCanvas.getContext('2d');
+
+            // --- БАЗОВЫЙ ЦВЕТ И ВЫСОТА ---
+            ctx.fillStyle = '#8a7d72';
+            ctx.fillRect(0, 0, 1024, 2048);
+            
+            bumpCtx.fillStyle = '#808080'; // Средний серый для плоской поверхности в карте высот
+            bumpCtx.fillRect(0, 0, 1024, 2048);
+
+            // --- ВОЛОКНА ДЕРЕВА (ШУМ) ---
+            for(let i = 0; i < 5000; i++) {
+                let isDark = Math.random() > 0.5;
+                
+                ctx.fillStyle = isDark ? 'rgba(60,50,40,0.12)' : 'rgba(220,210,200,0.1)';
+                // Для бампа: темные волокна - углубления, светлые - легкие выпуклости
+                bumpCtx.fillStyle = isDark ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+                
+                let w = Math.random() * 4 + 1;
+                let h = Math.random() * 200 + 50;
+                let x = Math.random() * 1024;
+                let y = Math.random() * 2048;
+                
+                ctx.fillRect(x, y, w, h);
+                bumpCtx.fillRect(x, y, w, h);
+            }
+
+            // --- ВЕРТИКАЛЬНЫЕ ДОСКИ (ЩЕЛИ) ---
+            ctx.lineWidth = 4;
+            bumpCtx.lineWidth = 6;
+            
+            for(let i = 0; i <= 1024; i += 128) {
+                // Цвет щели
+                ctx.strokeStyle = '#4a3f35';
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 2048); ctx.stroke();
+                
+                // Тень щели
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+                ctx.beginPath(); ctx.moveTo(i + 2, 0); ctx.lineTo(i + 2, 2048); ctx.stroke();
+                ctx.lineWidth = 4;
+
+                // Бамп щели (очень глубокая -> черная линия)
+                bumpCtx.strokeStyle = '#000000';
+                bumpCtx.beginPath(); bumpCtx.moveTo(i, 0); bumpCtx.lineTo(i, 2048); bumpCtx.stroke();
+            }
+
+            // --- ПЕРЕКЛАДИНЫ ---
+            if (type > 0) {
+                const drawPlank = (x, y, w, h) => {
+                    // Цвет: тень под доской
+                    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+                    ctx.fillRect(x + 10, y + 10, w, h);
+                    
+                    // Цвет: сама доска
+                    ctx.fillStyle = '#82766b';
+                    ctx.fillRect(x, y, w, h);
+                    ctx.lineWidth = 6;
+                    ctx.strokeStyle = '#4a3f35';
+                    ctx.strokeRect(x, y, w, h);
+
+                    // Бамп: доска выступает -> светло-серая
+                    bumpCtx.fillStyle = '#c0c0c0';
+                    bumpCtx.fillRect(x, y, w, h);
+                    
+                    // Бамп: края доски (создаем фаску)
+                    bumpCtx.lineWidth = 6;
+                    bumpCtx.strokeStyle = '#404040'; 
+                    bumpCtx.strokeRect(x, y, w, h);
+                };
+
+                // Рамки и балки
+                drawPlank(0, 0, 120, 2048);
+                drawPlank(1024 - 120, 0, 120, 2048);
+                drawPlank(0, 0, 1024, 180);
+                drawPlank(0, 900, 1024, 180);
+                drawPlank(0, 2048 - 180, 1024, 180);
+
+                // X-образная рама
+                const drawX = (isBump) => {
+                    const c = isBump ? bumpCtx : ctx;
+                    c.save();
+                    c.lineWidth = 140;
+                    c.lineCap = 'square';
+                    
+                    if (!isBump) {
+                        // Тень (рисуется только на цветной карте)
+                        c.beginPath();
+                        c.moveTo(130, 1090); c.lineTo(914, 1878);
+                        c.moveTo(914, 1090); c.lineTo(130, 1878);
+                        c.strokeStyle = 'rgba(0,0,0,0.4)';
+                        c.stroke();
+                    }
+
+                    // Основная линия
+                    c.beginPath();
+                    c.moveTo(120, 1080); c.lineTo(904, 1868);
+                    c.moveTo(904, 1080); c.lineTo(120, 1868);
+                    c.strokeStyle = isBump ? '#c0c0c0' : '#82766b';
+                    c.stroke();
+
+                    // Обводка
+                    c.lineWidth = 8;
+                    c.strokeStyle = isBump ? '#404040' : '#4a3f35';
+                    c.stroke();
+                    c.restore();
+                };
+                
+                drawX(false); // Рисуем цвет
+                drawX(true);  // Рисуем бамп
+
+                // Петли
+                ctx.fillStyle = '#1a1a1a';
+                bumpCtx.fillStyle = '#ffffff'; // Петли выступают сильнее всего (абсолютно белые)
+                
+                const drawHinges = (xPos) => {
+                    [300, 950, 1600].forEach(y => {
+                        ctx.fillRect(xPos, y, 40, 150);
+                        bumpCtx.fillRect(xPos, y, 40, 150);
+                    });
+                };
+
+                if (type === 1) drawHinges(0);
+                if (type === 2) drawHinges(1024 - 40);
+            }
+
+            const map = new THREE.CanvasTexture(canvas);
+            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
+            map.wrapS = bumpMap.wrapS = THREE.RepeatWrapping;
+            map.wrapT = bumpMap.wrapT = THREE.RepeatWrapping;
+            
+            return { map, bumpMap };
+        }
+
+        // --- НАСТРОЙКА ЗВУКА (Web Audio API) ---
+        let audioCtx, noiseGain, filter;
+        let audioInitialized = false;
+
+        function initAudio() {
+            if (audioInitialized) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // Создаем буфер белого шума
+            const bufferSize = audioCtx.sampleRate * 2;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = buffer;
+            noiseSource.loop = true;
+
+            // Фильтр низких частот (закрытая дверь = глухой гул)
+            filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 300; 
+
+            noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = 0.05; // Тихий звук в начале
+
+            noiseSource.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            noiseSource.start();
+
+            audioInitialized = true;
+        }
+
+        function updateAudio(isOpen) {
+            if (!audioInitialized) return;
+            const targetGain = isOpen ? 0.3 : 0.05;
+            const targetFreq = isOpen ? 5000 : 300;
+            const time = audioCtx.currentTime;
+            
+            // Плавное изменение громкости и фильтра
+            noiseGain.gain.setTargetAtTime(targetGain, time, 0.5);
+            filter.frequency.setTargetAtTime(targetFreq, time, 0.5);
+        }
+
+        // --- WEBGL СЦЕНА (Three.js) ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.Fog(0x000000, 5, 25);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 12);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        // --- УЛУЧШЕННОЕ ОСВЕЩЕНИЕ ---
+        // Мягкий полусферический свет для заполнения теней (небо/земля)
+        const hemiLight = new THREE.HemisphereLight(0xddeeff, 0x222233, 0.4);
+        scene.add(hemiLight);
+
+        // Главный направленный свет (луна/фонарь), светит под углом, чтобы проявить тиснение (Bump Map)
+        const dirLight = new THREE.DirectionalLight(0xffeedd, 1.5);
+        dirLight.position.set(-8, 10, 12);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.bias = -0.001;
+        scene.add(dirLight);
+
+        // Дополнительный свет с другой стороны для легкого объема в тенях
+        const fillLight = new THREE.DirectionalLight(0x88aaff, 0.4);
+        fillLight.position.set(10, 5, 10);
+        scene.add(fillLight);
+
+        // Мерцающий свет из "пустоты" (за дверями)
+        const voidLight = new THREE.PointLight(0xccffff, 0, 20);
+        voidLight.position.set(0, 0, -5); // Отодвигаем дальше, чтобы двери не пересекали его
+        scene.add(voidLight);
+
+        // --- МАТЕРИАЛЫ С 3D-ТИСНЕНИЕМ (BUMP MAP) ---
+        const texWall = createWoodTextures(0);
+        const texLeft = createWoodTextures(1);
+        const texRight = createWoodTextures(2);
+
+        const matConfig = {
+            roughness: 0.7, // Чуть более гладкое, чтобы свет лучше играл на краях
+            metalness: 0.05, 
+            bumpScale: 0.08 // Интенсивность выдавливания
+        };
+
+        const woodMaterial = new THREE.MeshStandardMaterial({ 
+            map: texWall.map, 
+            bumpMap: texWall.bumpMap, 
+            ...matConfig, 
+            color: 0x999999 
+        });
+        const leftDoorMaterial = new THREE.MeshStandardMaterial({ 
+            map: texLeft.map, 
+            bumpMap: texLeft.bumpMap, 
+            ...matConfig, 
+            color: 0xaaaaaa 
+        });
+        const rightDoorMaterial = new THREE.MeshStandardMaterial({ 
+            map: texRight.map, 
+            bumpMap: texRight.bumpMap, 
+            ...matConfig, 
+            color: 0xaaaaaa 
+        });
+
+        // Каркас сарая (стены вокруг дверей)
+        const wallGroup = new THREE.Group();
+        const wallGeoV = new THREE.BoxGeometry(10, 10, 1);
+        const wallGeoH = new THREE.BoxGeometry(30, 5, 1);
+        
+        const leftWall = new THREE.Mesh(wallGeoV, woodMaterial);
+        leftWall.position.set(-10, 0, 0);
+        leftWall.receiveShadow = true;
+        const rightWall = new THREE.Mesh(wallGeoV, woodMaterial);
+        rightWall.position.set(10, 0, 0);
+        rightWall.receiveShadow = true;
+        const topWall = new THREE.Mesh(wallGeoH, woodMaterial);
+        topWall.position.set(0, 7.5, 0);
+        topWall.receiveShadow = true;
+        const bottomWall = new THREE.Mesh(wallGeoH, woodMaterial);
+        bottomWall.position.set(0, -7.5, 0);
+        bottomWall.receiveShadow = true;
+
+        wallGroup.add(leftWall, rightWall, topWall, bottomWall);
+        scene.add(wallGroup);
+
+        // Двери
+        const doorGeo = new THREE.BoxGeometry(5, 10, 0.4);
+        
+        // Левая дверь
+        const leftPivot = new THREE.Group();
+        leftPivot.position.set(-5, 0, 0); // Петля слева
+        scene.add(leftPivot);
+        const leftDoor = new THREE.Mesh(doorGeo, leftDoorMaterial);
+        leftDoor.position.set(2.5, 0, 0); // Смещаем от петли
+        leftDoor.castShadow = true;
+        leftDoor.receiveShadow = true;
+        leftPivot.add(leftDoor);
+
+        // Правая дверь
+        const rightPivot = new THREE.Group();
+        rightPivot.position.set(5, 0, 0); // Петля справа
+        scene.add(rightPivot);
+        const rightDoor = new THREE.Mesh(doorGeo, rightDoorMaterial);
+        rightDoor.position.set(-2.5, 0, 0); // Смещаем от петли
+        rightDoor.castShadow = true;
+        rightDoor.receiveShadow = true;
+        rightPivot.add(rightDoor);
+
+        // --- ДВИГАЮЩИЙСЯ ШУМ (Шейдер заднего фона) ---
+        const noiseUniforms = {
+            u_time: { value: 0.0 }
+        };
+
+        const noiseVertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const noiseFragmentShader = `
+            uniform float u_time;
+            varying vec2 vUv;
+
+            // Функция генерации псевдослучайного шума
+            float random(vec2 st) {
+                return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            }
+
+            void main() {
+                vec2 st = vUv * 150.0; // Масштаб шума
+                
+                // Основной телевизионный шум (анимированный по времени)
+                float noise = random(st + fract(u_time));
+                
+                // Двигающиеся волны/искажения пространства
+                float wave = sin(vUv.y * 15.0 - u_time * 8.0) * 0.5 + 0.5;
+                float glitch = step(0.98, sin(vUv.y * 80.0 + u_time * 20.0));
+
+                vec3 color = vec3(noise * 0.7 + wave * 0.2 + glitch * 0.4);
+
+                // Затемнение по краям (виньетка)
+                float dist = distance(vUv, vec2(0.5));
+                color *= smoothstep(0.8, 0.1, dist);
+
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        const noiseMaterial = new THREE.ShaderMaterial({
+            uniforms: noiseUniforms,
+            vertexShader: noiseVertexShader,
+            fragmentShader: noiseFragmentShader
+        });
+
+        const noisePlane = new THREE.Mesh(new THREE.PlaneGeometry(50, 30), noiseMaterial);
+        noisePlane.position.set(0, 0, -12); // Плоскость отодвинута глубоко назад
+        scene.add(noisePlane);
+
+        // --- ЛОГИКА ВЗАИМОДЕЙСТВИЯ ---
+        let isOpen = false;
+        let targetAngleLeft = 0;
+        let targetAngleRight = 0;
+        let targetVoidLight = 0;
+
+        // При клике на экран переключаем состояние дверей
+        window.addEventListener('pointerdown', () => {
+            // Убираем оверлей и инициализируем звук при первом клике
+            const overlay = document.getElementById('overlay');
+            if (overlay.style.opacity !== '0') {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 1000);
+                initAudio();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            }
+
+            isOpen = !isOpen;
+            
+            // Устанавливаем целевые углы поворота дверей (положительный для левой, отрицательный для правой = внутрь)
+            targetAngleLeft = isOpen ? Math.PI * 0.65 : 0;
+            targetAngleRight = isOpen ? -Math.PI * 0.65 : 0;
+            
+            // Яркость мерцающего света изнутри
+            targetVoidLight = isOpen ? 3 : 0;
+
+            updateAudio(isOpen);
+        });
+
+        // Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- АНИМАЦИОННЫЙ ЦИКЛ ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            // Обновляем время в шейдере шума
+            noiseUniforms.u_time.value = time;
+
+            // Плавное открытие/закрытие дверей (Лерп)
+            leftPivot.rotation.y += (targetAngleLeft - leftPivot.rotation.y) * 0.05;
+            rightPivot.rotation.y += (targetAngleRight - rightPivot.rotation.y) * 0.05;
+
+            // Плавное изменение интенсивности света + мерцание
+            const currentLight = voidLight.intensity;
+            const flicker = isOpen ? Math.random() * 0.5 : 0;
+            voidLight.intensity += (targetVoidLight - currentLight) * 0.05;
+            if (isOpen) voidLight.intensity = 3 + flicker;
+
+            // Легкое покачивание камеры для эффекта "дыхания/жизни"
+            camera.position.x = Math.sin(time * 0.5) * 0.1;
+            camera.position.y = Math.cos(time * 0.3) * 0.1;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

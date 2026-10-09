@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMPRUM Notebook Full Spread</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        umprumBlue: '#1133D4', /* Подобрал оттенок ближе к твоему PDF */
+                    },
+                    fontFamily: {
+                        /* Имитация фирменного гротеска (Helvetica/Arial как фолбэк) */
+                        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #d1d5db; /* Светло-серый фон стола */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* Контейнер всего разворота (две страницы А5) */
+        .spread-container {
+            display: flex;
+            /* Пропорции двух А5 рядом (296мм x 210мм) */
+            aspect-ratio: 296 / 210;
+            width: 100%;
+            max-width: 1000px;
+            max-height: 90vh;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 20px rgba(0,0,0,0.05);
+            /* Включаем контейнерные запросы для масштабирования содержимого */
+            container-type: inline-size;
+            container-name: spread;
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Имитация сгиба (корешка) посередине */
+        .spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(255,255,255,0.2) 50%, rgba(0,0,0,0.1) 100%);
+            transform: translateX(-50%);
+            z-index: 50;
+        }
+
+        .page {
+            flex: 1;
+            position: relative;
+            /* Делаем каждую страницу отдельным контейнером для типографики */
+            container-type: inline-size;
+        }
+
+        .back-cover {
+            background-color: #1133D4;
+            color: white;
+        }
+
+        .front-cover {
+            background-color: #f8f9fa;
+            /* Имитация акварельной иллюстрации входа в школу */
+            background-image: repeating-linear-gradient(
+                45deg,
+                #f0f0f0,
+                #f0f0f0 10px,
+                #e8e8e8 10px,
+                #e8e8e8 20px
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="spread-container">
+        <!-- Сгиб по центру -->
+        <div class="spine"></div>
+
+        <!-- ЛЕВАЯ СТРАНИЦА: ЗАДНЯЯ ОБЛОЖКА (Blue) -->
+        <div class="page back-cover p-[8cqw] flex flex-col justify-between">
+            
+            <!-- Верхний блок -->
+            <div class="flex justify-between items-start">
+                <!-- Огромный заголовок -->
+                <h1 class="font-bold leading-[0.9] tracking-tighter" style="font-size: 13.5cqw;">
+                    COME<br>
+                    STUDY IN<br>
+                    PRAGUE<br>
+                    WITH US!
+                </h1>
+                
+                <!-- Список факультетов (прижат правее, как в макете 18) -->
+                <div class="mt-[18cqw] ml-[4cqw]">
+                    <ul class="font-medium leading-[1.2] opacity-95 tracking-tight" style="font-size: 3.5cqw;">
+                        <li>Architecture</li>
+                        <li>Design</li>
+                        <li>Fine Arts</li>
+                        <li>Applied Arts</li>
+                        <li>Graphics</li>
+                        <li>Theoretical studies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Средний блок: Идущий медведь -->
+            <div class="relative flex-grow">
+                <!-- Медведь "идет" по линии футера -->
+                <div class="absolute bottom-0 left-[6cqw] z-10" title="Медведь с папкой">
+                    <div class="text-[20cqw] drop-shadow-xl transform -scale-x-100">🐻🎨</div>
+                </div>
+            </div>
+
+            <!-- Нижний блок (Футер) -->
+            <div class="relative">
+                <!-- Та самая гениальная разделительная линия -->
+                <div class="w-full h-[2px] bg-white mb-[4cqw]"></div>
+
+                <div class="flex items-end justify-between">
+                    <div class="flex items-end gap-[5cqw]">
+                        <!-- QR Код -->
+                        <div class="bg-white rounded-sm flex items-center justify-center" style="width: 18cqw; height: 18cqw;">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://www.umprum.cz/en/web/applicant" alt="QR Code" class="w-[90%] h-[90%] opacity-90">
+                        </div>
+
+                        <!-- Логотип UMPRUM -->
+                        <div class="font-bold leading-[0.8] tracking-tighter pb-[0.5cqw]" style="font-size: 7.5cqw;">
+                            UM<br>
+                            PR<br>
+                            UM
+                        </div>
+                    </div>
+
+                    <!-- Кредит иллюстратора (вертикально) -->
+                    <div class="pb-[1cqw]">
+                        <p class="font-normal opacity-80 rotate-180 tracking-wide" style="writing-mode: vertical-rl; font-size: 2.2cqw;">
+                            ill. @weichein.ting
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ СТРАНИЦА: ЛИЦЕВАЯ ОБЛОЖКА (Иллюстрация) -->
+        <div class="page front-cover relative">
+            <!-- Плейсхолдер для главной акварели -->
+            <div class="bg-white/80 px-[6cqw] py-[4cqw] rounded-lg shadow-sm text-center transform -rotate-2 border border-gray-200">
+                <p class="font-bold text-gray-800" style="font-size: 4cqw;">Здесь акварель №1</p>
+                <p class="text-gray-500 mt-2" style="font-size: 2.5cqw;">(Школьные двери и студенты)</p>
+            </div>
+            
+            <!-- Кредит автора на лицевой (опционально, если нужно) -->
+            <div class="absolute bottom-[4cqw] right-[4cqw]">
+                <p class="font-medium opacity-50 text-gray-800 tracking-wider" style="font-size: 2cqw;">
+                    UMPRUM
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

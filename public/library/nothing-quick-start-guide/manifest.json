@@ -1,0 +1,21 @@
+{
+  "id": "nothing-quick-start-guide",
+  "title": "Nothing Quick Start Guide",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/nothing-quick-start-guide/code.html",
+  "previewUrl": "library/nothing-quick-start-guide/code.html"
+}

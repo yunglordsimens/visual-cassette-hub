@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chữ Triện Việt - Animated Typographic Grid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red-main: #d01118;
+            --black-main: #111111;
+            --bg-color: #ffffff;
+            --grid-gap: 8px;
+            --transition-speed: 0.5s;
+        }
+
+        body {
+            font-family: 'Teko', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Шапка по референсу */
+        .header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--red-main);
+            border-radius: 8px;
+            padding: 4px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-placeholder .inner {
+            border: 2px solid var(--red-main);
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--red-main);
+            font-size: 1.5rem;
+            line-height: 0.8;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: -2px;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-title {
+            color: var(--red-main);
+            font-size: 3.5rem;
+            line-height: 0.9;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-subtitle {
+            color: #ff9999;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .header-phone {
+            color: var(--black-main);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: -5px;
+        }
+
+        /* Контейнер сетки с динамическими размерами строк и колонок */
+        .grid-container {
+            display: grid;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 1 / 1;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: var(--grid-gap);
+            transition: grid-template-columns var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1),
+                        grid-template-rows var(--transition-speed) cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Базовый стиль блока печати */
+        .seal-block {
+            border: 4px solid var(--red-main);
+            border-radius: 8px;
+            background: var(--bg-color);
+            padding: 4px;
+            box-sizing: border-box;
+            cursor: pointer;
+            opacity: 0;
+            transform: scale(1.5);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .seal-block:hover {
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Внутренняя рамка и типографика */
+        .seal-inner {
+            border: 2px solid var(--red-main);
+            border-radius: 4px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .syllable {
+            color: var(--red-main);
+            font-size: clamp(1.2rem, 3.5vw, 2.5rem);
+            font-weight: 500;
+            line-height: 0.75;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            letter-spacing: -3px;
+            text-align: center;
+            word-break: break-all;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            width: 50%;
+        }
+
+        /* Цветовые вариации на основе референса */
+        .seal-block.black-bg {
+            background: var(--black-main);
+            border-color: var(--black-main);
+        }
+        .seal-block.black-bg .seal-inner {
+            border-color: var(--red-main);
+        }
+        .seal-block.black-bg .syllable {
+            color: var(--red-main);
+        }
+        
+        .seal-block.black-bg-complex {
+            background: var(--black-main);
+            border-color: var(--black-main);
+        }
+        .seal-block.black-bg-complex .seal-inner {
+            border-color: var(--bg-color);
+        }
+        .seal-block.black-bg-complex .syllable {
+            color: var(--bg-color);
+            font-size: clamp(0.8rem, 2vw, 1.5rem); /* Мелкий текст для сложного блока */
+            letter-spacing: -1px;
+        }
+
+        .seal-block.black-outline {
+            border-color: var(--black-main);
+        }
+        .seal-block.black-outline .seal-inner {
+            border-color: var(--black-main);
+        }
+        .seal-block.black-outline .syllable {
+            color: var(--black-main);
+        }
+
+        /* Подвал */
+        .footer {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            opacity: 0;
+            animation: fadeIn 1s 2s ease forwards;
+        }
+
+        .footer-left {
+            color: var(--red-main);
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-right {
+            color: var(--red-main);
+            font-size: 2.5rem;
+            text-transform: lowercase;
+            font-weight: 600;
+        }
+
+        /* Анимация появления "Печати" */
+        @keyframes stampIn {
+            0% { opacity: 0; transform: scale(1.5); }
+            50% { opacity: 1; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 600px) {
+            .header-title { font-size: 2.5rem; }
+            .header-subtitle { font-size: 1.5rem; }
+            .footer-left, .footer-right { font-size: 1.5rem; }
+            .logo-placeholder { width: 60px; height: 60px; }
+            .syllable { letter-spacing: -2px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка страницы -->
+    <div class="header">
+        <div class="logo-placeholder">
+            <div class="inner">NGO DUY</div>
+        </div>
+        <div class="header-text">
+            <div class="header-title">Chữ Triện Việt</div>
+            <div class="header-subtitle">thiết kế - Ngô Duy</div>
+            <div class="header-phone">☎ 0903366318</div>
+        </div>
+    </div>
+
+    <!-- Сетка печатей -->
+    <div class="grid-container" id="sealGrid">
+        <!-- Блоки будут сгенерированы через JS -->
+    </div>
+
+    <!-- Подвал -->
+    <div class="footer">
+        <div class="footer-left">Ngô Duy Thiết Kế</div>
+        <div class="footer-right">thuphapvn.com</div>
+    </div>
+
+    <script>
+        // Данные для каждого блока (текст и стиль)
+        const sealData = [
+            { text: ["NGOC", "BICH"], type: "red" },
+            { text: ["MINH", "TUE"], type: "red" },
+            { text: ["HONG", "NHI"], type: "red" },
+            { text: ["PHAP", "NHAN"], type: "red" },
+            { text: ["ANH", "THU"], type: "red" },
+            
+            { text: ["UAN", "THE"], type: "red" },
+            { text: ["PHUC", "CHINH"], type: "red" },
+            { text: ["KIET", "TRAN"], type: "red" },
+            { text: ["UAN", "THE"], type: "red" },
+            { text: ["HIEN", "HANH"], type: "red" },
+            
+            { text: ["HUYEN", "GIAO"], type: "red" },
+            { text: ["CAM", "ANH"], type: "black-bg" },
+            { text: ["NGUYEN", "PHUOC"], type: "black-bg-complex" }, // Упрощено для плотности
+            { text: ["TRAN", "GUNG"], type: "red" },
+            { text: ["DIEN", "HUONG"], type: "black-outline" },
+            
+            { text: ["DA", "THAI"], type: "black-outline" },
+            { text: ["CAO", "TRI"], type: "red" },
+            { text: ["ANH", "THU"], type: "red" },
+            { text: ["NGO", "DUY"], type: "red" },
+            { text: ["DINH", "CHIEU"], type: "red" },
+            
+            { text: ["THANH", "TINH"], type: "red" },
+            { text: ["NGOC", "HAN"], type: "red" },
+            { text: ["CONG", "THONG"], type: "red" },
+            { text: ["HOAI", "DUC"], type: "black-outline" },
+            { text: ["MINH", "THUC"], type: "red" }
+        ];
+
+        const gridContainer = document.getElementById('sealGrid');
+
+        // Генерация блоков печатей
+        sealData.forEach((data, index) => {
+            const block = document.createElement('div');
+            block.className = `seal-block ${data.type}`;
+            
+            // Распределение задержки анимации для эффекта штамповки
+            block.style.animation = `stampIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards`;
+            block.style.animationDelay = `${index * 0.05}s`;
+
+            const inner = document.createElement('div');
+            inner.className = 'seal-inner';
+
+            // Создаем колонки со слогами
+            data.text.forEach(syllable => {
+                const sylDiv = document.createElement('div');
+                sylDiv.className = 'syllable';
+                sylDiv.textContent = syllable;
+                inner.appendChild(sylDiv);
+            });
+
+            block.appendChild(inner);
+            gridContainer.appendChild(block);
+
+            // Интерактивное изменение размера при наведении (или касании)
+            block.addEventListener('mouseenter', () => expandBlock(index));
+            block.addEventListener('touchstart', (e) => {
+                // e.preventDefault();
+                expandBlock(index);
+            });
+        });
+
+        // Функция расширения блока (изменение сетки)
+        function expandBlock(index) {
+            const row = Math.floor(index / 5);
+            const col = index % 5;
+
+            // Базовые пропорции (1fr для всех)
+            let cols = Array(5).fill('1fr');
+            let rows = Array(5).fill('1fr');
+
+            // Увеличиваем долю для наведенного элемента
+            cols[col] = '2fr'; 
+            rows[row] = '2fr';
+
+            gridContainer.style.gridTemplateColumns = cols.join(' ');
+            gridContainer.style.gridTemplateRows = rows.join(' ');
+        }
+
+        // Возврат сетки в исходное состояние
+        function resetGrid() {
+            gridContainer.style.gridTemplateColumns = 'repeat(5, 1fr)';
+            gridContainer.style.gridTemplateRows = 'repeat(5, 1fr)';
+        }
+
+        gridContainer.addEventListener('mouseleave', resetGrid);
+
+        // --- АВТО-АНИМАЦИЯ ---
+        // Чтобы страница выглядела живой, если пользователь ничего не делает
+        let isHovering = false;
+        
+        gridContainer.addEventListener('mouseenter', () => isHovering = true);
+        gridContainer.addEventListener('mouseleave', () => {
+            isHovering = false;
+            resetGrid();
+        });
+
+        setInterval(() => {
+            if (!isHovering) {
+                // Случайным образом выбираем блок для расширения
+                const randomIndex = Math.floor(Math.random() * 25);
+                
+                const row = Math.floor(randomIndex / 5);
+                const col = randomIndex % 5;
+
+                let cols = Array(5).fill('1fr');
+                let rows = Array(5).fill('1fr');
+
+                // Легкое, "дышащее" расширение в случайных местах
+                cols[col] = '1.4fr';
+                rows[row] = '1.4fr';
+
+                gridContainer.style.gridTemplateColumns = cols.join(' ');
+                gridContainer.style.gridTemplateRows = rows.join(' ');
+                
+                // Возвращаем обратно через мгновение
+                setTimeout(() => {
+                    if (!isHovering) resetGrid();
+                }, 1000);
+            }
+        }, 2000);
+
+    </script>
+</body>
+</html>

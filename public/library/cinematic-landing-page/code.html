@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Void | Cinematic Experience</title>
+    
+    <!-- Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL RESET & VARS --- */
+        :root {
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --bg-color: #050505;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* We will handle scrolling inside specific containers */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography Utilities */
+        h1, h2, h3, .logo {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin: 0;
+        }
+
+        p {
+            line-height: 1.6;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- 3D CANVAS BACKGROUND --- */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: auto; /* Required for Raycasting the doors */
+            cursor: pointer;
+        }
+
+        /* Cinematic Overlays applied to the Canvas */
+        #vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            box-shadow: inset 0 0 20vw rgba(0,0,0,0.95);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #film-grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            animation: grain-animation 0.5s steps(2) infinite;
+        }
+
+        @keyframes grain-animation {
+            0% { transform: translate(0, 0); }
+            10% { transform: translate(-1px, -1px); }
+            30% { transform: translate(1px, -1px); }
+            50% { transform: translate(-1px, 1px); }
+            70% { transform: translate(1px, 1px); }
+            90% { transform: translate(-1px, -1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        /* --- SCROLLABLE SECTIONS --- */
+        .scroll-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 10;
+            scroll-behavior: smooth;
+        }
+
+        .scroll-view.hidden {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- OUTSIDE UI (STATE 1) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 20;
+            pointer-events: none; /* Let clicks pass through to canvas unless on links */
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            letter-spacing: 0.3em;
+            pointer-events: auto;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 3rem;
+            margin: 0;
+            padding: 0;
+            pointer-events: auto;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--text-muted);
+        }
+
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            pointer-events: none; /* Crucial: lets the user click the 3D doors behind the text */
+        }
+
+        .hero-section h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            letter-spacing: 0.3em;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.8);
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            animation: pulse-text 3s infinite;
+        }
+
+        @keyframes pulse-text {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .content-section {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, transparent, #050505 20%, #050505);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 2rem;
+            text-align: center;
+            pointer-events: auto; /* Normal interaction resumes here */
+        }
+
+        .content-section p {
+            max-width: 600px;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.1em;
+            pointer-events: auto;
+        }
+
+        /* --- THE FLASH TRANSITION --- */
+        #white-flash {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #ffffff;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        /* --- INSIDE UI (STATE 2) --- */
+        #inside-video-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.4; /* dim video slightly for readability */
+        }
+
+        #ui-inside .hero-section {
+            pointer-events: auto; /* Text inside is selectable now */
+        }
+
+        #ui-inside .content-section {
+            background: linear-gradient(to bottom, transparent, rgba(5,5,5,0.8) 20%, #050505);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1.5rem;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            nav ul {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+
+    <!-- Three.js & Post-Processing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+</head>
+<body>
+
+    <!-- White Flash Element -->
+    <div id="white-flash"></div>
+
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container">
+        <div id="vignette"></div>
+        <div id="film-grain"></div>
+    </div>
+
+    <!-- STATE 1: OUTSIDE (Scrollable) -->
+    <div id="ui-outside" class="scroll-view">
+        <header>
+            <div class="logo">AGENCY</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Works</a></li>
+                    <li><a href="#">Studio</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero-section">
+            <h1>The Void</h1>
+            <p>Click the doors to dive in</p>
+        </section>
+
+        <section class="content-section">
+            <h2>Beyond The Surface</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <footer>
+                &copy; 2026 Creative Agency. All Rights Reserved.
+            </footer>
+        </section>
+    </div>
+
+    <!-- STATE 2: INSIDE (Scrollable, hidden initially) -->
+    <div id="ui-inside" class="scroll-view hidden">
+        <!-- Abstract Video Background -->
+        <video id="inside-video-bg" autoplay loop muted playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-connection-background-4071-large.mp4" type="video/mp4">
+        </video>
+
+        <header>
+            <div class="logo">THE CORE</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Data</a></li>
+                    <li><a href="#">System</a></li>
+                    <li><a href="#">Exit</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero-section">
+            <h1>We Are In</h1>
+            <p>Scroll to explore the architecture</p>
+        </section>
+
+        <section class="content-section">
+            <h2>System Overview</h2>
+            <p>This is the inner layer. The 3D context has been suspended to optimize performance, shifting the visual language to a cinematic video background overlaid with your typography and information.</p>
+            <p>Here you can place case studies, intricate details, or heavy visual media without dropping frame rates.</p>
+            <footer>
+                &copy; 2026 The Core Network.
+            </footer>
+        </section>
+    </div>
+
+    <script>
+        // --- PROCEDURAL WOOD TEXTURES ---
+        function createWoodTextures(type) {
+            const canvas = document.createElement('canvas');
+            const bumpCanvas = document.createElement('canvas');
+            canvas.width = bumpCanvas.width = 1024;
+            canvas.height = bumpCanvas.height = 2048;
+            const ctx = canvas.getContext('2d');
+            const bumpCtx = bumpCanvas.getContext('2d');
+
+            ctx.fillStyle = '#1a1816'; 
+            ctx.fillRect(0, 0, 1024, 2048);
+            bumpCtx.fillStyle = '#808080';
+            bumpCtx.fillRect(0, 0, 1024, 2048);
+
+            for(let i = 0; i < 6000; i++) {
+                let isDark = Math.random() > 0.5;
+                ctx.fillStyle = isDark ? 'rgba(10,8,6,0.2)' : 'rgba(60,55,50,0.1)';
+                bumpCtx.fillStyle = isDark ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.06)';
+                let w = Math.random() * 3 + 1;
+                let h = Math.random() * 250 + 50;
+                let x = Math.random() * 1024;
+                let y = Math.random() * 2048;
+                ctx.fillRect(x, y, w, h);
+                bumpCtx.fillRect(x, y, w, h);
+            }
+
+            ctx.lineWidth = 4;
+            bumpCtx.lineWidth = 8;
+            
+            for(let i = 0; i <= 1024; i += 128) {
+                ctx.strokeStyle = '#0a0806';
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 2048); ctx.stroke();
+                
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+                ctx.beginPath(); ctx.moveTo(i + 2, 0); ctx.lineTo(i + 2, 2048); ctx.stroke();
+                ctx.lineWidth = 4;
+
+                bumpCtx.strokeStyle = '#000000';
+                bumpCtx.beginPath(); bumpCtx.moveTo(i, 0); bumpCtx.lineTo(i, 2048); bumpCtx.stroke();
+            }
+
+            if (type > 0) {
+                const drawPlank = (x, y, w, h) => {
+                    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                    ctx.fillRect(x + 15, y + 15, w, h);
+                    
+                    ctx.fillStyle = '#1e1c1a';
+                    ctx.fillRect(x, y, w, h);
+                    ctx.lineWidth = 8;
+                    ctx.strokeStyle = '#050403';
+                    ctx.strokeRect(x, y, w, h);
+
+                    bumpCtx.fillStyle = '#d0d0d0';
+                    bumpCtx.fillRect(x, y, w, h);
+                    bumpCtx.lineWidth = 8;
+                    bumpCtx.strokeStyle = '#303030'; 
+                    bumpCtx.strokeRect(x, y, w, h);
+                };
+
+                drawPlank(0, 0, 120, 2048);
+                drawPlank(1024 - 120, 0, 120, 2048);
+                drawPlank(0, 0, 1024, 180);
+                drawPlank(0, 900, 1024, 180);
+                drawPlank(0, 2048 - 180, 1024, 180);
+
+                const drawX = (isBump) => {
+                    const c = isBump ? bumpCtx : ctx;
+                    c.save();
+                    c.lineWidth = 140;
+                    c.lineCap = 'square';
+                    
+                    if (!isBump) {
+                        c.beginPath();
+                        c.moveTo(130, 1090); c.lineTo(914, 1878);
+                        c.moveTo(914, 1090); c.lineTo(130, 1878);
+                        c.strokeStyle = 'rgba(0,0,0,0.7)';
+                        c.stroke();
+                    }
+
+                    c.beginPath();
+                    c.moveTo(120, 1080); c.lineTo(904, 1868);
+                    c.moveTo(904, 1080); c.lineTo(120, 1868);
+                    c.strokeStyle = isBump ? '#d0d0d0' : '#1e1c1a';
+                    c.stroke();
+
+                    c.lineWidth = 10;
+                    c.strokeStyle = isBump ? '#303030' : '#050403';
+                    c.stroke();
+                    c.restore();
+                };
+                
+                drawX(false);
+                drawX(true); 
+
+                ctx.fillStyle = '#050505';
+                bumpCtx.fillStyle = '#ffffff'; 
+                
+                const drawHinges = (xPos) => {
+                    [300, 950, 1600].forEach(y => {
+                        ctx.fillRect(xPos, y, 40, 150);
+                        bumpCtx.fillRect(xPos, y, 40, 150);
+                    });
+                };
+
+                if (type === 1) drawHinges(0);
+                if (type === 2) drawHinges(1024 - 40);
+            }
+
+            const map = new THREE.CanvasTexture(canvas);
+            const bumpMap = new THREE.CanvasTexture(bumpCanvas);
+            map.wrapS = bumpMap.wrapS = THREE.RepeatWrapping;
+            map.wrapT = bumpMap.wrapT = THREE.RepeatWrapping;
+            
+            return { map, bumpMap };
+        }
+
+        // --- PROCEDURAL AUDIO ---
+        let audioCtx, noiseGain, filter, subOsc, subGain;
+        let audioInitialized = false;
+
+        function initAudio() {
+            if (audioInitialized) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            const bufferSize = audioCtx.sampleRate * 2;
+            const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = Math.random() * 2 - 1;
+            }
+
+            const noiseSource = audioCtx.createBufferSource();
+            noiseSource.buffer = buffer;
+            noiseSource.loop = true;
+
+            filter = audioCtx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = 150;
+
+            noiseGain = audioCtx.createGain();
+            noiseGain.gain.value = 0.02;
+
+            subOsc = audioCtx.createOscillator();
+            subOsc.type = 'sine';
+            subOsc.frequency.value = 45; 
+            subGain = audioCtx.createGain();
+            subGain.gain.value = 0;
+
+            noiseSource.connect(filter).connect(noiseGain).connect(audioCtx.destination);
+            subOsc.connect(subGain).connect(audioCtx.destination);
+            
+            noiseSource.start();
+            subOsc.start();
+
+            audioInitialized = true;
+        }
+
+        function playDiveAudio() {
+            if (!audioInitialized) initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const time = audioCtx.currentTime;
+            noiseGain.gain.setTargetAtTime(0.4, time, 1.5);
+            filter.frequency.setTargetAtTime(8000, time, 1.0);
+            subGain.gain.setTargetAtTime(0.8, time, 2.0); 
+
+            // Fade out audio as we enter the white flash
+            setTimeout(() => {
+                noiseGain.gain.setTargetAtTime(0, audioCtx.currentTime, 1.0);
+                subGain.gain.setTargetAtTime(0, audioCtx.currentTime, 1.0);
+            }, 2000);
+        }
+
+        // --- WEBGL SCENE SETUP ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x020203, 0.035);
+
+        const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 14);
+        
+        let targetCameraZ = 14;
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance", alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        container.appendChild(renderer.domElement);
+
+        // Post-Processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.1;
+        bloomPass.strength = 1.2; 
+        bloomPass.radius = 0.8;
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // Lighting
+        const hemiLight = new THREE.HemisphereLight(0x1a2a40, 0x050510, 0.15);
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0x88bbff, 1.5);
+        dirLight.position.set(-10, 15, 15);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        const voidLight = new THREE.PointLight(0x00ffff, 0, 30);
+        voidLight.position.set(0, 0, -3); 
+        scene.add(voidLight);
+
+        // Materials & Objects
+        const texWall = createWoodTextures(0);
+        const texLeft = createWoodTextures(1);
+        const texRight = createWoodTextures(2);
+
+        const matConfig = { roughness: 0.65, metalness: 0.15, bumpScale: 0.15 };
+
+        const woodMaterial = new THREE.MeshStandardMaterial({ map: texWall.map, bumpMap: texWall.bumpMap, ...matConfig, color: 0x888888 });
+        const leftDoorMaterial = new THREE.MeshStandardMaterial({ map: texLeft.map, bumpMap: texLeft.bumpMap, ...matConfig, color: 0xaaaaaa });
+        const rightDoorMaterial = new THREE.MeshStandardMaterial({ map: texRight.map, bumpMap: texRight.bumpMap, ...matConfig, color: 0xaaaaaa });
+
+        // Architecture
+        const wallGroup = new THREE.Group();
+        const wallGeoV = new THREE.BoxGeometry(10, 10, 1);
+        const wallGeoH = new THREE.BoxGeometry(30, 5, 1);
+        
+        const leftWall = new THREE.Mesh(wallGeoV, woodMaterial); leftWall.position.set(-10, 0, 0); leftWall.receiveShadow = true;
+        const rightWall = new THREE.Mesh(wallGeoV, woodMaterial); rightWall.position.set(10, 0, 0); rightWall.receiveShadow = true;
+        const topWall = new THREE.Mesh(wallGeoH, woodMaterial); topWall.position.set(0, 7.5, 0); topWall.receiveShadow = true;
+        const bottomWall = new THREE.Mesh(wallGeoH, woodMaterial); bottomWall.position.set(0, -7.5, 0); bottomWall.receiveShadow = true;
+
+        wallGroup.add(leftWall, rightWall, topWall, bottomWall);
+        scene.add(wallGroup);
+
+        // Doors
+        const doorGeo = new THREE.BoxGeometry(5, 10, 0.4);
+        
+        const leftPivot = new THREE.Group(); leftPivot.position.set(-5, 0, 0); scene.add(leftPivot);
+        const leftDoor = new THREE.Mesh(doorGeo, leftDoorMaterial); leftDoor.position.set(2.5, 0, 0); 
+        leftDoor.castShadow = true; leftDoor.receiveShadow = true; leftPivot.add(leftDoor);
+
+        const rightPivot = new THREE.Group(); rightPivot.position.set(5, 0, 0); scene.add(rightPivot);
+        const rightDoor = new THREE.Mesh(doorGeo, rightDoorMaterial); rightDoor.position.set(-2.5, 0, 0);
+        rightDoor.castShadow = true; rightDoor.receiveShadow = true; rightPivot.add(rightDoor);
+
+        // Void Background Shader
+        const noiseUniforms = { u_time: { value: 0.0 }, u_intensity: { value: 0.0 } };
+        const noiseMaterial = new THREE.ShaderMaterial({
+            uniforms: noiseUniforms,
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float u_time;
+                uniform float u_intensity;
+                varying vec2 vUv;
+                float random(vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123); }
+                void main() {
+                    vec2 st = vUv * 200.0;
+                    float noise = random(st + fract(u_time));
+                    float wave = sin(vUv.y * 10.0 - u_time * 5.0) * 0.5 + 0.5;
+                    float glitch = step(0.95, sin(vUv.y * 100.0 + u_time * 30.0));
+                    vec3 baseColor = vec3(0.02, 0.3, 0.5);
+                    vec3 glowColor = vec3(0.5, 1.0, 1.0);
+                    vec3 color = baseColor * noise + (glowColor * wave * 0.5) + vec3(glitch * 0.8);
+                    float dist = distance(vUv, vec2(0.5));
+                    color *= smoothstep(0.9, 0.2, dist);
+                    gl_FragColor = vec4(color * u_intensity, 1.0);
+                }
+            `
+        });
+        const noisePlane = new THREE.Mesh(new THREE.PlaneGeometry(60, 40), noiseMaterial);
+        noisePlane.position.set(0, 0, -15);
+        scene.add(noisePlane);
+
+        // --- INTERACTION LOGIC (RAYCASTING) ---
+        let isDiving = false;
+        let targetAngleLeft = 0;
+        let targetAngleRight = 0;
+        let targetVoidLight = 0;
+        
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        window.addEventListener('click', (event) => {
+            if (isDiving) return;
+
+            // Normalize mouse coordinates for Raycasting
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            
+            // Check if user clicked on the doors
+            const intersects = raycaster.intersectObjects([leftDoor, rightDoor]);
+            
+            if (intersects.length > 0) {
+                triggerDive();
+            }
+        });
+
+        // Ensure proper cursor when hovering over doors
+        window.addEventListener('mousemove', (event) => {
+            if (isDiving) return;
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects([leftDoor, rightDoor]);
+            if (intersects.length > 0) {
+                container.style.cursor = 'pointer';
+            } else {
+                container.style.cursor = 'default';
+            }
+        });
+
+        // --- THE DIVE SEQUENCE ---
+        function triggerDive() {
+            isDiving = true;
+            container.style.cursor = 'default';
+            
+            // 1. Open doors and swell sound/lights
+            targetAngleLeft = Math.PI * 0.65;
+            targetAngleRight = -Math.PI * 0.65;
+            targetVoidLight = 10;
+            bloomPass.strength = 2.5; // Maximize bloom
+            targetCameraZ = -6; // Move camera past the doors into the void
+            
+            playDiveAudio();
+
+            // 2. Trigger White Flash CSS after a short delay (as camera gets close)
+            setTimeout(() => {
+                const flash = document.getElementById('white-flash');
+                flash.style.opacity = '1';
+
+                // 3. Swap UI state while screen is completely white
+                setTimeout(() => {
+                    // Hide Outside UI and 3D Canvas
+                    document.getElementById('ui-outside').classList.add('hidden');
+                    container.style.display = 'none'; // stops rendering via display none
+                    isInside = true; // flag to stop animation loop
+
+                    // Show Inside UI
+                    const uiInside = document.getElementById('ui-inside');
+                    uiInside.classList.remove('hidden');
+                    uiInside.scrollTo(0, 0); // ensure scrolled to top
+                    
+                    // 4. Fade out White Flash
+                    flash.style.opacity = '0';
+                }, 1200); // Wait for flash transition to reach full opacity
+
+            }, 1800); // Time it takes to travel near the door
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+        let isInside = false; // To completely halt 3D calculations once transitioned
+
+        function animate() {
+            if (isInside) return; // Stop rendering 3D after diving to save battery/performance
+            
+            requestAnimationFrame(animate);
+            const time = clock.getElapsedTime();
+
+            noiseUniforms.u_time.value = time;
+            
+            const currentIntensity = noiseUniforms.u_intensity.value;
+            noiseUniforms.u_intensity.value += ( (isDiving ? 1.5 : 0.0) - currentIntensity ) * 0.02;
+
+            // Heavy door rotation
+            leftPivot.rotation.y += (targetAngleLeft - leftPivot.rotation.y) * 0.02;
+            rightPivot.rotation.y += (targetAngleRight - rightPivot.rotation.y) * 0.02;
+
+            // Camera Movement
+            if (isDiving) {
+                // Moving forward smoothly
+                camera.position.z += (targetCameraZ - camera.position.z) * 0.02;
+                camera.position.x += (0 - camera.position.x) * 0.05; // Center X
+                camera.position.y += (0 - camera.position.y) * 0.05; // Center Y
+                camera.lookAt(0, 0, -15);
+            } else {
+                // Handheld camera effect
+                camera.position.x = Math.sin(time * 0.4) * 0.15 + Math.sin(time * 1.5) * 0.03;
+                camera.position.y = Math.cos(time * 0.3) * 0.15 + Math.cos(time * 1.2) * 0.03;
+                camera.position.z = 14 + Math.sin(time * 0.2) * 0.2;
+                camera.lookAt(0, 0, 0);
+            }
+
+            // Flicker logic
+            const currentLight = voidLight.intensity;
+            const flicker = isDiving ? Math.random() * 2.5 : 0;
+            voidLight.intensity += (targetVoidLight - currentLight) * 0.03;
+            if (isDiving && voidLight.intensity > 1) voidLight.intensity = targetVoidLight + flicker;
+
+            composer.render();
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "vizualizaciya-arhiva",
+  "title": "Визуализация Архива",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/vizualizaciya-arhiva/code.html",
+  "previewUrl": "library/vizualizaciya-arhiva/code.html"
+}

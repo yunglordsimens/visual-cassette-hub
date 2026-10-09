@@ -1,0 +1,23 @@
+{
+  "id": "interaktivnaya-tipografika",
+  "title": "Интерактивная Типографика",
+  "tags": [
+    "gemini",
+    "react",
+    "p5js",
+    "canvas",
+    "tailwind"
+  ],
+  "groups": [
+    "Типографика",
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · p5js, canvas",
+  "created": "2026-05-28",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/interaktivnaya-tipografika/code.tsx",
+  "previewUrl": "library/interaktivnaya-tipografika/preview.html"
+}

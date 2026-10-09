@@ -1,0 +1,20 @@
+{
+  "id": "kineticheskie-chasticy",
+  "title": "Кинетические Частицы",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kineticheskie-chasticy/code.html",
+  "previewUrl": "library/kineticheskie-chasticy/code.html"
+}

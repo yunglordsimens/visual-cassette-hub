@@ -1,0 +1,21 @@
+{
+  "id": "pank-pleer",
+  "title": "Панк Плеер",
+  "tags": [
+    "gemini",
+    "html",
+    "svg",
+    "audio"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/pank-pleer/code.html",
+  "previewUrl": "library/pank-pleer/code.html"
+}

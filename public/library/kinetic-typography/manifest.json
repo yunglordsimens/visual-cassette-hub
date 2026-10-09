@@ -1,0 +1,21 @@
+{
+  "id": "kinetic-typography",
+  "title": "Kinetic Typography",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "Типографика",
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-06-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kinetic-typography/code.html",
+  "previewUrl": "library/kinetic-typography/code.html"
+}

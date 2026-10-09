@@ -1,0 +1,19 @@
+{
+  "id": "maket-telefona-s-video",
+  "title": "Макет Телефона с Видео",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maket-telefona-s-video/code.html",
+  "previewUrl": "library/maket-telefona-s-video/code.html"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "anime-js-visual-builder",
+  "title": "Anime.js Visual Builder",
+  "tags": [
+    "gemini",
+    "html",
+    "animejs",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Анимация",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · animejs",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/anime-js-visual-builder/code.html",
+  "previewUrl": "library/anime-js-visual-builder/code.html"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "odnostranichnik-forgo",
+  "title": "Одностраничник FORGO",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/odnostranichnik-forgo/code.html",
+  "previewUrl": "library/odnostranichnik-forgo/code.html"
+}

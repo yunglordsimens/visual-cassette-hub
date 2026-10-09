@@ -1,0 +1,21 @@
+{
+  "id": "parallaxsequence",
+  "title": "ParallaxSequence",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/parallaxsequence/code.tsx",
+  "previewUrl": "library/parallaxsequence/preview.html"
+}

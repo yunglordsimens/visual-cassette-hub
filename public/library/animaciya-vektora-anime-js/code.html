@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чистая анимация Anime.js</title>
+  
+  <!-- Подключаем Tailwind для красивого центрирования и фона (необязательно для самой анимации) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 1. Обязательно подключаем саму библиотеку Anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+
+  <style>
+    body {
+      /* Темный фон для контраста неоновых линий */
+      background-color: #0f172a; 
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Настройка свечения для SVG */
+    svg {
+      overflow: visible;
+      filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.4));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 2. Векторная графика (SVG), которую мы будем анимировать -->
+  <div class="w-80 h-80 relative">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      
+      <!-- Фоновая статичная сетка (круги) -->
+      <circle cx="100" cy="100" r="90" fill="none" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4" />
+      <circle cx="100" cy="100" r="50" fill="none" stroke="#1e293b" stroke-width="1" />
+
+      <!-- Анимируемые контуры (Шестиугольник и внутренние линии) -->
+      <g class="animated-lines">
+        <!-- Внешний шестиугольник -->
+        <path class="draw-line" d="M100 10 L178 55 L178 145 L100 190 L22 145 L22 55 Z" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        <!-- Внутренние лучи к центру -->
+        <path class="draw-line" d="M100 10 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+        <path class="draw-line" d="M178 55 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+        <path class="draw-line" d="M178 145 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+        <path class="draw-line" d="M100 190 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+        <path class="draw-line" d="M22 145 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+        <path class="draw-line" d="M22 55 L100 100" fill="none" stroke="#818cf8" stroke-width="1.5" />
+      </g>
+
+      <!-- Анимируемые узлы (точки на углах) -->
+      <g class="animated-nodes">
+        <!-- Центр -->
+        <circle class="node-dot center-dot" cx="100" cy="100" r="8" fill="#38bdf8" />
+        <!-- Периферия -->
+        <circle class="node-dot" cx="100" cy="10" r="4" fill="#a5b4fc" />
+        <circle class="node-dot" cx="178" cy="55" r="4" fill="#a5b4fc" />
+        <circle class="node-dot" cx="178" cy="145" r="4" fill="#a5b4fc" />
+        <circle class="node-dot" cx="100" cy="190" r="4" fill="#a5b4fc" />
+        <circle class="node-dot" cx="22" cy="145" r="4" fill="#a5b4fc" />
+        <circle class="node-dot" cx="22" cy="55" r="4" fill="#a5b4fc" />
+      </g>
+
+    </svg>
+  </div>
+
+  <!-- 3. Скрипт анимации -->
+  <script>
+    // Убеждаемся, что DOM загружен
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Создаем Timeline (Временную шкалу), чтобы анимации шли друг за другом
+      const tl = anime.timeline({
+        loop: true, // Зациклить всю сцену
+        direction: 'alternate', // Проигрывать туда-обратно
+      });
+
+      // Шаг 1: Отрисовка векторных линий (эффект рисования карандашом)
+      tl.add({
+        targets: '.draw-line',
+        // anime.setDashoffset автоматически вычисляет длину SVG-пути
+        strokeDashoffset: [anime.setDashoffset, 0], 
+        easing: 'easeInOutSine',
+        duration: 2000,
+        // Каскадная задержка: каждая следующая линия начинает рисоваться на 200мс позже
+        delay: function(el, i) { return i * 200 } 
+      })
+      
+      // Шаг 2: Появление маленьких точек на углах
+      // Используем отрицательный offset ('-=1000'), чтобы точки начали появляться 
+      // еще ДО того, как линии полностью дорисуются.
+      .add({
+        targets: '.node-dot:not(.center-dot)',
+        scale: [0, 1], // Увеличение от 0 до 100%
+        opacity: [0, 1],
+        easing: 'easeOutElastic(1, .6)', // Пружинистый эффект
+        duration: 1000,
+        delay: anime.stagger(150) // Появление по очереди с шагом 150мс
+      }, '-=1000')
+
+      // Шаг 3: Пульсация центральной точки (ядра)
+      .add({
+        targets: '.center-dot',
+        scale: [0, 1.5, 1], // От 0 -> до 150% -> возврат к 100%
+        fill: ['#ffffff', '#38bdf8'], // Смена цвета (вспышка)
+        easing: 'easeOutExpo',
+        duration: 1200,
+      }, '-=800');
+
+      // (Опционально) Бесконечное медленное вращение всего вектора
+      // Мы не добавляем это в timeline, так как вращение идет само по себе на фоне
+      anime({
+        targets: 'svg',
+        rotate: '360deg',
+        duration: 30000, // Очень медленно (30 секунд)
+        easing: 'linear',
+        loop: true
+      });
+
+    });
+  </script>
+
+</body>
+</html>

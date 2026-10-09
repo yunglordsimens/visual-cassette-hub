@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lee's Tea — Website Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vina+Sans&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Темная тема из макета сайта */
+    --bg: #121212;
+    --surface: #1e1e1e;
+    --text: #ffffff;
+    --text-muted: #9e9e9e;
+    
+    --accent-main: #00e676; /* Неоновый зеленый */
+    --accent-sec: #c29b6e;  /* Дерево */
+    --accent-warn: #ff5252; /* Красный для проблем (Wolt) */
+    
+    --border-main: 1px solid rgba(255,255,255,0.1);
+    
+    --font-display: 'Vina Sans', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+    --radius-pill: 50px;
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .display-text {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+
+  /* ═══ АНИМАЦИИ ПОЯВЛЕНИЯ ═══ */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ═══ БЕЙДЖИ И АКЦЕНТЫ ═══ */
+  .badge {
+    display: inline-block;
+    border: 1px solid var(--accent-sec);
+    color: var(--accent-sec);
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: var(--radius-pill);
+    background: rgba(194, 155, 110, 0.1);
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge.green {
+    border-color: var(--accent-main);
+    color: var(--accent-main);
+    background: rgba(0, 230, 118, 0.1);
+  }
+
+  /* ═══ COVER ═══ */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem;
+    position: relative;
+    border-bottom: var(--border-main);
+  }
+  
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 50%, rgba(0,230,118,0.08), transparent 60%);
+    pointer-events: none;
+  }
+  
+  .cover-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+  
+  .cover h1 {
+    font-size: clamp(4rem, 10vw, 7.5rem);
+    margin-bottom: 1.5rem;
+  }
+  
+  .cover h1 span { color: var(--accent-main); }
+  
+  .cover p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin-bottom: 2rem;
+  }
+  
+  .cover-footer {
+    position: absolute;
+    bottom: 3rem;
+    left: 4rem;
+    right: 4rem;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+  
+  /* ═══ SECTIONS ═══ */
+  section {
+    padding: 6rem 4rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .section-num {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--accent-sec);
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+  
+  section h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1.5rem;
+  }
+  
+  section p {
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+    font-size: 1.1rem;
+  }
+  
+  section p strong { color: var(--text); }
+  
+  /* ═══ COMPARISON ═══ */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 3rem 0;
+  }
+  
+  .comparison-card {
+    background: var(--surface);
+    border: var(--border-main);
+    padding: 2.5rem;
+    border-radius: var(--radius-lg);
+  }
+  
+  .comparison-card.before {
+    border-top: 3px solid var(--accent-warn);
+  }
+  
+  .comparison-card.after {
+    border-top: 3px solid var(--accent-main);
+    background: rgba(0,230,118,0.03);
+  }
+  
+  .comparison-card h4 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .comparison-card ul {
+    list-style: none;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+  
+  .comparison-card li {
+    padding: 0.6rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .comparison-card.before li::before {
+    content: '✕';
+    color: var(--accent-warn);
+    font-weight: bold;
+  }
+  
+  .comparison-card.after li::before {
+    content: '✓';
+    color: var(--accent-main);
+    font-weight: bold;
+  }
+  
+  /* ═══ HIGHLIGHT BOX ═══ */
+  .highlight {
+    background: var(--surface);
+    border: 1px solid var(--accent-sec);
+    padding: 3rem;
+    border-radius: var(--radius-lg);
+    margin: 3rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; width: 30%;
+    background: linear-gradient(90deg, transparent, rgba(194, 155, 110, 0.1));
+  }
+  
+  .highlight h3 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-sec);
+  }
+  
+  .highlight p {
+    color: var(--text);
+    margin: 0;
+  }
+  
+  /* ═══ WHAT YOU GET ═══ */
+  .deliverables {
+    margin: 3rem 0;
+  }
+  
+  .deliverable {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: var(--border-main);
+  }
+  
+  .deliverable:last-child { border-bottom: none; }
+  
+  .deliverable-check {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 230, 118, 0.1);
+    color: var(--accent-main);
+    border: 1px solid var(--accent-main);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  
+  .deliverable h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  
+  .deliverable p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  
+  /* ═══ LOGO SUGGESTION BOX ═══ */
+  .logo-suggestion {
+    background: rgba(194, 155, 110, 0.05);
+    border-left: 4px solid var(--accent-sec);
+    padding: 2.5rem;
+    margin: 3rem 0;
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+
+  .logo-suggestion h4 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    color: var(--accent-sec);
+    margin-bottom: 1rem;
+  }
+  
+  /* ═══ COSTS ═══ */
+  .costs {
+    background: var(--surface);
+    border: var(--border-main);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin: 3rem 0;
+  }
+  
+  .costs-header {
+    background: rgba(255,255,255,0.03);
+    padding: 1.5rem 2.5rem;
+    border-bottom: var(--border-main);
+  }
+  
+  .costs-header h4 {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+  }
+  
+  .costs-body {
+    padding: 1.5rem 2.5rem;
+  }
+  
+  .cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
+  }
+  
+  .cost-item:last-child { border-bottom: none; }
+  
+  .cost-item span:first-child {
+    font-size: 1rem;
+    color: var(--text-muted);
+  }
+  
+  .cost-item span:last-child {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  
+  .cost-item.free span:last-child {
+    color: var(--accent-main);
+  }
+  
+  .costs-total {
+    background: rgba(0, 230, 118, 0.05);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: var(--border-main);
+  }
+
+  .costs-total span:first-child { font-weight: 700; }
+  
+  .costs-total span:last-child {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: var(--accent-main);
+    font-weight: 600;
+  }
+  
+  /* ═══ TIMELINE ═══ */
+  .timeline {
+    margin: 3rem 0;
+  }
+  
+  .timeline-item {
+    display: flex;
+    gap: 2rem;
+    padding-bottom: 2.5rem;
+    position: relative;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 40px;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .timeline-item:last-child::before { display: none; }
+  
+  .timeline-num {
+    width: 40px;
+    height: 40px;
+    background: var(--surface);
+    color: var(--accent-sec);
+    border: 2px solid var(--accent-sec);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  
+  .timeline-content h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+  
+  .timeline-content p {
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  /* ═══ CTA SECTION ═══ */
+  .cta-section {
+    background: var(--surface);
+    border-top: var(--border-main);
+    padding: 6rem 4rem;
+    text-align: center;
+    max-width: none;
+  }
+  
+  .cta-section h2 {
+    font-size: 4rem;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+  
+  .cta-section p {
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+  
+  .cta-contact {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 4rem;
+    border: 1px solid var(--accent-main);
+    border-radius: var(--radius-lg);
+    background: rgba(0, 230, 118, 0.05);
+  }
+  
+  .cta-contact .name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+  
+  .cta-contact .handle {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--accent-main);
+  }
+  
+  /* ═══ RESPONSIVE ═══ */
+  @media (max-width: 768px) {
+    .cover { padding: 2.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .comparison { grid-template-columns: 1fr; }
+    .cover-footer { flex-direction: column; gap: 0.5rem; left: 2.5rem; right: 2.5rem; bottom: 2rem; }
+    .cta-section { padding: 4rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ═══ -->
+<section class="cover">
+  <div class="cover-content fade-up">
+    <div class="badge">Website Proposal</div>
+    <h1>Lee's <span>Tea</span><br>needs its own website</h1>
+    <p>Why depend on Wolt when you can have your own space? Here's what you'll get and how simple it will be.</p>
+  </div>
+  <div class="cover-footer fade-up" style="transition-delay: 0.2s;">
+    <span>Prepared by: Maria Chernobay</span>
+    <span>March 2026</span>
+  </div>
+</section>
+
+<!-- ═══ PROBLEM ═══ -->
+<section>
+  <div class="section-num fade-up">01</div>
+  <h2 class="fade-up">Wolt is taking your customers and your money</h2>
+  <p class="fade-up">Right now you're mainly on Wolt. That's fine for starting out, but it has problems:</p>
+  
+  <div class="comparison fade-up">
+    <div class="comparison-card before">
+      <h4>Now (Wolt only)</h4>
+      <ul>
+        <li>You pay 25–30% commission on every order</li>
+        <li>Customers remember Wolt, not Lee's Tea</li>
+        <li>Can't show your story, atmosphere, uniqueness</li>
+        <li>Menu changes go through support, takes time</li>
+        <li>No control over how you look</li>
+      </ul>
+    </div>
+    <div class="comparison-card after">
+      <h4>With your own website</h4>
+      <ul>
+        <li>Customers find you directly on Google</li>
+        <li>You build your own brand</li>
+        <li>Show the Vietnamese story, not just a list</li>
+        <li>Change menu yourself, instantly</li>
+        <li>Look professional and authentic</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ UNIQUE ═══ -->
+<section>
+  <div class="section-num fade-up">02</div>
+  <h2 class="fade-up">You have something nobody else has</h2>
+  <p class="fade-up">In central Prague, nobody offers <strong>real Vietnamese phin-dripped coffee</strong>, <strong>egg coffee (Cà Phê Trứng)</strong>, or such a collection of <strong>mochi and Asian desserts</strong>.</p>
+  <p class="fade-up">On Wolt, nobody sees this. It's hidden among hundreds of items. Your own website puts it front and center.</p>
+  
+  <div class="highlight fade-up">
+    <h3>☕ Cà Phê Trứng — Egg Coffee</h3>
+    <p>Famous Hanoi specialty. Creamy, sweet, unforgettable. This is your main trump card. On the website it will be the star — with story, photos, and atmosphere. This creates content people want to share on Instagram and TikTok.</p>
+  </div>
+</section>
+
+<!-- ═══ WHAT YOU GET ═══ -->
+<section>
+  <div class="section-num fade-up">03</div>
+  <h2 class="fade-up">What exactly you'll get</h2>
+  <p class="fade-up">No complications. Just a website that works, looks premium, and represents your physical store perfectly.</p>
+  
+  <div class="deliverables">
+    <div class="deliverable fade-up">
+      <div class="deliverable-check">✓</div>
+      <div>
+        <h4>Complete website with full menu</h4>
+        <p>All categories: Milk Tea, Fruit Tea, Matcha, Fresh Milk, Vietnamese Coffee, Mochi, Desserts. With prices, descriptions, and cut-out photos.</p>
+      </div>
+    </div>
+    <div class="deliverable fade-up">
+      <div class="deliverable-check">✓</div>
+      <div>
+        <h4>Special section for Vietnamese coffee</h4>
+        <p>Story about the phin filter, egg coffee, tradition. This sets you apart from typical boba competitors.</p>
+      </div>
+    </div>
+    <div class="deliverable fade-up">
+      <div class="deliverable-check">✓</div>
+      <div>
+        <h4>Easy menu management</h4>
+        <p>Want to change a price? Add a new drink? Do it yourself in the browser, no programmer needed. Changes appear instantly.</p>
+      </div>
+    </div>
+    <div class="deliverable fade-up">
+      <div class="deliverable-check">✓</div>
+      <div>
+        <h4>Links to Wolt and Bolt</h4>
+        <p>Customers see your website, learn your story, but can still order through Wolt/Bolt for delivery. Or come visit in person.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BRAND IDENTITY & LOGO ═══ -->
+<section>
+  <div class="section-num fade-up">04</div>
+  <h2 class="fade-up">Brand Identity & Logo Update</h2>
+  <p class="fade-up">To make the website and your physical store truly stand out, we should consider how the brand is presented.</p>
+  
+  <div class="logo-suggestion fade-up">
+    <h4>A Custom Typographic Logo</h4>
+    <p>Currently, your logo uses a complex graphic. For a modern, premium look, I suggest moving towards a <strong>text-based logo (wordmark)</strong>. </p>
+    <br>
+    <p>As I study Typography at UMPRUM, I can design a custom, unique font specifically for Lee's Tea. This will capture the authentic Vietnamese street culture and modern vibe without needing complex illustrations, making it perfect for cups, stickers, and signage.</p>
+  </div>
+</section>
+
+<!-- ═══ QUESTIONS ═══ -->
+<section>
+  <div class="section-num fade-up">05</div>
+  <h2 class="fade-up">What I need from you</h2>
+  <p class="fade-up">Before we finalize everything, we should discuss a few points:</p>
+  
+  <div class="deliverables">
+    <div class="deliverable fade-up">
+      <div class="deliverable-check" style="background:transparent; border: 1px dashed var(--accent-sec); color: var(--accent-sec);">?</div>
+      <div>
+        <h4>Photos & Content</h4>
+        <p>Do you have high-quality photos of the drinks and interior? Or do we need to arrange a quick photoshoot?</p>
+      </div>
+    </div>
+    <div class="deliverable fade-up">
+      <div class="deliverable-check" style="background:transparent; border: 1px dashed var(--accent-sec); color: var(--accent-sec);">?</div>
+      <div>
+        <h4>Branded Materials</h4>
+        <p>Are you planning to print new cups with the logo? Stickers for delivery packaging?</p>
+      </div>
+    </div>
+    <div class="deliverable fade-up">
+      <div class="deliverable-check" style="background:transparent; border: 1px dashed var(--accent-sec); color: var(--accent-sec);">?</div>
+      <div>
+        <h4>Social Media</h4>
+        <p>Who manages Instagram? Do you need help with visual content to match the new website?</p>
+      </div>
+    </div>
+  </div>
+  
+  <p class="fade-up" style="margin-top: 2rem;"><em>Note: We can launch the website even without a new logo or professional photos initially, and update them later.</em></p>
+</section>
+
+<!-- ═══ COSTS ═══ -->
+<section>
+  <div class="section-num fade-up">06</div>
+  <h2 class="fade-up">Running costs</h2>
+  <p class="fade-up">After launch, you'll have minimal technical costs to keep the site live. Most essential things are free.</p>
+  
+  <div class="costs fade-up">
+    <div class="costs-header">
+      <h4>Yearly Server & Domain Costs</h4>
+    </div>
+    <div class="costs-body">
+      <div class="cost-item">
+        <span>Domain (leestea.cz or .com)</span>
+        <span>~€15 / year</span>
+      </div>
+      <div class="cost-item free">
+        <span>Modern Hosting Platform</span>
+        <span>€0</span>
+      </div>
+      <div class="cost-item free">
+        <span>Menu management CMS</span>
+        <span>€0</span>
+      </div>
+      <div class="cost-item free">
+        <span>SSL certificate (https secure)</span>
+        <span>€0</span>
+      </div>
+    </div>
+    <div class="costs-total">
+      <span>Total per year</span>
+      <span>~€15</span>
+    </div>
+  </div>
+  
+  <p class="fade-up">That's about <strong>€1.25 per month</strong>. Less than the cost of one bubble tea to keep your brand online globally.</p>
+</section>
+
+<!-- ═══ TIMELINE ═══ -->
+<section>
+  <div class="section-num fade-up">07</div>
+  <h2 class="fade-up">How it will work</h2>
+  
+  <div class="timeline">
+    <div class="timeline-item fade-up">
+      <div class="timeline-num">1</div>
+      <div class="timeline-content">
+        <h4>Collect materials</h4>
+        <p>We confirm the final menu, answer the questions above, and decide on the logo direction.</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-up">
+      <div class="timeline-num">2</div>
+      <div class="timeline-content">
+        <h4>Design and development</h4>
+        <p>I build the website (like the prototype). I'll show you a preview and we fine-tune the details together.</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-up">
+      <div class="timeline-num">3</div>
+      <div class="timeline-content">
+        <h4>Launch</h4>
+        <p>Website goes live. I teach you how to change the menu (it's very simple).</p>
+      </div>
+    </div>
+    <div class="timeline-item fade-up">
+      <div class="timeline-num">4</div>
+      <div class="timeline-content">
+        <h4>Done</h4>
+        <p>The website runs, and you manage it. If you need bigger changes in the future, I'm available.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FUTURE ═══ -->
+<section>
+  <div class="section-num fade-up">08</div>
+  <h2 class="fade-up">For the future</h2>
+  <p class="fade-up">I'm building the website architecture so it can easily expand. If you add <strong>Bánh Mì</strong> or open a second <strong>Ché café</strong> location in the future, we simply add it. You don't have to start from scratch.</p>
+  <p class="fade-up">But for now, we focus on establishing Lee's Tea.</p>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section">
+  <h2 class="fade-up">Let's do this</h2>
+  <p class="fade-up">Have questions? Want to see more? Get in touch, we'll discuss the details.</p>
+  <div class="cta-contact fade-up">
+    <span class="name">Maria Chernobay</span>
+    <span class="handle">github.com/4rnbay</span>
+  </div>
+</section>
+
+<script>
+  // Анимация появления элементов (Intersection Observer)
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.15
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target); 
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.fade-up').forEach(el => {
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>

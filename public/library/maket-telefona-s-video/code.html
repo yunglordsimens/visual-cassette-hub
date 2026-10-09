@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream в макете смартфона</title>
+    <style>
+        /* Базовые настройки */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- ФОН TIKTOK --- */
+        .tiktok-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        /* Текст на фоне с эффектом глитча */
+        .tiktok-logo-text {
+            font-size: clamp(80px, 18vw, 250px);
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -4px;
+            text-shadow: 
+                6px 6px 0 #ff0050,
+                -6px -6px 0 #00f2fe;
+            opacity: 0.8;
+            animation: glitch-wobble 4s infinite alternate ease-in-out;
+        }
+
+        /* Неоновые кольца на фоне (как на картинке) */
+        .ring {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(8px);
+            opacity: 0.6;
+            animation: float-ring 8s infinite alternate ease-in-out;
+        }
+        .ring-red {
+            border: 5vw solid #ff0050;
+            width: 45vw; height: 45vw;
+            top: -5%; left: -5%;
+            box-shadow: 0 0 60px #ff0050, inset 0 0 60px #ff0050;
+        }
+        .ring-cyan {
+            border: 6vw solid #00f2fe;
+            width: 55vw; height: 55vw;
+            bottom: -10%; right: -10%;
+            animation-delay: -4s;
+            box-shadow: 0 0 60px #00f2fe, inset 0 0 60px #00f2fe;
+        }
+
+        @keyframes float-ring {
+            0% { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.05) translate(20px, 30px); }
+        }
+        @keyframes glitch-wobble {
+            0% { transform: scale(1) skew(0deg); }
+            100% { transform: scale(1.02) skew(-2deg); }
+        }
+
+        /* --- МАКЕТ ТЕЛЕФОНА --- */
+        .phone-mockup {
+            position: relative;
+            z-index: 10;
+            height: 85vh;
+            aspect-ratio: 9 / 19.5;
+            background-color: #000;
+            border: 14px solid #1a1a1a;
+            border-radius: 45px;
+            overflow: hidden; /* Обрезает все, что выходит за экран (видео, блик, интерфейс) */
+            
+            /* Свечение (облики) сзади телефона */
+            box-shadow: 
+                0 0 100px rgba(255, 0, 80, 0.4),  /* Красный свет сзади */
+                0 0 150px rgba(0, 242, 254, 0.4), /* Бирюзовый свет сзади */
+                inset 0 0 0 2px #333,             /* Внутренняя кромка рамки */
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Камера: Островок (Dynamic Island) вместо челки */
+        .camera-pill {
+            position: absolute;
+            top: 12px;
+            width: 110px;
+            height: 32px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 12px;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 5px rgba(255,255,255,0.15); /* Легкий блик на самом островке */
+        }
+        
+        /* Линза камеры внутри островка */
+        .camera-lens {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #111;
+            box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.5);
+            position: relative;
+        }
+        .camera-lens::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 4px; height: 4px;
+            background: rgba(255, 255, 255, 0.8); /* Блик на линзе */
+            border-radius: 50%;
+        }
+
+        /* Блик (облик) на стекле телефона поверх всего */
+        .phone-glare {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Сложный градиент для имитации нескольких мягких матовых бликов */
+            background: 
+                linear-gradient(125deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 20%, rgba(255, 255, 255, 0) 40%),
+                linear-gradient(250deg, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.04) 80%, rgba(255, 255, 255, 0) 100%);
+            z-index: 25; /* Поверх видео и интерфейса */
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        /* Матовое наложение (антибликовое покрытие экрана) */
+        .matte-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            /* SVG-шум для имитации физической текстуры матовой пленки/дисплея */
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+            /* Легкое снижение контраста (высветление черного) */
+            background-color: rgba(255, 255, 255, 0.03);
+            z-index: 26; 
+            pointer-events: none;
+            mix-blend-mode: lighten;
+        }
+
+        /* --- ВИДЕО --- */
+        .phone-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: #111;
+        }
+
+        /* --- ИНТЕРФЕЙС LIVE STREAM --- */
+        .live-ui {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 20;
+            pointer-events: none; /* Чтобы клики проходили к видео */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Верхняя панель (аватарка, бейдж LIVE) */
+        .live-top {
+            padding: 55px 15px 15px; /* Отступ под камеру */
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .host-info {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 25px;
+            padding: 4px 12px 4px 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+        }
+        .host-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0050, #00f2fe);
+            border: 2px solid white;
+        }
+        .host-text {
+            color: white;
+            font-size: 13px;
+        }
+        .host-text strong { display: block; font-weight: 600; }
+        .host-text span { font-size: 11px; opacity: 0.8; }
+        
+        .live-badge-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .viewers { color: white; font-size: 14px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .live-badge {
+            background: #ff0050;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            animation: pulse-live 2s infinite;
+        }
+
+        /* Нижняя панель (комментарии и лайки) */
+        .live-bottom {
+            height: 40%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 20px 15px;
+        }
+
+        /* Зона комментариев (бесконечная прокрутка) */
+        .comments-area {
+            flex: 1;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to top, black 70%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, black 70%, transparent 100%);
+        }
+        .comments-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: scroll-comments 12s linear infinite;
+        }
+        .comment {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .comment-ava {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            background: #ddd;
+            flex-shrink: 0;
+        }
+        .comment-content {
+            color: white;
+            font-size: 14px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+            line-height: 1.3;
+        }
+        .comment-user { color: rgba(255,255,255,0.7); font-weight: 600; margin-right: 5px;}
+
+        /* Зона летящих сердечек */
+        .hearts-area {
+            width: 60px;
+            height: 250px;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .heart {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            opacity: 0;
+            font-size: 24px;
+            animation: fly-heart 3s ease-in infinite;
+        }
+        /* Разные настройки для каждого сердечка, чтобы они летели вразнобой */
+        .heart:nth-child(1) { animation-delay: 0.0s; color: #ff0050; right: 10px; font-size: 26px; }
+        .heart:nth-child(2) { animation-delay: 0.8s; color: #00f2fe; right: 25px; font-size: 20px; animation-duration: 3.5s; }
+        .heart:nth-child(3) { animation-delay: 1.5s; color: #ff0050; right: 5px;  font-size: 30px; animation-duration: 2.8s; }
+        .heart:nth-child(4) { animation-delay: 2.1s; color: #fff;    right: 20px; font-size: 22px; animation-duration: 3.2s; }
+        .heart:nth-child(5) { animation-delay: 2.9s; color: #ff0050; right: 15px; font-size: 24px; animation-duration: 2.5s; }
+
+        /* Анимации */
+        @keyframes pulse-live {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        @keyframes scroll-comments {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(-100%); }
+        }
+        @keyframes fly-heart {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-250px) scale(1.5) rotate(25deg); opacity: 0; }
+        }
+
+        /* Адаптивность для узких экранов */
+        @media (max-width: 500px) {
+            .phone-mockup { height: 90vh; border-width: 10px; border-radius: 35px; }
+            .tiktok-logo-text { font-size: 30vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фон TikTok (кольца и текст) -->
+    <div class="tiktok-background">
+        <div class="ring ring-red"></div>
+        <div class="ring ring-cyan"></div>
+        <div class="tiktok-logo-text">TikTok</div>
+    </div>
+
+    <!-- Макет телефона -->
+    <div class="phone-mockup">
+        
+        <!-- Островок камеры (Dynamic Island) -->
+        <div class="camera-pill">
+            <div class="camera-lens"></div>
+        </div>
+
+        <!-- Видео -->
+        <video class="phone-video" autoplay loop muted playsinline>
+            <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+        </video>
+
+        <!-- Интерфейс Live Stream -->
+        <div class="live-ui">
+            
+            <!-- Верх (инфо о стримере) -->
+            <div class="live-top">
+                <div class="host-info">
+                    <div class="host-avatar"></div>
+                    <div class="host-text">
+                        <strong>User_Name</strong>
+                        <span>Трансляция</span>
+                    </div>
+                </div>
+                <div class="live-badge-container">
+                    <span class="viewers">12.5K</span>
+                    <span class="live-badge">LIVE</span>
+                </div>
+            </div>
+
+            <!-- Низ (Летящие комментарии и лайки) -->
+            <div class="live-bottom">
+                
+                <!-- Блок с летящим текстом -->
+                <div class="comments-area">
+                    <div class="comments-track">
+                        <!-- Набор комментариев (они будут бесконечно прокручиваться) -->
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#ff9a9e;"></div>
+                            <div class="comment-content"><span class="comment-user">Оля:</span> Вау, крутой стрим! 😍</div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#a1c4fd;"></div>
+                            <div class="comment-content"><span class="comment-user">Алекс_22:</span> Привет из Киева! 👋</div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#fbc2eb;"></div>
+                            <div class="comment-content"><span class="comment-user">Design_Pro:</span> Как сделать такой же фон? Очень стильно.</div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#84fab0;"></div>
+                            <div class="comment-content"><span class="comment-user">Max:</span> +++++++</div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#cfd9df;"></div>
+                            <div class="comment-content"><span class="comment-user">User991:</span> А что это за телефон?</div>
+                        </div>
+                        <!-- Дублируем комментарии для плавного зацикливания -->
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#ff9a9e;"></div>
+                            <div class="comment-content"><span class="comment-user">Оля:</span> Вау, крутой стрим! 😍</div>
+                        </div>
+                        <div class="comment">
+                            <div class="comment-ava" style="background:#a1c4fd;"></div>
+                            <div class="comment-content"><span class="comment-user">Алекс_22:</span> Привет из Киева! 👋</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок с вылетающими сердечками -->
+                <div class="hearts-area">
+                    <div class="heart">❤️</div>
+                    <div class="heart">💙</div>
+                    <div class="heart">❤️</div>
+                    <div class="heart">🤍</div>
+                    <div class="heart">❤️</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Стеклянный диагональный блик (поверх видео и интерфейса) -->
+        <div class="phone-glare"></div>
+        
+        <!-- Матовое наложение (текстура экрана) -->
+        <div class="matte-overlay"></div>
+
+    </div>
+
+</body>
+</html>

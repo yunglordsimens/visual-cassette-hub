@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime.js Visual Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Підключаємо Anime.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-mono { font-family: 'JetBrains+Mono', monospace; }
+    
+    /* Сетка на фоне для наглядности движения */
+    .bg-grid-pattern {
+      background-image: 
+        linear-gradient(to right, #1e293b 1px, transparent 1px),
+        linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+      background-size: 40px 40px;
+      background-position: center center;
+    }
+
+    /* Кастомные ползунки */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #818cf8;
+      cursor: pointer;
+      margin-top: -6px;
+      box-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: #334155;
+      border-radius: 2px;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-indigo-500 p-[2px] shadow-lg shadow-indigo-500/20">
+          <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-tr from-pink-400 to-indigo-400">
+            A.
+          </div>
+        </div>
+        <div>
+          <h1 class="font-bold text-base tracking-tight text-white flex items-center gap-2">
+            Anime.js Visual Builder
+          </h1>
+          <p class="text-xs text-slate-400">Генератор кода для ваших кастомных веб-анимаций</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-copy-full" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md shadow-indigo-600/25 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span>Скопировать код</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-[1400px] w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    
+    <!-- LEFT PANEL: Canvas & Output -->
+    <section class="lg:col-span-8 flex flex-col gap-6">
+      
+      <!-- Stage -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col relative overflow-hidden h-[450px]">
+        
+        <!-- Controls Top -->
+        <div class="flex items-center justify-between p-3 border-b border-slate-800 bg-slate-900/50 z-10">
+          <div class="flex items-center gap-2 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
+            <button id="target-single" class="px-3 py-1.5 rounded bg-indigo-500/20 text-indigo-300 font-medium transition">Один элемент</button>
+            <button id="target-grid" class="px-3 py-1.5 rounded text-slate-400 hover:text-slate-200 transition">Сетка (Staggering)</button>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="btn-play" class="flex items-center gap-2 px-4 py-1.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition text-xs font-semibold">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              Play
+            </button>
+            <button id="btn-reset" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div id="canvas-area" class="flex-1 bg-slate-950 bg-grid-pattern flex items-center justify-center relative overflow-hidden">
+          
+          <!-- Container for elements -->
+          <div id="anim-container" class="relative">
+            <!-- Elements will be injected here via JS -->
+          </div>
+
+        </div>
+      </div>
+
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex-1 flex flex-col">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Сгенерированный код Anime.js</h3>
+          <span class="text-[10px] bg-slate-800 px-2 py-1 rounded text-slate-400 font-mono">JS</span>
+        </div>
+        <pre id="code-output" class="flex-1 overflow-auto text-sm font-mono p-4 bg-slate-950 rounded-xl border border-slate-800/80 text-pink-400 leading-relaxed selection:bg-indigo-900"></pre>
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL: Parameters -->
+    <aside class="lg:col-span-4 flex flex-col gap-4 max-h-[850px] overflow-y-auto pr-2 custom-scrollbar">
+      
+      <!-- Transforms Group -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center gap-2 mb-4 text-indigo-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+          <h2 class="font-semibold text-sm">Трансформации</h2>
+        </div>
+
+        <div class="space-y-5">
+          <!-- Translate X -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Смещение X (translateX)</span>
+              <span id="val-tx" class="font-mono text-white">0px</span>
+            </div>
+            <input type="range" id="param-tx" min="-200" max="200" value="0" step="10">
+          </div>
+
+          <!-- Translate Y -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Смещение Y (translateY)</span>
+              <span id="val-ty" class="font-mono text-white">-100px</span>
+            </div>
+            <input type="range" id="param-ty" min="-200" max="200" value="-100" step="10">
+          </div>
+
+          <!-- Scale -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Масштаб (scale)</span>
+              <span id="val-scale" class="font-mono text-white">1</span>
+            </div>
+            <input type="range" id="param-scale" min="0" max="3" value="1" step="0.1">
+          </div>
+
+          <!-- Rotate -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Вращение (rotate)</span>
+              <span id="val-rotate" class="font-mono text-white">1turn</span>
+            </div>
+            <input type="range" id="param-rotate" min="-720" max="720" value="360" step="45">
+          </div>
+          
+          <!-- Border Radius -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Скругление (borderRadius)</span>
+              <span id="val-radius" class="font-mono text-white">50%</span>
+            </div>
+            <input type="range" id="param-radius" min="0" max="50" value="50" step="1">
+          </div>
+        </div>
+      </div>
+
+      <!-- Timing Group -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center gap-2 mb-4 text-emerald-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h2 class="font-semibold text-sm">Тайминги & Easing</h2>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Duration -->
+          <div>
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+              <span>Длительность (duration)</span>
+              <span id="val-duration" class="font-mono text-white">1000ms</span>
+            </div>
+            <input type="range" id="param-duration" min="200" max="5000" value="1000" step="100">
+          </div>
+
+          <!-- Stagger (only visible in Grid mode) -->
+          <div id="stagger-wrapper" class="hidden opacity-0 transition-opacity duration-300">
+            <div class="flex justify-between text-xs text-pink-400 mb-2">
+              <span>Задержка сетки (stagger)</span>
+              <span id="val-stagger" class="font-mono text-white">100ms</span>
+            </div>
+            <input type="range" id="param-stagger" min="10" max="300" value="100" step="10">
+          </div>
+
+          <!-- Easing Select -->
+          <div class="pt-2">
+            <label class="block text-xs text-slate-400 mb-2">График движения (easing)</label>
+            <select id="param-easing" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 outline-none">
+              <optgroup label="Пружина (Физика)">
+                <option value="spring(1, 80, 10, 0)">Spring (Default)</option>
+                <option value="spring(1, 100, 10, 0)">Spring (Bouncy)</option>
+              </optgroup>
+              <optgroup label="Базовые">
+                <option value="easeInOutSine">easeInOutSine</option>
+                <option value="easeOutExpo" selected>easeOutExpo</option>
+                <option value="easeOutElastic(1, .5)">easeOutElastic</option>
+                <option value="linear">linear</option>
+              </optgroup>
+              <optgroup label="Bounce">
+                <option value="easeOutBounce">easeOutBounce</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Loop & Direction Options -->
+          <div class="grid grid-cols-2 gap-3 pt-3 border-t border-slate-800">
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-300">
+              <input type="checkbox" id="param-loop" checked class="w-4 h-4 rounded border-slate-700 bg-slate-900 accent-indigo-500 focus:ring-0">
+              Зациклить
+            </label>
+            
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-slate-300" title="Анимация туда и обратно">
+              <input type="checkbox" id="param-alternate" checked class="w-4 h-4 rounded border-slate-700 bg-slate-900 accent-indigo-500 focus:ring-0">
+              Alternate
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-indigo-500/40 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+    <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</div>
+    <div class="text-xs font-medium" id="toast-message">Код скопирован</div>
+  </div>
+
+  <script>
+    // State
+    const state = {
+      mode: 'single', // 'single' | 'grid'
+      tx: 0,
+      ty: -100,
+      scale: 1,
+      rotate: 360,
+      radius: 50,
+      duration: 1000,
+      stagger: 100,
+      easing: 'easeOutExpo',
+      loop: true,
+      alternate: true
+    };
+
+    let currentAnimation = null;
+
+    // Elements
+    const container = document.getElementById('anim-container');
+    const staggerWrapper = document.getElementById('stagger-wrapper');
+
+    // DOM Binding
+    const bindings = [
+      { id: 'param-tx', key: 'tx', suffix: 'px' },
+      { id: 'param-ty', key: 'ty', suffix: 'px' },
+      { id: 'param-scale', key: 'scale', suffix: '' },
+      { id: 'param-radius', key: 'radius', suffix: '%' },
+      { id: 'param-duration', key: 'duration', suffix: 'ms' },
+      { id: 'param-stagger', key: 'stagger', suffix: 'ms' },
+    ];
+
+    // Build the visual elements
+    function buildElements() {
+      container.innerHTML = '';
+      
+      if (state.mode === 'single') {
+        const el = document.createElement('div');
+        el.className = 'anim-el w-20 h-20 bg-gradient-to-tr from-pink-500 to-indigo-500 shadow-lg shadow-indigo-500/50 flex items-center justify-center text-white font-bold text-2xl';
+        el.style.borderRadius = '8px'; // Default before anim
+        container.appendChild(el);
+        staggerWrapper.classList.add('hidden', 'opacity-0');
+      } 
+      else if (state.mode === 'grid') {
+        // Create 3x3 grid
+        container.className = 'grid grid-cols-5 gap-3';
+        for(let i=0; i<25; i++) {
+          const el = document.createElement('div');
+          // Vary colors slightly based on index for cool effect
+          el.className = 'anim-el w-8 h-8 bg-indigo-500 shadow-md shadow-indigo-500/30';
+          el.style.borderRadius = '4px';
+          container.appendChild(el);
+        }
+        staggerWrapper.classList.remove('hidden');
+        setTimeout(() => staggerWrapper.classList.remove('opacity-0'), 50);
+      }
+    }
+
+    // Play the anime.js timeline/animation
+    function playAnimation() {
+      // Clean up old animation
+      if (currentAnimation) {
+        currentAnimation.pause();
+        anime.remove('.anim-el');
+      }
+
+      // Reset inline styles
+      document.querySelectorAll('.anim-el').forEach(el => {
+        el.style.transform = 'none';
+        el.style.borderRadius = state.mode === 'single' ? '8px' : '4px';
+      });
+
+      // Build config
+      const config = {
+        targets: '.anim-el',
+        translateX: state.tx,
+        translateY: state.ty,
+        scale: state.scale,
+        rotate: state.rotate + 'deg',
+        borderRadius: state.radius + '%',
+        duration: state.duration,
+        easing: state.easing,
+        loop: state.loop,
+        direction: state.alternate ? 'alternate' : 'normal'
+      };
+
+      // Add stagger if grid
+      if (state.mode === 'grid') {
+        config.delay = anime.stagger(state.stagger, {grid: [5, 5], from: 'center'});
+      }
+
+      // Start animation
+      currentAnimation = anime(config);
+      
+      updateCodeOutput(config);
+    }
+
+    // Generate Code string
+    function updateCodeOutput(config) {
+      const codeBlock = document.getElementById('code-output');
+      
+      let code = `// 1. Убедитесь, что подключили anime.js\n`;
+      code += `// <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"><\\/script>\n\n`;
+      
+      code += `anime({\n`;
+      code += `  targets: '.your-element-class',\n`;
+      
+      if(state.tx !== 0) code += `  translateX: ${state.tx},\n`;
+      if(state.ty !== 0) code += `  translateY: ${state.ty},\n`;
+      if(state.scale !== 1) code += `  scale: ${state.scale},\n`;
+      if(state.rotate !== 0) code += `  rotate: '${state.rotate}deg',\n`;
+      if(state.radius > 0) code += `  borderRadius: '${state.radius}%',\n`;
+      
+      code += `  duration: ${state.duration},\n`;
+      code += `  easing: '${state.easing}',\n`;
+      
+      if(state.mode === 'grid') {
+        code += `  // Stagger эффект (каскадная задержка)\n`;
+        code += `  delay: anime.stagger(${state.stagger}, {grid: [5, 5], from: 'center'}),\n`;
+      }
+      
+      code += `  loop: ${state.loop},\n`;
+      code += `  direction: '${state.alternate ? 'alternate' : 'normal'}'\n`;
+      code += `});`;
+      
+      codeBlock.textContent = code.replace(/\\/g, ''); // Fix escape
+    }
+
+    // Attach Event Listeners to Inputs
+    bindings.forEach(b => {
+      const input = document.getElementById(b.id);
+      const label = document.getElementById(`val-${b.key}`);
+      
+      input.addEventListener('input', (e) => {
+        const val = parseFloat(e.target.value);
+        state[b.key] = val;
+        label.textContent = val + b.suffix;
+      });
+
+      input.addEventListener('change', playAnimation);
+    });
+
+    // Special inputs
+    const rotateInput = document.getElementById('param-rotate');
+    rotateInput.addEventListener('input', (e) => {
+      state.rotate = parseInt(e.target.value);
+      document.getElementById('val-rotate').textContent = state.rotate + 'deg';
+    });
+    rotateInput.addEventListener('change', playAnimation);
+
+    document.getElementById('param-easing').addEventListener('change', (e) => {
+      state.easing = e.target.value;
+      playAnimation();
+    });
+
+    document.getElementById('param-loop').addEventListener('change', (e) => {
+      state.loop = e.target.checked;
+      playAnimation();
+    });
+
+    document.getElementById('param-alternate').addEventListener('change', (e) => {
+      state.alternate = e.target.checked;
+      playAnimation();
+    });
+
+    // Target Switchers
+    const btnSingle = document.getElementById('target-single');
+    const btnGrid = document.getElementById('target-grid');
+
+    btnSingle.addEventListener('click', () => {
+      state.mode = 'single';
+      btnSingle.className = 'px-3 py-1.5 rounded bg-indigo-500/20 text-indigo-300 font-medium transition';
+      btnGrid.className = 'px-3 py-1.5 rounded text-slate-400 hover:text-slate-200 transition';
+      container.className = 'relative'; // Reset grid
+      buildElements();
+      playAnimation();
+    });
+
+    btnGrid.addEventListener('click', () => {
+      state.mode = 'grid';
+      btnGrid.className = 'px-3 py-1.5 rounded bg-indigo-500/20 text-indigo-300 font-medium transition';
+      btnSingle.className = 'px-3 py-1.5 rounded text-slate-400 hover:text-slate-200 transition';
+      buildElements();
+      playAnimation();
+    });
+
+    // Play & Reset Buttons
+    document.getElementById('btn-play').addEventListener('click', playAnimation);
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if(currentAnimation) currentAnimation.pause();
+      anime.remove('.anim-el');
+      document.querySelectorAll('.anim-el').forEach(el => {
+        el.style.transform = 'none';
+        el.style.borderRadius = state.mode === 'single' ? '8px' : '4px';
+      });
+      // Re-trigger animation with slight delay
+      setTimeout(playAnimation, 50);
+    });
+
+    // Toast logic
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2500);
+    }
+
+    // Copy Code
+    document.getElementById('btn-copy-full').addEventListener('click', () => {
+      const textToCopy = document.getElementById('code-output').textContent;
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast();
+      } catch (err) {
+        console.error('Copy failed', err);
+      }
+      document.body.removeChild(textArea);
+    });
+
+    // Init
+    window.onload = () => {
+      buildElements();
+      playAnimation();
+    };
+
+  </script>
+</body>
+</html>

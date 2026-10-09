@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-ink text-cream">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oryza — Specialty Coffee & Vietnamese Roots</title>
+    <meta name="description" content="Specialty coffee, Vietnamese phin, banh mi, poke, pastries, ice cream and beer. A premium neighbourhood café in Smíchov, Prague.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oxblood: { DEFAULT: '#7a1f24', dark: '#5a161a', light: '#9a3338' },
+                        cream: { DEFAULT: '#f5efe4', dark: '#e8dfd0', light: '#fcfbf8' },
+                        ink: { DEFAULT: '#0a0a0a', light: '#1a1a1a', muted: '#6b6b6b' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Alterglam', 'Georgia', 'serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'marquee-fast': 'marquee 15s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @font-face {
+            font-family: 'Alterglam';
+            src: local('Georgia'); 
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* 2025 Trend: Film Grain Overlay */
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Image Placeholders with subtle zoom effect */
+        .img-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .img-placeholder {
+            background: theme('colors.ink.light');
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            color: theme('colors.cream.dark');
+            width: 100%;
+            height: 100%;
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .img-container:hover .img-placeholder {
+            transform: scale(1.05);
+        }
+
+        /* Reveal animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: theme('colors.ink.DEFAULT'); }
+        ::-webkit-scrollbar-thumb { background: theme('colors.ink.light'); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.oxblood.DEFAULT'); }
+    </style>
+</head>
+<body class="selection:bg-oxblood selection:text-cream">
+
+    <!-- Noise Texture Overlay -->
+    <div class="noise-overlay"></div>
+
+    <header class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 w-[90%] md:w-auto max-w-2xl">
+        <div class="bg-cream/90 backdrop-blur-xl border border-ink/5 text-ink rounded-full px-6 py-3 flex justify-between md:justify-center items-center gap-8 shadow-2xl shadow-black/20">
+            <a href="#" class="flex items-center gap-2 group">
+                <svg class="w-5 h-5 text-ink transition-colors duration-300 group-hover:text-oxblood" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 8c-23 0-42 19-42 42s19 42 42 42 42-19 42-42S73 8 50 8zm0 78c-7 0-13-5-17-12-3-7-2-15 2-22s11-12 18-13c5-1 10 1 13 5 4 5 4 12 1 19-4 11-12 19-17 23z"/>
+                </svg>
+                <span class="font-sans font-bold text-sm tracking-tight hidden md:block group-hover:text-oxblood transition-colors">Oryza × Lee's Tea</span>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#about" class="text-xs font-medium uppercase tracking-[0.1em] hover:text-oxblood transition-colors">Concept</a>
+                <a href="#lees-tea" class="text-xs font-medium uppercase tracking-[0.1em] hover:text-oxblood transition-colors">Lee's Tea</a>
+                <a href="#menu" class="text-xs font-medium uppercase tracking-[0.1em] hover:text-oxblood transition-colors">Menu</a>
+                <a href="#visit" class="text-xs font-medium uppercase tracking-[0.1em] hover:text-oxblood transition-colors">Visit</a>
+            </nav>
+
+            <a href="https://oryza.choiceqr.com" target="_blank" class="bg-oxblood text-cream px-5 py-2 rounded-full text-xs font-medium uppercase tracking-widest hover:bg-oxblood-dark transition-colors">
+                Order
+            </a>
+        </div>
+    </header>
+
+    <section class="relative h-[100svh] w-full flex flex-col justify-end p-6 md:p-12 overflow-hidden bg-ink">
+        <div class="absolute inset-0 z-0 img-container">
+            <!-- Full bleed background -->
+            <div class="img-placeholder !bg-oxblood-dark/30 !p-0">
+                <p class="font-mono text-xs tracking-widest opacity-30 text-cream mix-blend-overlay">Moody Dark Hero Image</p>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/50 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between items-end gap-10">
+            <div class="reveal">
+                <h1 class="font-display text-[15vw] md:text-[10rem] lg:text-[14rem] leading-[0.8] tracking-tighter text-cream drop-shadow-lg -ml-2 md:-ml-4">
+                    Oryza
+                </h1>
+                <h2 class="font-display text-[8vw] md:text-[5rem] lg:text-[7rem] leading-[0.8] tracking-tighter text-cream/50 drop-shadow-lg -ml-1 md:-ml-2 mt-2 md:mt-4 italic">
+                    & Lee's Tea
+                </h2>
+            </div>
+            <div class="mb-4 md:mb-12 max-w-sm reveal delay-100">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-oxblood-light mb-4">Prague 5</p>
+                <p class="text-cream/80 text-lg md:text-xl font-light leading-relaxed mb-6">
+                    Two brands.<br>One rhythm.
+                </p>
+                <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-cream/20 bg-cream/5 backdrop-blur-md">
+                    <span class="font-mono text-[10px] uppercase tracking-widest text-cream/70">Dual Concept Store</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="py-12 bg-oxblood text-cream overflow-hidden flex whitespace-nowrap border-y border-white/10">
+        <div class="animate-marquee flex items-center gap-8 text-4xl md:text-6xl font-display italic tracking-tight opacity-90">
+            <span>Specialty Coffee</span><span class="text-xl mx-4">✦</span>
+            <span>Lee's Tea Boba</span><span class="text-xl mx-4">✦</span>
+            <span>Banh Mi</span><span class="text-xl mx-4">✦</span>
+            <span>Fresh Poke Bowls</span><span class="text-xl mx-4">✦</span>
+            <span>Local Beer</span><span class="text-xl mx-4">✦</span>
+            <span>Pastries</span><span class="text-xl mx-4">✦</span>
+        </div>
+        <div class="animate-marquee flex items-center gap-8 text-4xl md:text-6xl font-display italic tracking-tight opacity-90 absolute top-12">
+            <!-- Duplicate for seamless loop -->
+            <span class="ml-8">Specialty Coffee</span><span class="text-xl mx-4">✦</span>
+            <span>Lee's Tea Boba</span><span class="text-xl mx-4">✦</span>
+            <span>Banh Mi</span><span class="text-xl mx-4">✦</span>
+            <span>Fresh Poke Bowls</span><span class="text-xl mx-4">✦</span>
+            <span>Local Beer</span><span class="text-xl mx-4">✦</span>
+            <span>Pastries</span><span class="text-xl mx-4">✦</span>
+        </div>
+    </div>
+
+    <section id="about" class="py-32 md:py-48 px-6 md:px-12 bg-cream text-ink">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            
+            <div class="lg:col-span-4 reveal">
+                <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-oxblood mb-2">( 01 ) Concept</p>
+            </div>
+            
+            <div class="lg:col-span-8 reveal delay-100">
+                <h2 class="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-12">
+                    Coffee, Food<br>
+                    <span class="italic text-oxblood">& Premium Boba.</span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-light text-lg md:text-xl text-ink/80 leading-relaxed">
+                    <p>
+                        Oryza is the foundation of every Asian table. Here in Smíchov, we've built a space where two distinct concepts share one roof. 
+                    </p>
+                    <p>
+                        On one side, specialty espresso and Vietnamese coffee with fresh food. On the other, the authentic, premium bubble tea experience of <strong>Lee's Tea</strong>.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="py-24 px-6 md:px-12 bg-cream text-ink pb-48">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px]">
+            
+            <!-- Large Image Cell -->
+            <div class="md:col-span-8 row-span-2 img-container rounded-3xl reveal">
+                <div class="img-placeholder !bg-cream-dark/50">
+                    <span class="text-5xl mb-4">☕</span>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">Espresso / Phin Pour</p>
+                </div>
+            </div>
+
+            <!-- Text Cell -->
+            <div class="md:col-span-4 row-span-1 bg-ink text-cream rounded-3xl p-10 flex flex-col justify-between reveal delay-100">
+                <h3 class="font-display text-3xl">Two Traditions.</h3>
+                <p class="font-light text-cream/70 text-sm mt-4">Specialty espresso dialed in daily, sitting side-by-side with the rich, slow-dripped tradition of Vietnamese Phin and famous Hanoi Egg Coffee.</p>
+            </div>
+
+            <!-- Small Image Cell -->
+            <div class="md:col-span-4 row-span-1 img-container rounded-3xl reveal delay-200">
+                <div class="img-placeholder !bg-oxblood/10 !text-oxblood">
+                    <span class="text-4xl mb-2">🧋</span>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-oxblood/60">Lee's Tea Boba</p>
+                </div>
+            </div>
+
+            <!-- Food Text Cell -->
+            <div class="md:col-span-4 row-span-1 border border-ink/10 rounded-3xl p-10 flex flex-col justify-center reveal">
+                <h3 class="font-display text-3xl text-oxblood mb-2">Fresh Daily.</h3>
+                <p class="font-light text-ink/70 text-sm">Crispy Banh Mi, vibrant Poke Bowls, sandwiches, and daily pastries.</p>
+            </div>
+
+            <!-- Long Horizontal Image -->
+            <div class="md:col-span-8 row-span-1 img-container rounded-3xl reveal delay-100">
+                <div class="img-placeholder !bg-cream-dark/50">
+                    <span class="text-4xl mb-2">🥖</span>
+                    <p class="font-mono text-[10px] uppercase tracking-widest text-ink/50">Banh Mi Close-up</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NEW SECTION: SISTER BRAND COLLAB -->
+    <section id="lees-tea" class="py-24 md:py-32 px-6 md:px-12 bg-oxblood text-cream overflow-hidden">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <div class="reveal">
+                <div class="img-container rounded-[3rem] aspect-[4/5] md:aspect-square w-full">
+                    <div class="img-placeholder !bg-oxblood-dark/50 !p-8">
+                        <span class="text-8xl mb-6 drop-shadow-2xl">🧋</span>
+                        <p class="font-display text-3xl italic mb-2">Lee's Tea</p>
+                        <p class="font-mono text-[10px] uppercase tracking-widest text-cream/50">Premium Bubble Tea Bar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="reveal delay-100 lg:pl-12">
+                <div class="flex flex-wrap items-center gap-3 mb-8">
+                    <span class="px-4 py-2 rounded-full bg-cream text-oxblood font-mono text-[10px] uppercase tracking-widest font-bold">50% of the experience</span>
+                    <span class="px-4 py-2 rounded-full border border-cream/30 font-mono text-[10px] uppercase tracking-widest">Under One Roof</span>
+                </div>
+                
+                <h2 class="font-display text-6xl md:text-8xl lg:text-[7rem] leading-[1] tracking-tight mb-8">
+                    Lee's Tea
+                </h2>
+                
+                <p class="font-light text-xl md:text-2xl text-cream/90 leading-relaxed mb-10 max-w-lg">
+                    This isn't just an extra menu item. <strong>Lee's Tea</strong> is a fully-fledged premium bubble tea bar operating inside Oryza. Authentic recipes, high-end ingredients, no compromises. 
+                </p>
+
+                <div class="flex flex-wrap gap-4">
+                    <a href="https://oryza.choiceqr.com" target="_blank" class="bg-cream text-oxblood px-8 py-4 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white hover:scale-105 transition-all duration-300">
+                        Explore Boba Menu
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="menu" class="py-32 px-6 md:px-12 bg-ink text-cream rounded-t-[3rem] -mt-12 relative z-10">
+        <div class="max-w-[1000px] mx-auto">
+            
+            <div class="mb-24 flex flex-col md:flex-row justify-between items-end border-b border-cream/20 pb-12 reveal">
+                <div>
+                    <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-oxblood mb-6">( 02 ) Offerings</p>
+                    <h2 class="font-display text-5xl md:text-7xl">The Menu</h2>
+                </div>
+                <a href="https://oryza.choiceqr.com" target="_blank" class="mt-8 md:mt-0 inline-flex items-center gap-3 font-mono text-xs uppercase tracking-widest hover:text-oxblood transition-colors group">
+                    Full Menu 
+                    <span class="w-8 h-[1px] bg-current transform origin-left group-hover:scale-x-150 transition-transform"></span>
+                </a>
+            </div>
+
+            <!-- Interactive List -->
+            <div class="flex flex-col gap-6 reveal delay-100">
+                
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-cream/10 hover:border-oxblood transition-colors cursor-pointer">
+                    <h3 class="font-display text-3xl md:text-4xl group-hover:text-oxblood transition-colors">Specialty & Phin Coffee</h3>
+                    <p class="font-mono text-xs text-cream/40 uppercase tracking-widest mt-2 md:mt-0">Hot & Iced</p>
+                </div>
+                
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-cream/10 hover:border-oxblood transition-colors cursor-pointer">
+                    <h3 class="font-display text-3xl md:text-4xl group-hover:text-oxblood transition-colors">Banh Mi & Sandwiches</h3>
+                    <p class="font-mono text-xs text-cream/40 uppercase tracking-widest mt-2 md:mt-0">Signature</p>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-cream/10 hover:border-oxblood transition-colors cursor-pointer">
+                    <h3 class="font-display text-3xl md:text-4xl group-hover:text-oxblood transition-colors">Poke Bowls</h3>
+                    <p class="font-mono text-xs text-cream/40 uppercase tracking-widest mt-2 md:mt-0">Fresh</p>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-cream/10 hover:border-oxblood transition-colors cursor-pointer">
+                    <h3 class="font-display text-3xl md:text-4xl group-hover:text-oxblood transition-colors">Pastries & Ice Cream</h3>
+                    <p class="font-mono text-xs text-cream/40 uppercase tracking-widest mt-2 md:mt-0">Sweet</p>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-8 border-b border-cream/30 hover:border-oxblood transition-colors cursor-pointer bg-cream/5 -mx-6 px-6 md:-mx-12 md:px-12 rounded-xl">
+                    <div>
+                        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-oxblood-light mb-2">Partner Brand</p>
+                        <h3 class="font-display text-4xl md:text-5xl group-hover:text-oxblood transition-colors">Lee's Tea Selection</h3>
+                    </div>
+                    <p class="font-mono text-xs text-cream/60 uppercase tracking-widest mt-4 md:mt-0 bg-oxblood text-cream px-4 py-2 rounded-full">Bubble Tea Bar</p>
+                </div>
+
+                <div class="group flex flex-col md:flex-row md:items-center justify-between py-6 border-b border-cream/10 hover:border-oxblood transition-colors cursor-pointer mt-2">
+                    <h3 class="font-display text-3xl md:text-4xl group-hover:text-oxblood transition-colors">Local Beer & Drinks</h3>
+                    <p class="font-mono text-xs text-cream/40 uppercase tracking-widest mt-2 md:mt-0">Bar</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <footer id="visit" class="py-32 px-6 md:px-12 bg-oxblood text-cream">
+        <div class="max-w-[1600px] mx-auto">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 mb-32">
+                <div class="reveal">
+                    <h2 class="font-display text-6xl md:text-[8rem] leading-[0.8] tracking-tighter mb-12">Visit</h2>
+                    <a href="https://oryza.choiceqr.com" target="_blank" class="inline-flex items-center justify-center px-10 py-5 bg-cream text-oxblood rounded-full font-mono text-xs uppercase tracking-widest hover:bg-ink hover:text-cream transition-colors duration-500">
+                        Order Ahead
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 font-light reveal delay-100">
+                    <div>
+                        <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/50 mb-4">Location</p>
+                        <p class="text-2xl mb-2">U Lihovaru 3398/9</p>
+                        <p class="text-cream/70">150 00 Praha 5<br>Smíchov, Czechia</p>
+                    </div>
+                    
+                    <div>
+                        <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/50 mb-4">Soft Opening</p>
+                        <p class="text-2xl mb-2">Mon – Sun</p>
+                        <p class="text-cream/70">7:30 – 18:30</p>
+                    </div>
+
+                    <div class="md:col-span-2 pt-8 border-t border-cream/20 mt-4">
+                        <p class="font-mono text-[10px] tracking-[0.2em] uppercase text-cream/50 mb-4">Connect</p>
+                        <a href="https://instagram.com/Oryza_lihovar" target="_blank" class="text-2xl hover:text-ink transition-colors block">@Oryza_lihovar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Massive Brand Footer -->
+            <div class="flex flex-col md:flex-row justify-between items-end border-t border-cream/20 pt-12">
+                <div class="w-full md:w-auto text-center md:text-left mb-8 md:mb-0">
+                    <span class="font-sans font-bold text-4xl md:text-6xl tracking-tighter block mb-2">oryza <span class="font-display italic text-3xl md:text-5xl text-cream/40 mx-1">×</span> Lee's Tea</span>
+                    <span class="font-mono text-[10px] tracking-widest uppercase text-cream/50">&copy; 2026 Oryza & Lee's Tea. Lihovar Praha.</span>
+                </div>
+                <div class="font-mono text-[10px] tracking-widest uppercase text-cream/50 text-center md:text-right w-full md:w-auto">
+                    Design Concept
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Stop observing once animated in
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+        });
+    </script>
+</body>
+</html>

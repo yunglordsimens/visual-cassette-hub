@@ -1,0 +1,20 @@
+{
+  "id": "wall-crust-cross-massive-scale",
+  "title": "Wall Crust Cross (Massive Scale)",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/wall-crust-cross-massive-scale/code.tsx",
+  "previewUrl": "library/wall-crust-cross-massive-scale/preview.html"
+}

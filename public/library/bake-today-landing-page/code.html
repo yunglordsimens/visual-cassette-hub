@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bake Today</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-red': '#9A2526',
+                        'brand-cream': '#F4EFE6',
+                    },
+                    fontFamily: {
+                        'display': ['Anton', 'sans-serif'],
+                        'body': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for specific design elements */
+        body {
+            background-color: #F4EFE6;
+            color: #9A2526;
+        }
+        
+        /* Marquee animation */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Pill shape button */
+        .pill-button {
+            border-radius: 9999px;
+        }
+
+        /* Number input hide arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        
+        .floating-badge {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body class="font-body antialiased overflow-x-hidden">
+
+    <!-- Top Marquee -->
+    <div class="bg-brand-cream border-b border-brand-red py-1 text-xs font-bold tracking-widest uppercase marquee-container flex items-center">
+        <div class="marquee-content flex gap-8">
+            <!-- Repeated content for smooth scrolling -->
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            <span>•</span>
+            <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-brand-red text-brand-cream px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="text-4xl md:text-5xl font-display uppercase tracking-wider">
+            Bake Today
+        </div>
+        
+        <div class="hidden md:flex gap-8 font-semibold text-sm tracking-wide">
+            <a href="#" class="hover:opacity-80 transition-opacity">SHOP</a>
+            <a href="#" class="hover:opacity-80 transition-opacity">ABOUT</a>
+            <a href="#" class="hover:opacity-80 transition-opacity">SUBSCRIBE</a>
+            <a href="#" class="hover:opacity-80 transition-opacity">STORE LOCATOR</a>
+        </div>
+        
+        <button class="bg-brand-cream text-brand-red px-4 py-1.5 pill-button font-bold text-sm hover:bg-white transition-colors flex items-center gap-2">
+            CART (0)
+        </button>
+    </nav>
+
+    <!-- Hero Image Section -->
+    <section class="bg-brand-red px-4 pb-4">
+        <div class="w-full h-[40vh] md:h-[60vh] rounded-3xl overflow-hidden relative">
+            <img src="https://images.unsplash.com/photo-1528207776546-32248a4c1605?q=80&w=2070&auto=format&fit=crop" 
+                 alt="Pancakes with syrup" 
+                 class="w-full h-full object-cover object-center" />
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section class="bg-brand-cream py-16 px-6 md:px-12 lg:px-24">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-12 items-center">
+            
+            <!-- Product Info -->
+            <div class="w-full md:w-1/2 flex flex-col gap-6">
+                <h1 class="text-3xl md:text-5xl font-bold uppercase leading-tight text-brand-red">
+                    Organic Pancake &<br>Waffle Baking Mix
+                </h1>
+                
+                <div class="flex items-center gap-2 text-brand-red">
+                    <div class="flex gap-1">
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                        <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                    </div>
+                    <span class="text-sm font-semibold">(128 reviews)</span>
+                </div>
+                
+                <p class="text-sm md:text-base text-brand-red font-medium leading-relaxed max-w-md">
+                    Start your morning with the perfect stack of light, fluffy pancakes, crafted from our premium BAKE TODAY Pancake Mix. Made with only the finest ingredients, it's designed to give you that homemade taste with none of the hassle. Simply add water, stir, and cook to golden perfection. Whether you're enjoying a weekend brunch or a quick weekday breakfast, BAKE TODAY makes every morning deliciously easy.
+                </p>
+                
+                <div class="text-xs text-brand-red opacity-80 max-w-md">
+                    Ingredients: Rice Flour, Sugar, Leavening (baking soda, sodium aluminum phosphate, monocalcium phosphate), Modified Potato Starch, Salt, Xanthan Gum.
+                </div>
+                
+                <div class="flex items-center gap-4 mt-4">
+                    <!-- Quantity Selector -->
+                    <div class="flex items-center border-2 border-brand-red pill-button px-4 py-2">
+                        <button class="text-brand-red hover:opacity-70 font-bold" onclick="decrementQty()">-</button>
+                        <input type="number" id="qty" value="2" class="w-12 text-center bg-transparent text-brand-red font-bold text-lg focus:outline-none" readonly>
+                        <button class="text-brand-red hover:opacity-70 font-bold" onclick="incrementQty()">+</button>
+                    </div>
+                    
+                    <button class="bg-brand-red text-brand-cream px-8 py-3.5 pill-button font-bold text-sm tracking-wide hover:bg-red-800 transition-colors w-full md:w-auto text-center">
+                        ADD TO CART
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Product Images -->
+            <div class="w-full md:w-1/2 flex gap-4 relative">
+                <!-- Decorative Badge -->
+                <div class="absolute -top-6 -left-6 w-16 h-16 bg-brand-red rounded-full flex items-center justify-center text-brand-cream text-[10px] font-bold text-center leading-tight floating-badge z-10 border-4 border-brand-cream">
+                    <span>100%<br>ORGANIC</span>
+                </div>
+                
+                <div class="w-2/3 h-[400px] bg-[#E8E0D1] rounded-3xl overflow-hidden border-2 border-brand-red flex items-center justify-center p-8 relative">
+                    <!-- Placeholder for actual product packaging -->
+                    <div class="relative w-full h-full flex gap-4 transform rotate-[-5deg]">
+                       <div class="w-1/2 h-full bg-brand-red rounded-t-xl rounded-b-3xl relative overflow-hidden flex flex-col justify-between p-4 border border-red-900 shadow-xl">
+                           <div class="text-brand-cream font-display text-4xl leading-none rotate-90 origin-top-left absolute left-full top-4 translate-x-[-1rem]">BAKE</div>
+                           <div class="mt-auto text-brand-cream">
+                               <i data-lucide="coffee" class="w-8 h-8 mb-2"></i>
+                               <div class="text-xs font-bold">WAFFLE</div>
+                           </div>
+                       </div>
+                       <div class="w-1/2 h-full bg-brand-red rounded-t-xl rounded-b-3xl relative overflow-hidden flex flex-col justify-between p-4 border border-red-900 shadow-xl mt-8">
+                           <div class="text-brand-cream font-display text-4xl leading-none rotate-90 origin-top-left absolute left-full top-4 translate-x-[-1rem]">TODAY</div>
+                           <div class="mt-auto text-brand-cream">
+                               <i data-lucide="croissant" class="w-8 h-8 mb-2"></i>
+                               <div class="text-xs font-bold">PANCAKE</div>
+                           </div>
+                       </div>
+                    </div>
+                </div>
+                
+                <div class="w-1/3 h-[400px] rounded-3xl overflow-hidden border-2 border-brand-red">
+                     <img src="https://images.unsplash.com/photo-1554520735-0a6b8b6ce8b7?q=80&w=1964&auto=format&fit=crop" 
+                         alt="Pancake stack detail" 
+                         class="w-full h-full object-cover" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Banner Section -->
+    <section class="bg-brand-red text-brand-cream py-24 px-6 relative overflow-hidden">
+        <!-- Floating pills background decoration -->
+        <div class="absolute top-10 left-[20%] border border-brand-cream/30 rounded-full px-4 py-1 text-xs rotate-[-15deg]">PANCAKES</div>
+        <div class="absolute bottom-10 right-[25%] border border-brand-cream/30 rounded-full px-4 py-1 text-xs rotate-[10deg]">WAFFLES</div>
+        <div class="absolute top-16 right-[30%] border border-brand-cream/30 rounded-full px-4 py-1 text-xs rotate-[5deg]">BREAKFAST</div>
+        <div class="absolute bottom-16 left-[30%] border border-brand-cream/30 rounded-full px-4 py-1 text-xs rotate-[-5deg]">EASY PEASY</div>
+
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <h2 class="text-2xl md:text-4xl font-bold uppercase leading-snug tracking-wide">
+                SOME THINGS & THOUGHTS<br>
+                ABOUT THESE THINGS TAKE<br>
+                FOREVER, BUT BREAKFAST<br>
+                SHOULDN'T BE ONE OF IT
+            </h2>
+        </div>
+    </section>
+
+    <!-- Steps Section -->
+    <section class="bg-brand-cream py-16 px-6">
+        
+         <!-- Middle Marquee -->
+        <div class="border-y border-brand-red py-1 text-[10px] font-bold tracking-widest uppercase marquee-container flex items-center mb-16">
+            <div class="marquee-content flex gap-8 text-brand-red">
+                <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+                <span>•</span>
+                <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+                <span>•</span>
+                <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+                <span>•</span>
+                <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+                <span>•</span>
+                <span>BAKE TODAY, ENJOY EVERY TOMORROW</span>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto relative">
+             <!-- Decorative Badge 2 -->
+             <div class="absolute -top-4 left-[28%] w-12 h-12 bg-brand-red rounded-full flex items-center justify-center text-brand-cream text-[8px] font-bold text-center leading-tight z-10 border-2 border-brand-cream">
+                <span>EASY<br>STEPS</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="flex flex-col gap-4">
+                    <div class="aspect-square rounded-3xl overflow-hidden border-2 border-brand-red">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745a872f?q=80&w=2070&auto=format&fit=crop" alt="Adding water to mix" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="border-2 border-brand-red rounded-full px-3 py-0.5 text-sm font-bold text-brand-red">STEP 1</span>
+                            <h3 class="font-bold text-brand-red text-lg">Add water</h3>
+                        </div>
+                        <p class="text-sm text-brand-red/80 font-medium leading-relaxed">
+                            Just mix the perfect amount of water with your BAKE Today mix.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="flex flex-col gap-4">
+                    <div class="aspect-square rounded-3xl overflow-hidden border-2 border-brand-red">
+                        <img src="https://images.unsplash.com/photo-1505253304499-671c55fb57fe?q=80&w=1974&auto=format&fit=crop" alt="Pouring batter into pan" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="border-2 border-brand-red rounded-full px-3 py-0.5 text-sm font-bold text-brand-red">STEP 2</span>
+                            <h3 class="font-bold text-brand-red text-lg">Bake</h3>
+                        </div>
+                        <p class="text-sm text-brand-red/80 font-medium leading-relaxed">
+                            Pour the batter into your pan and bake to golden perfection.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flex flex-col gap-4">
+                    <div class="aspect-square rounded-3xl overflow-hidden border-2 border-brand-red">
+                        <img src="https://images.unsplash.com/photo-1528207776546-32248a4c1605?q=80&w=2070&auto=format&fit=crop" alt="Enjoying pancakes" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="border-2 border-brand-red rounded-full px-3 py-0.5 text-sm font-bold text-brand-red">STEP 3</span>
+                            <h3 class="font-bold text-brand-red text-lg">Enjoy</h3>
+                        </div>
+                        <p class="text-sm text-brand-red/80 font-medium leading-relaxed">
+                            Serve warm, delicious treats fresh out of the oven!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Giant Logo Footer -->
+    <footer class="bg-brand-cream pb-12 px-4 overflow-hidden flex justify-center">
+        <h1 class="font-display text-[15vw] leading-[0.8] text-brand-red m-0 text-center uppercase tracking-tighter w-full max-w-screen-2xl">
+            BAKE TODAY
+        </h1>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Simple Quantity Logic
+        const qtyInput = document.getElementById('qty');
+        
+        function incrementQty() {
+            let currentValue = parseInt(qtyInput.value);
+            qtyInput.value = currentValue + 1;
+        }
+
+        function decrementQty() {
+            let currentValue = parseInt(qtyInput.value);
+            if (currentValue > 1) {
+                qtyInput.value = currentValue - 1;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "bento-neon-grid",
+  "title": "Bento Neon Grid",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-neon-grid/code.html",
+  "previewUrl": "library/bento-neon-grid/code.html"
+}

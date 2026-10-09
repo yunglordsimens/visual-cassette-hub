@@ -1,0 +1,21 @@
+{
+  "id": "library-mockup",
+  "title": "Library Mockup",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/library-mockup/code.html",
+  "previewUrl": "library/library-mockup/code.html"
+}

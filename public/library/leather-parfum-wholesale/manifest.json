@@ -1,0 +1,21 @@
+{
+  "id": "leather-parfum-wholesale",
+  "title": "Leather Parfum Wholesale",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Клиенты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/leather-parfum-wholesale/code.tsx",
+  "previewUrl": "library/leather-parfum-wholesale/preview.html"
+}

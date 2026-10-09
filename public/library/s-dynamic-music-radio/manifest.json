@@ -1,0 +1,21 @@
+{
+  "id": "s-dynamic-music-radio",
+  "title": "S-Dynamic Music Radio",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/s-dynamic-music-radio/code.html",
+  "previewUrl": "library/s-dynamic-music-radio/code.html"
+}

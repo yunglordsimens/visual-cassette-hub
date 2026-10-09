@@ -1,0 +1,22 @@
+{
+  "id": "premium-agency-landing",
+  "title": "Premium Agency Landing",
+  "tags": [
+    "gemini",
+    "react",
+    "gsap",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · gsap",
+  "created": "2026-03-22",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/premium-agency-landing/code.tsx",
+  "previewUrl": "library/premium-agency-landing/preview.html"
+}

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASO.CORP // PART 1 (01-08)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg: #0a0a0a;
+            --ink: #ffffff;
+            --accent: #ff2a00;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--ink);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- UTILS --- */
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .blend-diff { mix-blend-mode: difference; }
+        
+        /* --- KINETIC TYPOGRAPHY --- */
+        @keyframes morph {
+            0%, 100% { font-variation-settings: 'wght' 900, 'wdth' 100; letter-spacing: -0.05em; }
+            50% { font-variation-settings: 'wght' 100, 'wdth' 150; letter-spacing: 0.1em; }
+        }
+        
+        .kinetic-title {
+            font-size: 15vw;
+            line-height: 0.8;
+            font-weight: 900;
+            text-transform: uppercase;
+            transition: all 0.5s ease;
+        }
+        .kinetic-title:hover {
+            color: transparent;
+            -webkit-text-stroke: 2px var(--accent);
+            transform: scaleX(1.1);
+        }
+
+        /* Marquee */
+        .marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            position: absolute;
+            width: 100%;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 10s linear infinite;
+        }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Blink & Glitch */
+        .blink { animation: blink 0.5s step-end infinite alternate; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* --- UPLOAD ZONES --- */
+        .page-wrapper {
+            padding: 4rem 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        .page-wrapper::before {
+            content: attr(data-page);
+            position: absolute;
+            left: 2rem; top: 50%;
+            font-size: 10rem;
+            font-weight: 900;
+            color: #1a1a1a;
+            z-index: -1;
+            transform: translateY(-50%);
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 600px; 
+            aspect-ratio: 1 / 1.414;
+            position: relative;
+            background-color: #111;
+            border: 1px solid #333;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            transition: transform 0.3s;
+        }
+        .page-container:hover { transform: scale(1.02); z-index: 10; border-color: var(--accent); }
+        
+        .file-input {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer; z-index: 50;
+        }
+
+        .uploaded-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            z-index: 1; opacity: 0.5; transition: opacity 0.5s;
+        }
+        .page-container.has-image .uploaded-image { opacity: 1; }
+        .page-container.has-image .upload-label { display: none; }
+
+        .upload-label {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            border: 1px dashed #444; padding: 2rem; pointer-events: none; z-index: 2;
+            text-align: center; color: #666;
+        }
+
+        .print-layer {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 10; pointer-events: none; padding: 1.5rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            mix-blend-mode: difference; color: white;
+        }
+
+        /* --- UI ELEMENTS --- */
+        .crosshair {
+            position: absolute; width: 20px; height: 20px;
+            border-top: 1px solid var(--accent); border-left: 1px solid var(--accent);
+        }
+        .crosshair.tr { top: 0; right: 0; transform: rotate(90deg); }
+        .crosshair.bl { bottom: 0; left: 0; transform: rotate(-90deg); }
+        .crosshair.br { bottom: 0; right: 0; transform: rotate(180deg); }
+
+        /* p5 canvas */
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+    </style>
+</head>
+<body>
+
+    <div id="p5-canvas"></div>
+
+    <header class="py-24 text-center border-b border-[#333]">
+        <h1 class="kinetic-title">MASO<br><span style="color: var(--accent)">PART I</span></h1>
+        <div class="flex justify-center gap-12 mt-8 mono text-xs text-gray-500">
+            <span>PAGES 01-08</span>
+            <span>SETUP: B1 OFFSET</span>
+            <span class="text-accent blink">● RECORDING</span>
+        </div>
+    </header>
+
+    <!-- PAGE 01: COVER -->
+    <div class="page-wrapper" data-page="01">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP COVER ART</div>
+            
+            <div class="print-layer items-center justify-center">
+                <!-- Decorative Frame -->
+                <div class="absolute inset-4 border border-white opacity-50"></div>
+                <div class="absolute top-8 left-8 mono text-[0.6rem]">ISSUE 01</div>
+                <div class="absolute top-8 right-8 mono text-[0.6rem]">2026</div>
+
+                <h2 class="text-[12rem] font-black leading-[0.75] tracking-tighter text-center mix-blend-difference">
+                    MASO<br><span style="-webkit-text-stroke: 2px white; color: transparent;">CORP</span>
+                </h2>
+                
+                <div class="absolute bottom-8 w-full text-center mono text-xs uppercase tracking-widest">
+                    Official Supply Catalog
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 02: MANIFESTO -->
+    <div class="page-wrapper" data-page="02">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP TEXTURE</div>
+            
+            <div class="print-layer">
+                <div class="marquee-wrapper absolute top-10 left-0 opacity-30" style="transform: rotate(-90deg) translateX(-50%); width: 100vh; transform-origin: left;">
+                    <div class="marquee-content text-6xl font-black">NO COMPROMISE • RAW MATERIAL • PURE STEEL • </div>
+                </div>
+
+                <h2 class="text-7xl font-black uppercase mt-12 ml-12 leading-none relative z-10">
+                    Maso<br>Je<br><span class="text-[var(--accent)]">Měna.</span>
+                </h2>
+                
+                <div class="mt-auto ml-12 max-w-[250px] mono text-[0.65rem] leading-relaxed border-l-2 border-[var(--accent)] pl-4">
+                    <strong>MANIFESTO:</strong><br>
+                    Jsme průmyslový dodavatel pro gastronomickou elitu. Neprodáváme jídlo. Prodáváme surovinu.
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl opacity-50">02</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 03: INDEX (Graphic) -->
+    <div class="page-wrapper" data-page="03">
+        <div class="page-container bg-white">
+            <!-- No image needed usually, but allowed -->
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image opacity-10"></div> 
+            
+            <div class="print-layer !text-black !mix-blend-normal p-8">
+                <h2 class="text-9xl font-black opacity-10 absolute top-[-20px] right-[-20px]">IDX</h2>
+                <div class="border-b-4 border-black pb-4 mb-8">
+                    <h2 class="text-5xl font-black uppercase">Index</h2>
+                </div>
+                
+                <div class="mono text-lg space-y-2 font-bold relative z-10">
+                    <div class="group flex justify-between border-b-2 border-black py-4 hover:bg-black hover:text-white transition-all cursor-pointer px-2">
+                        <span>01. PRODUCT</span><span>04</span>
+                    </div>
+                    <div class="group flex justify-between border-b-2 border-black py-4 hover:bg-black hover:text-white transition-all cursor-pointer px-2">
+                        <span>02. LOGISTICS</span><span>06</span>
+                    </div>
+                    <div class="group flex justify-between border-b-2 border-black py-4 hover:bg-black hover:text-white transition-all cursor-pointer px-2">
+                        <span>03. ANATOMY</span><span>08</span>
+                    </div>
+                    <div class="group flex justify-between border-b-2 border-black py-4 hover:bg-black hover:text-white transition-all cursor-pointer px-2">
+                        <span>04. DATA</span><span>10</span>
+                    </div>
+                </div>
+                
+                <div class="mt-auto flex justify-between items-end">
+                    <div class="barcode w-32 h-12 bg-[repeating-linear-gradient(90deg,black,black_2px,transparent_2px,transparent_4px)]"></div>
+                    <span class="text-4xl font-black">03</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 04: RIBEYE (Big Visual) -->
+    <div class="page-wrapper" data-page="04">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP RIBEYE</div>
+            
+            <div class="print-layer">
+                <div class="absolute top-0 left-0 w-full h-full border-[20px] border-white opacity-10 pointer-events-none"></div>
+                <div class="flex flex-col h-full justify-between">
+                    <div class="flex justify-between mono text-[0.6rem]">
+                        <span>REF: A-001</span>
+                        <span>CUT: RIBEYE</span>
+                    </div>
+                    
+                    <h2 class="text-[9rem] font-black leading-none uppercase mix-blend-overlay text-center opacity-80" style="writing-mode: vertical-rl; text-orientation: mixed;">
+                        PRIME
+                    </h2>
+                    
+                    <div class="text-right">
+                        <div class="text-6xl font-black">04</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 05: T-BONE -->
+    <div class="page-wrapper" data-page="05">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP T-BONE</div>
+            
+            <div class="print-layer">
+                <div class="w-[1px] h-full bg-[var(--accent)] absolute left-1/2 top-0 opacity-50"></div>
+                <div class="w-full h-[1px] bg-[var(--accent)] absolute top-1/3 left-0 opacity-50"></div>
+                
+                <h2 class="text-5xl font-black uppercase bg-white text-black px-4 py-2 w-max mt-20 rotate-[-5deg]">T-Bone</h2>
+                
+                <div class="mt-auto bg-black p-4 w-2/3 border border-[var(--accent)]">
+                    <p class="mono text-[0.6rem] text-white">
+                        Kombinace dvou světů. Jemná svíčková a výrazný roštěnec na kosti.
+                        <br><span class="text-[var(--accent)]">> DRY AGED 30 DAYS</span>
+                    </p>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">05</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 06: MAP (Data) -->
+    <div class="page-wrapper" data-page="06">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP MAP</div>
+            
+            <div class="print-layer">
+                <div class="absolute top-4 left-4 w-4 h-4 bg-[var(--accent)] rounded-full blink shadow-[0_0_20px_red]"></div>
+                <div class="absolute top-4 left-10 mono text-xs text-[var(--accent)]">LIVE TRACKING</div>
+                
+                <h2 class="text-[5rem] font-black uppercase text-transparent mt-20 ml-[-2rem]" style="-webkit-text-stroke: 2px white; opacity: 0.5;">
+                    LOGISTICS
+                </h2>
+                
+                <div class="mt-auto w-full grid grid-cols-2 gap-4 mono text-[0.6rem] border-t border-white pt-2">
+                    <div>> COLD CHAIN: ACTIVE</div>
+                    <div class="text-right">TEMP: 0-2°C</div>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">06</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 07: PRICE (Table) -->
+    <div class="page-wrapper" data-page="07">
+        <div class="page-container bg-[#f4f4f5]">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image opacity-10"></div>
+            
+            <div class="print-layer !text-black !mix-blend-normal p-6">
+                <h2 class="text-6xl font-black uppercase mb-10 tracking-tighter">Ceník <span class="text-[var(--accent)]">Q3</span></h2>
+                
+                <div class="w-full mono text-xs font-bold border-t-2 border-black">
+                    <div class="grid grid-cols-4 py-2 border-b border-black bg-black text-white">
+                        <span class="pl-2">CODE</span><span class="col-span-2">ITEM</span><span class="text-right pr-2">PRICE</span>
+                    </div>
+                    <div class="grid grid-cols-4 py-4 border-b border-gray-400 hover:bg-[var(--accent)] hover:text-white transition-colors cursor-crosshair">
+                        <span class="pl-2">A-001</span><span class="col-span-2">Rib-Eye</span><span class="text-right pr-2">890</span>
+                    </div>
+                    <div class="grid grid-cols-4 py-4 border-b border-gray-400 hover:bg-[var(--accent)] hover:text-white transition-colors cursor-crosshair">
+                        <span class="pl-2">A-002</span><span class="col-span-2">Striploin</span><span class="text-right pr-2">950</span>
+                    </div>
+                    <div class="grid grid-cols-4 py-4 border-b border-gray-400 hover:bg-[var(--accent)] hover:text-white transition-colors cursor-crosshair">
+                        <span class="pl-2">B-015</span><span class="col-span-2">Flank</span><span class="text-right pr-2">680</span>
+                    </div>
+                    <div class="grid grid-cols-4 py-4 border-b-4 border-black text-[var(--accent)] text-lg hover:bg-black hover:text-white transition-colors">
+                        <span class="pl-2">S-99</span><span class="col-span-2">Wagyu A5</span><span class="text-right pr-2">8 500</span>
+                    </div>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">07</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 08: ANATOMY (Technical) -->
+    <div class="page-wrapper" data-page="08">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP ANATOMY</div>
+            
+            <div class="print-layer">
+                <div class="absolute inset-0 border border-white opacity-20 m-4 rounded-[2rem]"></div>
+                
+                <h2 class="text-6xl font-black uppercase text-center mt-8 relative z-10 mix-blend-overlay">Anatomy</h2>
+                
+                <!-- Crosshairs overlay -->
+                <div class="crosshair tl top-4 left-4 border-t border-l border-white w-4 h-4 absolute"></div>
+                <div class="crosshair tr top-4 right-4 border-t border-r border-white w-4 h-4 absolute"></div>
+                <div class="crosshair bl bottom-4 left-4 border-b border-l border-white w-4 h-4 absolute"></div>
+                <div class="crosshair br bottom-4 right-4 border-b border-r border-white w-4 h-4 absolute"></div>
+
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] border border-dashed border-[var(--accent)] rounded-full animate-[spin_20s_linear_infinite]"></div>
+                
+                <span class="absolute bottom-4 right-4 font-black text-4xl">08</span>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-20 text-center mono text-xs text-gray-600">
+        END OF PART 1 // CONTINUE TO PART 2
+    </footer>
+
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = input.parentElement;
+                    const imgDiv = container.querySelector('.uploaded-image');
+                    imgDiv.style.backgroundImage = `url(${e.target.result})`;
+                    container.classList.add('has-image');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('p5-canvas');
+            frameRate(30);
+        }
+
+        function draw() {
+            clear();
+            stroke(255, 15);
+            strokeWeight(1);
+            let gridSize = 100;
+            
+            for(let x=0; x<width; x+=gridSize) {
+                line(x, 0, x, height);
+            }
+            // Active random glitch line
+            if (frameCount % 20 === 0) {
+                stroke(255, 42, 0, 100);
+                let y = random(height);
+                line(0, y, width, y);
+            }
+        }
+        function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+    </script>
+</body>
+</html>

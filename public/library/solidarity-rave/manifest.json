@@ -1,0 +1,21 @@
+{
+  "id": "solidarity-rave",
+  "title": "Solidarity Rave",
+  "tags": [
+    "gemini",
+    "html",
+    "svg",
+    "audio"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · audio",
+  "created": "2026-04-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/solidarity-rave/code.html",
+  "previewUrl": "library/solidarity-rave/code.html"
+}

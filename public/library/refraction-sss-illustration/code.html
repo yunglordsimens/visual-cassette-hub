@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Illustration Shader: SSS & Refraction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Clean typography inspired by good design practices */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+            letter-spacing: -0.01em;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1, h2, label {
+            letter-spacing: -0.02em;
+        }
+
+        /* Custom range slider styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #38bdf8; /* Light blue */
+            cursor: pointer;
+            margin-top: -6px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #334155; /* Slate 700 */
+            border-radius: 2px;
+        }
+        
+        #canvas-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row">
+
+    <!-- Controls Sidebar -->
+    <div class="w-full md:w-80 bg-slate-800/80 backdrop-blur-md border-b md:border-r border-slate-700 p-6 flex flex-col gap-6 z-10 shadow-xl overflow-y-auto">
+        
+        <div>
+            <h1 class="text-xl font-semibold text-sky-400">Illustration FX</h1>
+            <p class="text-xs text-slate-400 mt-1">Subsurface Scattering & Refraction</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="space-y-5 flex-grow">
+            
+            <!-- Scale -->
+            <div>
+                <div class="flex justify-between mb-1">
+                    <label class="text-sm font-medium">Pattern Scale</label>
+                    <span class="text-xs text-slate-400">Масштаб</span>
+                </div>
+                <input type="range" id="scale" min="5" max="100" value="45" step="1" oninput="markUpdate()">
+            </div>
+
+            <!-- Refraction -->
+            <div>
+                <div class="flex justify-between mb-1">
+                    <label class="text-sm font-medium">Refraction</label>
+                    <span class="text-xs text-slate-400">Преломление</span>
+                </div>
+                <input type="range" id="refraction" min="0" max="2" value="0.8" step="0.05" oninput="markUpdate()">
+            </div>
+
+            <!-- Subsurface Scattering -->
+            <div>
+                <div class="flex justify-between mb-1">
+                    <label class="text-sm font-medium">SSS Effect</label>
+                    <span class="text-xs text-slate-400">Рассеивание</span>
+                </div>
+                <input type="range" id="sss" min="0" max="2" value="1.2" step="0.05" oninput="markUpdate()">
+            </div>
+
+            <!-- Illustration Stylization -->
+            <div>
+                <div class="flex justify-between mb-1">
+                    <label class="text-sm font-medium">Illustration Look</label>
+                    <span class="text-xs text-slate-400">Постеризация</span>
+                </div>
+                <input type="range" id="posterize" min="0" max="1" value="0.4" step="0.05" oninput="markUpdate()">
+            </div>
+            
+        </div>
+
+        <!-- Download Button -->
+        <button id="downloadBtn" class="w-full py-3 px-4 bg-sky-500 hover:bg-sky-400 transition-colors rounded-lg text-sm font-medium text-slate-900 shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Save Illustration
+        </button>
+
+        <div id="error-msg" class="hidden text-xs text-red-400 bg-red-900/20 p-3 rounded border border-red-800/50">
+            Image not found. Ensure 'image.png' is available.
+        </div>
+    </div>
+
+    <!-- Canvas Container -->
+    <div id="canvas-container" class="flex-grow relative h-full p-4 md:p-8">
+        <canvas id="glcanvas"></canvas>
+    </div>
+
+    <!-- WebGL Logic -->
+    <script>
+        const canvas = document.getElementById('glcanvas');
+        // preserveDrawingBuffer is required to allow canvas.toDataURL() for saving the image
+        const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true });
+
+        let needUpdate = true;
+        let programInfo = null;
+        let buffers = null;
+        let texture = null;
+
+        function markUpdate() {
+            needUpdate = true;
+        }
+
+        // Vertex Shader
+        const vsSource = `
+            attribute vec2 a_position;
+            varying vec2 v_uv;
+            void main() {
+                // Map from clip space (-1 to 1) to UV space (0 to 1)
+                v_uv = a_position * 0.5 + 0.5;
+                // Flip Y coordinate so image renders right-side up
+                v_uv.y = 1.0 - v_uv.y; 
+                gl_Position = vec4(a_position, 0.0, 1.0);
+            }
+        `;
+
+        // Fragment Shader (The core visual logic)
+        const fsSource = `
+            precision highp float;
+
+            uniform sampler2D u_image;
+            uniform vec2 u_resolution;
+            uniform float u_scale;
+            uniform float u_refraction;
+            uniform float u_sss;
+            uniform float u_posterize;
+
+            varying vec2 v_uv;
+
+            void main() {
+                // Aspect ratio to keep the grid aligned and square
+                vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+                vec2 uv = v_uv;
+                
+                // --- ALIGNED PATTERN ---
+                // Create a repeating grid
+                vec2 scaled_uv = uv * aspect * u_scale;
+                vec2 cell_uv = fract(scaled_uv) - 0.5;
+                
+                // Calculate geometry of the cell (a bump/dome)
+                float dist = length(cell_uv);
+                // z represents the height of the dome
+                float z = sqrt(max(0.0, 0.25 - dist * dist)); 
+                // Normal vector for lighting and refraction calculation
+                vec3 normal = normalize(vec3(cell_uv, z + 0.1)); 
+                
+                // --- 1. REFRACTION (Преломление) ---
+                // Displace the UV coordinates based on the surface normal
+                vec2 refracted_uv = uv - normal.xy * u_refraction * 0.08;
+                // Keep UVs in bounds to avoid edge stretching artifacts
+                refracted_uv = clamp(refracted_uv, 0.0, 1.0);
+                
+                vec4 baseColor = texture2D(u_image, refracted_uv);
+                
+                // --- 2. SUBSURFACE SCATTERING (Подповерхностное рассеивание) ---
+                // Approximate light scattering through the translucent medium
+                vec4 sssColor = vec4(0.0);
+                float blur = 0.015 * u_sss;
+                
+                // Multi-tap sample to blur underlying color
+                sssColor += texture2D(u_image, refracted_uv + vec2(blur, 0.0));
+                sssColor += texture2D(u_image, refracted_uv + vec2(-blur, 0.0));
+                sssColor += texture2D(u_image, refracted_uv + vec2(0.0, blur));
+                sssColor += texture2D(u_image, refracted_uv + vec2(0.0, -blur));
+                sssColor += texture2D(u_image, refracted_uv + vec2(blur, blur) * 0.7);
+                sssColor += texture2D(u_image, refracted_uv + vec2(-blur, blur) * 0.7);
+                sssColor += texture2D(u_image, refracted_uv + vec2(blur, -blur) * 0.7);
+                sssColor += texture2D(u_image, refracted_uv + vec2(-blur, -blur) * 0.7);
+                sssColor /= 8.0;
+                
+                // Shift to warmer tones typical for physical scattering
+                sssColor.rgb *= vec3(1.15, 0.95, 0.85);
+                
+                // The thicker parts (edges of the bump) scatter more light
+                float edge = smoothstep(0.1, 0.5, dist);
+                vec3 finalColor = mix(baseColor.rgb, sssColor.rgb, edge * u_sss * 1.2);
+                
+                // Specular highlight to simulate glossy surface
+                vec3 lightDir = normalize(vec3(0.5, 0.5, 1.0));
+                float specular = pow(max(dot(normal, lightDir), 0.0), 32.0);
+                finalColor += specular * 0.3 * u_refraction;
+
+                // --- 3. ILLUSTRATION STYLIZATION (Постеризация) ---
+                // Quantize colors to create a painted/illustrated look
+                if (u_posterize > 0.0) {
+                    float levels = mix(25.0, 6.0, u_posterize); // Map slider to quantization levels
+                    finalColor = floor(finalColor * levels + 0.5) / levels;
+                    
+                    // Add subtle inner shading/outlines for depth
+                    float edgeDetect = smoothstep(0.35, 0.5, dist);
+                    finalColor *= mix(1.0, 0.75, edgeDetect * u_posterize);
+                }
+                
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+        function initShaderProgram(gl, vsSource, fsSource) {
+            const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+            const shaderProgram = gl.createProgram();
+            gl.attachShader(shaderProgram, vertexShader);
+            gl.attachShader(shaderProgram, fragmentShader);
+            gl.linkProgram(shaderProgram);
+
+            if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+                console.error('Shader program failed to initialize:', gl.getProgramInfoLog(shaderProgram));
+                return null;
+            }
+            return shaderProgram;
+        }
+
+        function loadShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('Shader compilation error:', gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader);
+                return null;
+            }
+            return shader;
+        }
+
+        function setupWebGL(img) {
+            // Set canvas size exactly to image size
+            canvas.width = img.width;
+            canvas.height = img.height;
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+            const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+
+            programInfo = {
+                program: shaderProgram,
+                attribLocations: {
+                    vertexPosition: gl.getAttribLocation(shaderProgram, 'a_position'),
+                },
+                uniformLocations: {
+                    u_image: gl.getUniformLocation(shaderProgram, 'u_image'),
+                    u_resolution: gl.getUniformLocation(shaderProgram, 'u_resolution'),
+                    u_scale: gl.getUniformLocation(shaderProgram, 'u_scale'),
+                    u_refraction: gl.getUniformLocation(shaderProgram, 'u_refraction'),
+                    u_sss: gl.getUniformLocation(shaderProgram, 'u_sss'),
+                    u_posterize: gl.getUniformLocation(shaderProgram, 'u_posterize'),
+                },
+            };
+
+            // Fullscreen quad
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            const positions = [
+                -1.0, -1.0,
+                 1.0, -1.0,
+                -1.0,  1.0,
+                -1.0,  1.0,
+                 1.0, -1.0,
+                 1.0,  1.0,
+            ];
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+            buffers = { position: positionBuffer };
+
+            // Setup texture
+            texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            
+            // Texture filtering settings
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+            // Start render loop
+            requestAnimationFrame(render);
+        }
+
+        function render() {
+            if (needUpdate && programInfo) {
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                gl.useProgram(programInfo.program);
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+                gl.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 2, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+
+                // Pass UI values to the shader
+                gl.uniform2f(programInfo.uniformLocations.u_resolution, canvas.width, canvas.height);
+                gl.uniform1f(programInfo.uniformLocations.u_scale, parseFloat(document.getElementById('scale').value));
+                gl.uniform1f(programInfo.uniformLocations.u_refraction, parseFloat(document.getElementById('refraction').value));
+                gl.uniform1f(programInfo.uniformLocations.u_sss, parseFloat(document.getElementById('sss').value));
+                gl.uniform1f(programInfo.uniformLocations.u_posterize, parseFloat(document.getElementById('posterize').value));
+
+                gl.activeTexture(gl.TEXTURE0);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.uniform1i(programInfo.uniformLocations.u_image, 0);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                needUpdate = false;
+            }
+            requestAnimationFrame(render);
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const img = new Image();
+            // Important for canvas CORS policy if running locally/hosted
+            img.crossOrigin = "anonymous"; 
+            img.src = "image.png";
+            
+            img.onload = () => {
+                setupWebGL(img);
+            };
+            
+            img.onerror = () => {
+                document.getElementById('error-msg').classList.remove('hidden');
+                console.error("Could not load image.png");
+            };
+        });
+
+        // Download functionality
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            if (!programInfo) return; // Not initialized yet
+            
+            // Force a render pass just in case
+            needUpdate = true;
+            render(); 
+            
+            const dataURL = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'aligned-pattern-illustration.png';
+            link.href = dataURL;
+            link.click();
+        });
+
+    </script>
+</body>
+</html>

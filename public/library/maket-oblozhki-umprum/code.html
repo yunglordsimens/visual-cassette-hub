@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMPRUM Notebook Cover Mockup</title>
+    <!-- Подключаем Tailwind CSS для быстрой верстки и сетки -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Фирменный синий цвет UMPRUM из брендбука/логотипа
+                        umprumBlue: '#0000FF', 
+                    },
+                    fontFamily: {
+                        // Имитация фирменного гротеска UMPRUM
+                        sans: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Стили для имитации физического объекта (блокнота) */
+        body {
+            background-color: #e5e5e5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .notebook-a5 {
+            /* Точные пропорции формата А5 (148мм x 210мм) */
+            width: 100%;
+            max-height: 85vh;
+            max-width: calc(85vh * (148 / 210));
+            aspect-ratio: 148 / 210;
+            background-color: #0000FF;
+            border-radius: 12px; /* Заобленные углы по брифу */
+            box-shadow: 
+                -15px 15px 35px rgba(0, 0, 0, 0.2),
+                inset -3px 0 15px rgba(0,0,0,0.1); /* Легкий объем */
+            position: relative;
+            overflow: hidden;
+            /* Делаем блокнот контейнером для идеального масштабирования текста */
+            container-type: inline-size;
+        }
+
+        /* Анимация мишки для легкой интерактивности в макете */
+        .bear-hover {
+            transition: transform 0.3s ease;
+        }
+        .bear-hover:hover {
+            transform: translateY(-5px) rotate(-2deg);
+        }
+    </style>
+</head>
+<body class="antialiased text-white">
+
+    <!-- Контейнер блокнота -->
+    <div class="notebook-a5 p-[8%] flex flex-col justify-between">
+        
+        <!-- ВЕРХНЯЯ ЧАСТЬ: Заголовок и Факультеты -->
+        <div class="top-section">
+            <!-- Главный акцентный заголовок (размер жестко привязан к ширине обложки) -->
+            <h1 class="font-bold leading-[0.9] tracking-tight mb-[8cqw]" style="font-size: 13.5cqw;">
+                Come<br>
+                study in<br>
+                Prague<br>
+                with us!
+            </h1>
+
+            <!-- Строгий список факультетов -->
+            <ul class="font-medium leading-tight opacity-90 space-y-[0.5cqw]" style="font-size: 4cqw;">
+                <li>Architecture</li>
+                <li>Design</li>
+                <li>Fine Arts</li>
+                <li>Applied Arts</li>
+                <li>Graphics</li>
+                <li>Theoretical studies</li>
+            </ul>
+        </div>
+
+        <!-- НИЖНЯЯ ЧАСТЬ: Логотип, QR, Мишка и Кредит -->
+        <div class="bottom-section relative mt-12">
+            
+            <!-- Медведь-вырезка (Плейсхолдер) -->
+            <!-- По задумке он "стоит" на QR-коде или выглядывает из-за него -->
+            <div class="absolute -top-[16cqw] left-[2cqw] bear-hover cursor-pointer z-10" title="Сюда вставим вырезанного мишку с папкой">
+                <!-- Заглушка вместо картинки -->
+                <div class="drop-shadow-lg filter" style="font-size: 13cqw;">🐻‍❄️🎨</div>
+            </div>
+
+            <div class="flex items-end justify-between border-t border-white/30 pt-[4cqw]">
+                
+                <!-- Левый блок: QR и Логотип -->
+                <div class="flex items-end gap-[4cqw]">
+                    <!-- Плейсхолдер QR-кода -->
+                    <div class="bg-white rounded-sm flex items-center justify-center flex-shrink-0" style="width: 17cqw; height: 17cqw;">
+                        <span class="text-umprumBlue font-bold text-center leading-none" style="font-size: 3.5cqw;">QR<br>CODE</span>
+                    </div>
+
+                    <!-- Типографический Логотип UMPRUM -->
+                    <div class="font-bold leading-[0.85] tracking-tighter pb-[0.5cqw]" style="font-size: 6.5cqw;">
+                        UM<br>
+                        PR<br>
+                        UM
+                    </div>
+                </div>
+
+                <!-- Правый блок: Кредит автора -->
+                <div class="text-right pb-1">
+                    <p class="font-medium opacity-80 rotate-180" style="writing-mode: vertical-rl; font-size: 2.5cqw;">
+                        ill. @weichein.ting
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

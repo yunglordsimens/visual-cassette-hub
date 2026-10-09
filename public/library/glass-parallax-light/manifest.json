@@ -1,0 +1,20 @@
+{
+  "id": "glass-parallax-light",
+  "title": "Glass Parallax & Light",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "3D / WebGL",
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/glass-parallax-light/code.html",
+  "previewUrl": "library/glass-parallax-light/code.html"
+}

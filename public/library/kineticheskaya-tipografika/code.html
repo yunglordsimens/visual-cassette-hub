@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кинетическая Типографика: Бесконечность из букв</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 10;">
+    <input type="text" id="textInput" value="[c11] TU .doc 03-10/06 " autocomplete="off" spellcheck="false" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 24px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; outline: none; border-radius: 30px; text-align: center; width: 320px; letter-spacing: 2px; backdrop-filter: blur(5px); transition: 0.3s;" onfocus="this.style.borderColor='rgba(255,255,255,0.8)'" onblur="this.style.borderColor='rgba(255,255,255,0.3)'">
+</div>
+
+<canvas id="kineticCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('kineticCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    
+    // Единый системный шрифт для всей типографики
+    const fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+    
+    // Алфавит, из которого берутся символы (на случай, если поле ввода пустое)
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        
+        const dpr = window.devicePixelRatio || 1;
+        
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        
+        ctx.scale(dpr, dpr);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Настройки кривой
+    const NUM_POINTS = 160; 
+    const points = [];
+
+    // Инициализация точек на кривой
+    for (let i = 0; i < NUM_POINTS; i++) {
+        points.push({
+            angle: (i / NUM_POINTS) * Math.PI * 2,
+            id: i
+        });
+    }
+
+    let time = 0;
+
+    function render() {
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, width, height);
+
+        time += 0.003;
+
+        const R = Math.min(width, height) * 0.4;
+        const perspective = R * 2.5;
+
+        // Математика формы "восьмерки" (Лиссажу)
+        const projected = points.map(p => {
+            const a = p.angle + time;
+            
+            const x3d = R * Math.sin(a);
+            const y3d = R * Math.sin(2 * a) * 0.9; 
+            const z3d = R * Math.cos(a) * 0.5;
+
+            // Медленное вращение сцены
+            const rotX = Math.sin(time * 0.5) * 0.3;
+            const rotY = time * 0.2;
+
+            const x1 = x3d * Math.cos(rotY) - z3d * Math.sin(rotY);
+            const z1 = x3d * Math.sin(rotY) + z3d * Math.cos(rotY);
+
+            const y2 = y3d * Math.cos(rotX) - z1 * Math.sin(rotX);
+            const z2 = y3d * Math.sin(rotX) + z1 * Math.cos(rotX);
+            
+            const scale = perspective / (perspective + z2);
+            
+            const x = width / 2 + x1 * scale;
+            const y = height / 2 + y2 * scale;
+
+            return { 
+                x, y, scale, z: z2, 
+                id: p.id, 
+                originalAngle: p.angle 
+            };
+        });
+
+        // Painter's algorithm
+        projected.sort((a, b) => b.z - a.z);
+
+        ctx.textBaseline = 'middle';
+
+        // Получаем текст (убрали toUpperCase, чтобы сохранить оригинальный регистр, например .doc)
+        const customText = document.getElementById('textInput').value || '   ';
+        const len = customText.length;
+
+        projected.forEach(p => {
+            const fontSize = Math.max(2, 12 * p.scale);
+            ctx.font = `${fontSize}px ${fontFamily}`;
+
+            const alpha = Math.max(0.1, Math.min(1, p.scale * 1.2 - 0.2));
+            
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.5})`;
+            ctx.lineWidth = Math.max(0.5, 1 * p.scale);
+
+            // Плавный сдвиг текста: каждая линия берет следующие символы по порядку ленты
+            const i = p.id;
+            const text1 = customText.charAt(i % len) + 
+                          customText.charAt((i + 1) % len) + 
+                          customText.charAt((i + 2) % len);
+                          
+            const text2 = customText.charAt((i + 3) % len) + 
+                          customText.charAt((i + 4) % len) + 
+                          customText.charAt((i + 5) % len);
+
+            const gap = 20 * p.scale;
+            const padding = 6 * p.scale; // Аккуратный отступ от конца линии до текста
+
+            // Отрисовка линии
+            ctx.beginPath();
+            ctx.moveTo(p.x - gap, p.y);
+            ctx.lineTo(p.x + gap, p.y);
+            ctx.stroke();
+
+            // Отрисовка букв с правильным выравниванием по краям (вместо центрирования)
+            ctx.textAlign = 'right';
+            ctx.fillText(text1, p.x - gap - padding, p.y);
+            
+            ctx.textAlign = 'left';
+            ctx.fillText(text2, p.x + gap + padding, p.y);
+        });
+
+        requestAnimationFrame(render);
+    }
+
+    render();
+</script>
+
+</body>
+</html>

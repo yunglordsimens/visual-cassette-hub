@@ -1,0 +1,20 @@
+{
+  "id": "timeline-landing-page",
+  "title": "Timeline Landing Page",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/timeline-landing-page/code.html",
+  "previewUrl": "library/timeline-landing-page/code.html"
+}

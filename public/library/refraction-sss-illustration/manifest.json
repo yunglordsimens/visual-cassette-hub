@@ -1,0 +1,22 @@
+{
+  "id": "refraction-sss-illustration",
+  "title": "Refraction & SSS Illustration",
+  "tags": [
+    "gemini",
+    "html",
+    "webgl",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · webgl",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/refraction-sss-illustration/code.html",
+  "previewUrl": "library/refraction-sss-illustration/code.html"
+}

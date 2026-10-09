@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Визуальные Коммуникации | Прототип</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Используем элегантный антикву для заголовков (отсылка к классической типографике) и строгий гротеск для интерфейса -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --glass-bg: rgba(20, 20, 20, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: rgba(255, 255, 255, 0.9);
+            --text-muted: rgba(255, 255, 255, 0.5);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #050505;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Запрещаем скролл для эффекта иммерсивности */
+        }
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* КОНТЕЙНЕР ПАРАЛЛАКСА И ФОНА */
+        .bg-container {
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            z-index: 0;
+            pointer-events: none;
+            /* Легкое пульсирование для живости */
+            animation: pulse-slow 10s ease-in-out infinite alternate;
+        }
+
+        /* БАЗОВЫЕ СЛОИ ИЗОБРАЖЕНИЯ */
+        .layer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('image.png'); /* Без ./ согласно предпочтениям */
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+        }
+
+        /* МАГИЯ ХРОМАТИЧЕСКОЙ АБЕРРАЦИИ */
+        .layer-red {
+            filter: url(#filter-red) blur(1px);
+            mix-blend-mode: screen;
+            opacity: 0.8;
+        }
+
+        .layer-cyan {
+            filter: url(#filter-cyan) blur(1px);
+            mix-blend-mode: screen;
+            opacity: 0.8;
+        }
+
+        .layer-main {
+            opacity: 0.5;
+            filter: contrast(1.2) saturate(1.2);
+        }
+
+        /* ШУМ (GRAIN) */
+        .noise-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 10;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.12;
+            mix-blend-mode: overlay;
+        }
+
+        /* ЭФФЕКТ СТЕКЛА (GLASSMORPHISM) */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 20;
+            overflow: hidden;
+        }
+
+        /* Блик на стекле */
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.03), transparent);
+            transform: skewX(-20deg);
+            animation: shine 8s infinite;
+        }
+
+        /* АНИМАЦИИ */
+        @keyframes pulse-slow {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.03); }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Кастомный скроллбар для внутренних блоков, если понадобятся */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <!-- SVG ФИЛЬТРЫ ДЛЯ РАЗДЕЛЕНИЯ КАНАЛОВ (RGB SPLIT) -->
+    <svg style="display: none;">
+        <defs>
+            <!-- Оставляем только красный канал -->
+            <filter id="filter-red">
+                <feColorMatrix type="matrix" values="
+                    1 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 0 0
+                    0 0 0 1 0" />
+            </filter>
+            <!-- Оставляем зеленый и синий (циан) -->
+            <filter id="filter-cyan">
+                <feColorMatrix type="matrix" values="
+                    0 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    0 0 0 1 0" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- СЛОЙ ШУМА -->
+    <div class="noise-overlay"></div>
+
+    <!-- ИНТЕРАКТИВНЫЙ ФОН С ПАРАЛЛАКСОМ -->
+    <div class="bg-container" id="scene">
+        <div class="layer layer-main" id="layer-main"></div>
+        <div class="layer layer-cyan" id="layer-cyan"></div>
+        <div class="layer layer-red" id="layer-red"></div>
+    </div>
+
+    <!-- UI СЛОЙ -->
+    <div class="relative z-20 w-full h-full flex flex-col justify-between p-6 md:p-12">
+        
+        <!-- НАВИГАЦИЯ -->
+        <header class="flex justify-between items-center w-full fade-in-up">
+            <div class="text-sm tracking-[0.2em] uppercase font-medium text-white/70 hover:text-white transition-colors cursor-pointer">
+                Studio / 2026
+            </div>
+            <nav class="hidden md:flex gap-8 text-sm tracking-wide text-white/60">
+                <a href="#" class="hover:text-white transition-colors">Проекты</a>
+                <a href="#" class="hover:text-white transition-colors">Типографика</a>
+                <a href="#" class="hover:text-white transition-colors">Обо мне</a>
+            </nav>
+            <button class="md:hidden text-white/70">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            </button>
+        </header>
+
+        <!-- ЦЕНТРАЛЬНЫЙ БЛОК -->
+        <main class="w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 mt-12 md:mt-0">
+            
+            <!-- Текст -->
+            <div class="flex-1 text-center md:text-left">
+                <p class="text-xs md:text-sm tracking-[0.3em] text-white/50 uppercase mb-4 fade-in-up delay-1">
+                    Исследование формы и света
+                </p>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif leading-[1.1] mb-6 fade-in-up delay-2">
+                    Визуальная <br/>
+                    <span class="italic text-white/80">Коммуникация</span>
+                </h1>
+                <p class="text-base md:text-lg text-white/50 max-w-md mx-auto md:mx-0 font-light fade-in-up delay-3 leading-relaxed">
+                    Синтез технологий и классической типографики. Пространство, где абстрактные формы обретают структуру через эстетику преломления.
+                </p>
+                
+                <div class="mt-10 fade-in-up delay-3">
+                    <button class="relative group overflow-hidden rounded-full p-[1px]">
+                        <span class="absolute inset-0 bg-gradient-to-r from-white/40 to-white/10 rounded-full opacity-50 group-hover:opacity-100 transition-opacity duration-500"></span>
+                        <div class="relative px-8 py-3 bg-black/40 backdrop-blur-md rounded-full border border-white/10 text-sm tracking-widest uppercase transition-all duration-300 group-hover:bg-white/10">
+                            Смотреть проекты
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Стеклянная карточка -->
+            <div class="w-full md:w-[400px] glass-panel p-8 fade-in-up delay-3 transform transition-transform duration-700 hover:scale-[1.02]">
+                <div class="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                    <span class="font-serif text-xl italic">Детали</span>
+                    <span class="text-xs tracking-widest text-white/40 uppercase">v. 2.0</span>
+                </div>
+                
+                <ul class="space-y-6">
+                    <li class="group">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-1 group-hover:text-white/60 transition-colors">Дисциплина</div>
+                        <div class="text-lg font-serif">Проектирование шрифтов</div>
+                    </li>
+                    <li class="group">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-1 group-hover:text-white/60 transition-colors">Локация</div>
+                        <div class="text-lg font-serif">UMPRUM, Прага</div>
+                    </li>
+                    <li class="group">
+                        <div class="text-xs text-white/40 uppercase tracking-widest mb-1 group-hover:text-white/60 transition-colors">Стек</div>
+                        <div class="flex gap-2 mt-2">
+                            <span class="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs">WebGL</span>
+                            <span class="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs">Glassmorphism</span>
+                            <span class="px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs">Typography</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+        </main>
+
+        <!-- ФУТЕР -->
+        <footer class="w-full flex justify-between items-end fade-in-up delay-3">
+            <div class="text-xs text-white/40 tracking-widest uppercase">
+                EN / RU / ES
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 hover:bg-white/20 backdrop-blur-sm transition-all">
+                    <span class="sr-only">Instagram</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+                <a href="#" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 hover:bg-white/20 backdrop-blur-sm transition-all">
+                    <span class="sr-only">Behance</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 4h4c2.5 0 4 1.5 4 4s-1.5 4-4 4H5V4z"/><path d="M5 12h4c2.5 0 4 1.5 4 4s-1.5 4-4 4H5v-8z"/><line x1="14" y1="8" x2="20" y2="8"/><path d="M14 14h6v-2c0-2-1.5-4-4-4s-4 2-4 4v4c0 2 1.5 4 4 4s4-2 4-4"/></svg>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ЛОГИКА ПАРАЛЛАКСА -->
+    <script>
+        // Элементы
+        const layerMain = document.getElementById('layer-main');
+        const layerRed = document.getElementById('layer-red');
+        const layerCyan = document.getElementById('layer-cyan');
+        const card = document.querySelector('.glass-panel');
+
+        // Переменные для плавной интерполяции (lerp)
+        let mouseX = 0;
+        let mouseY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        
+        // Настройка силы эффекта
+        const ease = 0.04; // Плавность (меньше = плавнее)
+        const parallaxStrength = 40; // Максимальное отклонение фона
+        const aberrationStrength = 25; // Сила разъезда каналов RGB
+
+        // Слушаем мышь
+        window.addEventListener('mousemove', (e) => {
+            // Нормализуем координаты от -1 до 1 (центр экрана = 0)
+            mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+            mouseY = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        // Анимационный цикл
+        function animate() {
+            // Линейная интерполяция для плавного движения
+            currentX += (mouseX - currentX) * ease;
+            currentY += (mouseY - currentY) * ease;
+
+            // 1. Двигаем основной слой (немного)
+            const mainX = currentX * -parallaxStrength;
+            const mainY = currentY * -parallaxStrength;
+            layerMain.style.transform = `translate(${mainX}px, ${mainY}px) scale(1.1)`;
+
+            // 2. Двигаем красный канал (в одну сторону) - создает глитч по краям
+            const redX = currentX * -(parallaxStrength + aberrationStrength);
+            const redY = currentY * -(parallaxStrength + aberrationStrength);
+            layerRed.style.transform = `translate(${redX}px, ${redY}px) scale(1.1)`;
+
+            // 3. Двигаем циан канал (в противоположную сторону)
+            const cyanX = currentX * -(parallaxStrength - aberrationStrength);
+            const cyanY = currentY * -(parallaxStrength - aberrationStrength);
+            layerCyan.style.transform = `translate(${cyanX}px, ${cyanY}px) scale(1.1)`;
+
+            // 4. Легкий 3D-эффект наклона для стеклянной карточки
+            if(card) {
+                const rotateY = currentX * 10; // наклон по X
+                const rotateX = currentY * -10; // наклон по Y
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Запуск
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "id": "may-prg-event",
+  "title": "May PRG Event",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll",
+    "audio"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · audio",
+  "created": "2026-04-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/may-prg-event/code.tsx",
+  "previewUrl": "library/may-prg-event/preview.html"
+}

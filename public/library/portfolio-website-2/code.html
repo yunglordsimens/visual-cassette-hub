@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videographer & Video-Editor Portfolio</title>
+    
+    <!-- Loading Google Fonts: Inter (sans-serif) and Playfair Display (serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Loading Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuring Tailwind custom theme values -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#f9f9f9',
+                            text: '#1a1a1a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f9f9f9;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen p-0 md:p-8">
+
+    <!-- Main Content Container with white background and subtle shadow -->
+    <main class="max-w-[1000px] mx-auto bg-white p-6 md:p-12 shadow-sm rounded-xl">
+        
+        <!-- Header Navigation -->
+        <header class="flex justify-between items-center pb-12">
+            <div class="font-medium tracking-wide">ic — iv</div>
+            <nav class="hidden md:flex gap-8 text-sm">
+                <a href="#about" class="hover:text-gray-500 transition-colors">About me</a>
+                <a href="#projects" class="hover:text-gray-500 transition-colors">Projects</a>
+                <a href="#skills" class="hover:text-gray-500 transition-colors">Skills</a>
+            </nav>
+            <!-- Mobile Menu Placeholder -->
+            <div class="md:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="about" class="mb-20">
+            <h1 class="text-5xl md:text-[5.5rem] font-serif uppercase leading-tight mb-10 tracking-tight">
+                Videographer<br>& Video-Editor.
+            </h1>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                <img 
+                    src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80" 
+                    alt="Videographer working" 
+                    class="w-full rounded-xl object-cover shadow-sm"
+                >
+                <div class="text-sm md:text-base text-gray-700 max-w-md leading-relaxed">
+                    <p>My name is Kate. I'm from Ukraine, but currently I'm based in Canada, Toronto. I have experience in creating and editing reels, shorts, scenery and social media videos (YouTube Reels and TikTok). I'm eager to work hard to feel my skills.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="mb-24">
+            <!-- Section Title -->
+            <div class="flex items-center gap-6 mb-10">
+                <div class="w-16 h-[1px] bg-gray-300"></div>
+                <h2 class="text-4xl font-serif">Projects</h2>
+            </div>
+            
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <!-- Project Card 1 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1547153760-18fc86324498?auto=format&fit=crop&w=600&q=80" alt="Solo dance video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Solo dance video</div>
+                </a>
+
+                <!-- Project Card 2 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1573871781290-798eb419c836?auto=format&fit=crop&w=600&q=80" alt="Sax player" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Sax player</div>
+                </a>
+
+                <!-- Project Card 3 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" alt="Drone video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Drone video</div>
+                </a>
+
+                <!-- Project Card 4 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=600&q=80" alt="Dentistry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Dentistry</div>
+                </a>
+
+                <!-- Project Card 5 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a1a2a5956020?auto=format&fit=crop&w=600&q=80" alt="Music video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Music video</div>
+                </a>
+
+                <!-- Project Card 6 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1524567248834-8c83a00c6198?auto=format&fit=crop&w=600&q=80" alt="Group dance video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Group dance video</div>
+                </a>
+
+                <!-- Project Card 7 (Wide) -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] md:aspect-auto md:h-full md:col-span-2 block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1682687982501-1e58b8147144?auto=format&fit=crop&w=1200&q=80" alt="Scenery video" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Scenery video</div>
+                </a>
+
+                <!-- Project Card 8 -->
+                <a href="#" class="group relative rounded-xl overflow-hidden aspect-[4/3] block shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=600&q=80" alt="Dentistry 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-5 text-white text-sm font-light">Dentistry</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="mb-20">
+            <!-- Section Title -->
+            <div class="flex items-center gap-6 mb-10">
+                <div class="w-16 h-[1px] bg-gray-300"></div>
+                <h2 class="text-4xl font-serif">Skills</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-16 items-start">
+                <!-- Skills Image -->
+                <div class="md:col-span-2">
+                    <img src="https://images.unsplash.com/photo-1525539525157-5b6eb4cfdc16?auto=format&fit=crop&w=800&q=80" alt="Camera equipment" class="w-full aspect-[4/3] object-cover rounded-xl shadow-sm">
+                </div>
+                
+                <!-- Skills Lists -->
+                <div class="md:col-span-3 flex flex-col gap-10">
+                    
+                    <!-- Tools -->
+                    <div>
+                        <h3 class="text-2xl font-serif mb-5">Tools</h3>
+                        <div class="flex flex-wrap gap-2.5">
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Adobe Premiere Pro</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Final Cut Pro</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">After Effects</span>
+                        </div>
+                    </div>
+
+                    <!-- Video Editing Skills -->
+                    <div>
+                        <h3 class="text-2xl font-serif mb-5">Video-editing skills</h3>
+                        <div class="flex flex-wrap gap-2.5">
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Sound editing</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Animation</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Rhythm</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Color correction</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Multicam/multi-video editing</span>
+                        </div>
+                    </div>
+
+                    <!-- Videographer Skills -->
+                    <div>
+                        <h3 class="text-2xl font-serif mb-5">Videographer skills</h3>
+                        <div class="flex flex-wrap gap-2.5">
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Camera tools</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Composition</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Mise-en-scene</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Lighting schemes</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Sound recording</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Perspective</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Studio, interior, action, and object shooting</span>
+                            <span class="border border-gray-300 rounded-full px-4 py-1.5 text-xs text-gray-800 tracking-wide">Snow gear</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="flex flex-col md:flex-row justify-between pt-10 border-t border-gray-200 gap-6">
+            <div>
+                <div class="text-[0.65rem] text-gray-400 uppercase tracking-widest mb-1.5">Email</div>
+                <a href="mailto:kate.maksimichova@gmail.com" class="text-sm font-medium hover:text-gray-600 transition-colors">kate.maksimichova@gmail.com</a>
+            </div>
+            
+            <div>
+                <div class="text-[0.65rem] text-gray-400 uppercase tracking-widest mb-1.5">Social</div>
+                <div class="flex gap-4 text-sm font-medium">
+                    <a href="#" class="hover:text-gray-600 transition-colors">LinkedIn</a>
+                    <a href="#" class="hover:text-gray-600 transition-colors">Instagram</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+</body>
+</html>

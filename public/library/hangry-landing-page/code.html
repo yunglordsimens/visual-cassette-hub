@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangry - L'heure est au carnage</title>
+    <!-- Tailwind CSS for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Oswald for headings, Inter for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600;800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom font applications and basic resets */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f5ef; /* Light cream background from reference */
+            color: #111111;
+        }
+        .font-heading {
+            font-family: 'Anton', sans-serif;
+            text-transform: uppercase;
+        }
+        .font-subheading {
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+        
+        /* Custom utilities for image overlays and hover effects */
+        .image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .image-container img {
+            transition: transform 0.5s ease;
+        }
+        .image-container:hover img {
+            transform: scale(1.05);
+        }
+        .badge {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            z-index: 10;
+        }
+
+        /* Subtle noise texture overlay for the retro feel */
+        .noise-bg {
+            position: relative;
+        }
+        .noise-bg::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+        }
+    </style>
+</head>
+<body class="noise-bg antialiased selection:bg-black selection:text-white">
+
+    <!-- Max width container mimicking the centered "app" view in the reference -->
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-screen flex flex-col">
+        
+        <!-- Header / Navigation -->
+        <header class="flex justify-between items-center py-6 border-b border-gray-200 mb-12">
+            <!-- Logo area -->
+            <div class="flex items-center">
+                <span class="font-heading text-3xl tracking-tighter">IR</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">À Propos</a>
+                <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">Menu</a>
+                <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">Points de vente</a>
+                <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">Extras</a>
+                <a href="#" class="text-xs font-bold uppercase tracking-widest hover:text-gray-600 transition-colors">Contact</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <div>
+                <a href="#" class="bg-black text-white text-xs font-bold uppercase tracking-widest py-3 px-6 rounded-full hover:bg-gray-800 transition-colors inline-block">
+                    Commander
+                </a>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow">
+            
+            <!-- Hero Title Section -->
+            <div class="text-center mb-16">
+                <h1 class="font-heading text-8xl md:text-9xl lg:text-[10rem] leading-none tracking-tight mb-4">
+                    HANGRY
+                </h1>
+                <h2 class="font-subheading text-2xl md:text-3xl tracking-wide mb-6">
+                    L'HEURE EST AU CARNAGE
+                </h2>
+                <p class="max-w-2xl mx-auto text-sm md:text-base leading-relaxed text-gray-800 font-medium px-4">
+                    T'as la dalle ? On a ce qu'il te faut. Chez Hangry, on te sert du bon, du rapide, et du 100% fait maison, avec des saveurs qui vont te faire vibrer. Fini les snacks insipides et les menus sans âme. Ici, chaque bouchée, c'est un plaisir. T'es prêt à découvrir un fast food qui ne ressemble à aucun autre ?
+                </p>
+            </div>
+
+            <!-- Image Grid - Top Row (2 columns) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 border-b-2 border-black pb-6">
+                <!-- Image 1 -->
+                <div>
+                    <div class="image-container aspect-[4/3] mb-4 bg-gray-200">
+                        <div class="badge font-subheading">SUR PLACE</div>
+                        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Person holding many burgers" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-heading text-3xl tracking-wide">SUR PLACE</h3>
+                </div>
+
+                <!-- Image 2 -->
+                <div>
+                    <div class="image-container aspect-[4/3] mb-4 bg-gray-200">
+                        <div class="badge font-subheading">TAKE AWAY</div>
+                        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Person eating a large burger" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-heading text-3xl tracking-wide">TAKE AWAY</h3>
+                </div>
+            </div>
+
+            <!-- Image Grid - Bottom Row (3 columns) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                <!-- Item 1 -->
+                <div>
+                    <div class="image-container aspect-square mb-4 bg-gray-200">
+                        <div class="badge font-subheading">BURGERS</div>
+                        <img src="https://images.unsplash.com/photo-1610440042657-612c34d9b29e?q=80&w=800&auto=format&fit=crop" 
+                             alt="Close up of a delicious burger" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-heading text-2xl tracking-wide">NOS BURGERS</h3>
+                </div>
+
+                <!-- Item 2 -->
+                <div>
+                    <div class="image-container aspect-square mb-4 bg-gray-200">
+                        <div class="badge font-subheading">PETITES FAIMS</div>
+                        <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=800&auto=format&fit=crop" 
+                             alt="Fried chicken tenders with pickles" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-heading text-2xl tracking-wide">PETITES FAIMS</h3>
+                </div>
+
+                <!-- Item 3 -->
+                <div>
+                    <div class="image-container aspect-square mb-4 bg-gray-200">
+                        <div class="badge font-subheading">DESSERTS</div>
+                        <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?q=80&w=800&auto=format&fit=crop" 
+                             alt="Jelly filled donut" 
+                             class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="font-heading text-2xl tracking-wide">DESSERTS</h3>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer area -->
+        <footer class="py-6 border-t border-gray-300 text-center text-sm font-medium text-gray-500">
+            <p>&copy; 2026 Hangry. Tous droits réservés.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

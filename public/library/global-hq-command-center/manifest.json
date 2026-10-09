@@ -1,0 +1,22 @@
+{
+  "id": "global-hq-command-center",
+  "title": "Global HQ Command Center",
+  "tags": [
+    "gemini",
+    "react",
+    "canvas",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · canvas",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/global-hq-command-center/code.tsx",
+  "previewUrl": "library/global-hq-command-center/preview.html"
+}

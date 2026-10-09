@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Визуальный Архив Книг</title>
+    <!-- Tailwind CSS для стилизации UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vis-Network для графовой визуализации -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #fcfcfc;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        #network-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        /* Убираем синюю рамку при фокусе на canvas */
+        .vis-network {
+            outline: none;
+        }
+
+        /* Кастомный скроллбар для панели информации */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="relative text-gray-800">
+
+    <!-- Заголовок интерфейса -->
+    <header class="absolute top-6 left-6 z-20 pointer-events-none">
+        <h1 class="text-3xl font-light tracking-tight text-slate-900 bg-white/80 px-4 py-2 rounded-lg backdrop-blur-sm border border-slate-200/50 shadow-sm">
+            Архив<span class="font-bold">Книг</span>
+        </h1>
+        <p class="mt-2 text-sm text-slate-500 bg-white/80 px-4 py-1.5 rounded-lg backdrop-blur-sm border border-slate-200/50 inline-block shadow-sm">
+            Интерактивная карта знаний и связей
+        </p>
+    </header>
+
+    <!-- Инструкция (исчезает при клике) -->
+    <div id="instruction" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 transition-opacity duration-500 pointer-events-none">
+        <div class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg text-sm flex items-center space-x-2 opacity-90">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+            <span>Используйте мышь для перемещения, колесико для зума. Кликните на книгу для деталей.</span>
+        </div>
+    </div>
+
+    <!-- Контейнер для графа -->
+    <div id="network-container"></div>
+
+    <!-- Боковая панель с информацией о книге -->
+    <aside id="book-panel" class="absolute top-0 right-0 h-full w-full sm:w-96 bg-white/95 backdrop-blur-md border-l border-slate-200 shadow-2xl z-30 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <!-- Кнопка закрытия -->
+        <button id="close-panel" class="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-full transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div class="p-8 pb-4 flex-grow overflow-y-auto custom-scrollbar">
+            <!-- Обложка -->
+            <div class="w-full aspect-[2/3] bg-slate-100 rounded-lg overflow-hidden shadow-inner mb-6 relative">
+                <img id="panel-cover" src="" alt="Обложка книги" class="w-full h-full object-cover">
+                <div class="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-lg"></div>
+            </div>
+
+            <!-- Теги / Категория -->
+            <div class="mb-3 flex flex-wrap gap-2" id="panel-tags">
+                <!-- Теги будут добавлены через JS -->
+            </div>
+
+            <!-- Название и автор -->
+            <h2 id="panel-title" class="text-2xl font-bold text-slate-900 leading-tight mb-2">Название книги</h2>
+            <h3 id="panel-author" class="text-lg text-slate-600 font-medium mb-6">Автор</h3>
+
+            <!-- Описание -->
+            <div class="prose prose-sm prose-slate">
+                <p id="panel-desc" class="text-slate-700 leading-relaxed text-justify">
+                    Описание книги появится здесь.
+                </p>
+            </div>
+        </div>
+
+        <!-- Футер панели с действиями -->
+        <div class="p-6 border-t border-slate-100 bg-slate-50/50">
+            <button class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-4 rounded-lg shadow transition-colors flex justify-center items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Добавить в библиотеку
+            </button>
+            <button class="w-full mt-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-medium py-3 px-4 rounded-lg shadow-sm transition-colors flex justify-center items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                Читать онлайн
+            </button>
+        </div>
+    </aside>
+
+    <script>
+        // База данных книг (mock data) с персонализацией
+        const booksDB = {
+            1: {
+                title: "Новая типографика",
+                author: "Ян Чихольд",
+                desc: "Манифест современной типографики. Обязательное чтение для всех, кто изучает визуальные коммуникации. Книга заложила основы асимметричной верстки и функционального дизайна.",
+                cover: "https://picsum.photos/seed/book1/400/600",
+                tags: ["Типографика", "Дизайн", "UMPRUM"]
+            },
+            2: {
+                title: "Основы стиля в типографике",
+                author: "Роберт Брингхерст",
+                desc: "Глубокое погружение в историю и правила создания шрифтов. Книга, которую называют «Библией типографики». Рассматривает шрифт как искусство и науку.",
+                cover: "https://picsum.photos/seed/book2/400/600",
+                tags: ["Типографика", "Шрифты"]
+            },
+            3: {
+                title: "Алгоритмы: построение и анализ",
+                author: "Томас Кормен и др.",
+                desc: "Фундаментальный труд по Computer Science. Детальный разбор структур данных и алгоритмов. Мост между строгой математикой и практическим программированием.",
+                cover: "https://picsum.photos/seed/book3/400/600",
+                tags: ["Computer Science", "Алгоритмы", "KhNURE"]
+            },
+            4: {
+                title: "Процесс (Der Process)",
+                author: "Франц Кафка",
+                desc: "Абсурдистский роман, тесно связанный с атмосферой Праги. Исследование бюрократии, экзистенциального ужаса и визуальных метафор одиночества.",
+                cover: "https://picsum.photos/seed/book4/400/600",
+                tags: ["Классика", "Прага", "Философия"]
+            },
+            5: {
+                title: "Дон Кихот (Don Quijote)",
+                author: "Мигель де Сервантес",
+                desc: "Один из величайших романов в истории литературы. Отличная практика для чтения на испанском языке.",
+                cover: "https://picsum.photos/seed/book5/400/600",
+                tags: ["Испанский", "Классика"]
+            },
+            6: {
+                title: "Кобзар",
+                author: "Тарас Шевченко",
+                desc: "Фундамент украинской литературы. Сборник поэтических произведений, глубоко визуальных по своей природе.",
+                cover: "https://picsum.photos/seed/book6/400/600",
+                tags: ["Украинский", "Поэзия"]
+            },
+            7: {
+                title: "Дизайн привычных вещей",
+                author: "Дон Норман",
+                desc: "Как сделать интерфейсы и вещи понятными для пользователя. Книга объединяет инженерию (CS) и визуальные коммуникации (Design).",
+                cover: "https://picsum.photos/seed/book7/400/600",
+                tags: ["UX/UI", "Дизайн", "Психология"]
+            },
+            8: {
+                title: "Компьютерная графика: Принципы и практика",
+                author: "Джеймс Фоли",
+                desc: "Классический учебник по рендерингу, 3D и пикселям. Идеальное пересечение кода (CS) и визуального искусства.",
+                cover: "https://picsum.photos/seed/book8/400/600",
+                tags: ["Computer Science", "Визуализация"]
+            },
+            9: {
+                title: "Creative Code",
+                author: "John Maeda",
+                desc: "Эстетика и алгоритмы. Как программирование становится инструментом художника и дизайнера.",
+                cover: "https://picsum.photos/seed/book9/400/600",
+                tags: ["Generative Art", "Код", "Дизайн"]
+            },
+            10: {
+                title: "О фотографии",
+                author: "Сьюзен Сонтаг",
+                desc: "Эссе о природе изображений в современном мире. Важно для понимания визуальных коммуникаций.",
+                cover: "https://picsum.photos/seed/book10/400/600",
+                tags: ["Визуальная культура", "Эссе"]
+            }
+        };
+
+        // Подготовка данных для графа (Vis.js)
+        // Чтобы сделать похоже на референс, мы используем прямоугольные узлы с картинками (shape: 'image')
+        const nodesArray = Object.keys(booksDB).map(id => ({
+            id: Number(id),
+            label: booksDB[id].title,
+            shape: 'image',
+            image: booksDB[id].cover,
+            size: 40,
+            font: {
+                size: 12,
+                face: 'Inter, sans-serif',
+                color: '#334155',
+                vadjust: -5,
+                background: 'rgba(255,255,255,0.8)'
+            },
+            borderWidth: 2,
+            color: {
+                border: '#cbd5e1',
+                background: '#ffffff',
+                highlight: { border: '#0f172a', background: '#ffffff' }
+            },
+            shadow: {
+                enabled: true,
+                color: 'rgba(0,0,0,0.1)',
+                size: 10,
+                x: 3,
+                y: 3
+            }
+        }));
+
+        // Создаем связи (edges) как на референсе
+        const edgesArray = [
+            { from: 1, to: 2, label: 'Типографика', font: {align: 'middle'} },
+            { from: 1, to: 7, label: 'Принципы дизайна' },
+            { from: 3, to: 8, label: 'CS База' },
+            { from: 8, to: 9, label: 'Алгоритмы в искусстве' },
+            { from: 7, to: 9, label: 'Интерфейсы' },
+            { from: 1, to: 9, label: 'Визуальный язык' },
+            { from: 4, to: 5, label: 'Классика' },
+            { from: 6, to: 5, label: 'Наследие' },
+            { from: 4, to: 10, label: 'Экзистенциализм' },
+            { from: 10, to: 1, label: 'Визуальные коммуникации' },
+            { from: 7, to: 10, label: 'Восприятие' },
+            // Добавим немного центральных "уловных" узлов (Концепций), чтобы ветвить граф
+            { id: 'c1', label: 'Визуальные\nКоммуникации', shape: 'box', color: { background: '#f1f5f9', border: '#94a3b8' }, font: {size: 16, bold: true} },
+            { id: 'c2', label: 'Computer\nScience', shape: 'box', color: { background: '#f1f5f9', border: '#94a3b8' }, font: {size: 16, bold: true} },
+            { id: 'c3', label: 'Лингвистика &\nКультура', shape: 'box', color: { background: '#f1f5f9', border: '#94a3b8' }, font: {size: 16, bold: true} }
+        ];
+
+        // Привязываем книги к концепциям
+        edgesArray.push(
+            { from: 'c1', to: 1, dashes: true, color: '#94a3b8' },
+            { from: 'c1', to: 2, dashes: true, color: '#94a3b8' },
+            { from: 'c1', to: 7, dashes: true, color: '#94a3b8' },
+            { from: 'c1', to: 10, dashes: true, color: '#94a3b8' },
+            { from: 'c2', to: 3, dashes: true, color: '#94a3b8' },
+            { from: 'c2', to: 8, dashes: true, color: '#94a3b8' },
+            { from: 'c2', to: 9, dashes: true, color: '#94a3b8' },
+            { from: 'c3', to: 4, dashes: true, color: '#94a3b8' },
+            { from: 'c3', to: 5, dashes: true, color: '#94a3b8' },
+            { from: 'c3', to: 6, dashes: true, color: '#94a3b8' },
+            { from: 'c1', to: 'c2', label: 'Creative Tech', width: 2, color: '#cbd5e1', font: {background: 'white'} },
+            { from: 'c1', to: 'c3', label: 'Семиотика', width: 2, color: '#cbd5e1', font: {background: 'white'} }
+        );
+
+        // Добавляем узлы-концепции в общий массив
+        const allNodes = new vis.DataSet([
+            ...nodesArray,
+            { id: 'c1', label: 'Визуальные\nКоммуникации', shape: 'box', color: { background: '#f8fafc', border: '#cbd5e1' }, font: {size: 14, color: '#475569'}, margin: 10 },
+            { id: 'c2', label: 'Computer\nScience', shape: 'box', color: { background: '#f8fafc', border: '#cbd5e1' }, font: {size: 14, color: '#475569'}, margin: 10 },
+            { id: 'c3', label: 'Лингвистика &\nКультура', shape: 'box', color: { background: '#f8fafc', border: '#cbd5e1' }, font: {size: 14, color: '#475569'}, margin: 10 }
+        ]);
+
+        const allEdges = new vis.DataSet(edgesArray.filter(e => !e.shape)); // убираем временные объекты из массива связей
+
+        // Настройка сети
+        const container = document.getElementById('network-container');
+        const data = {
+            nodes: allNodes,
+            edges: allEdges
+        };
+        const options = {
+            physics: {
+                forceAtlas2Based: {
+                    gravitationalConstant: -100,
+                    centralGravity: 0.005,
+                    springLength: 200,
+                    springConstant: 0.08
+                },
+                maxVelocity: 50,
+                solver: 'forceAtlas2Based',
+                timestep: 0.35,
+                stabilization: { iterations: 150 }
+            },
+            edges: {
+                color: { color: '#cbd5e1', highlight: '#64748b' },
+                width: 1,
+                smooth: { type: 'continuous' },
+                font: {
+                    size: 10,
+                    color: '#64748b',
+                    face: 'Inter',
+                    background: '#ffffff',
+                    strokeWidth: 0
+                },
+                arrows: {
+                    to: { enabled: true, scaleFactor: 0.5 }
+                }
+            },
+            interaction: {
+                hover: true,
+                tooltipDelay: 200,
+                zoomSpeed: 0.5
+            }
+        };
+
+        // Инициализация
+        const network = new vis.Network(container, data, options);
+
+        // UI Логика
+        const panel = document.getElementById('book-panel');
+        const closeBtn = document.getElementById('close-panel');
+        const instruction = document.getElementById('instruction');
+
+        // Элементы панели
+        const pCover = document.getElementById('panel-cover');
+        const pTitle = document.getElementById('panel-title');
+        const pAuthor = document.getElementById('panel-author');
+        const pDesc = document.getElementById('panel-desc');
+        const pTags = document.getElementById('panel-tags');
+
+        // Обработка клика по узлу
+        network.on("selectNode", function (params) {
+            const nodeId = params.nodes[0];
+            instruction.style.opacity = '0'; // Прячем инструкцию
+
+            if (booksDB[nodeId]) {
+                const book = booksDB[nodeId];
+                
+                // Обновляем UI
+                pCover.src = book.cover;
+                pTitle.textContent = book.title;
+                pAuthor.textContent = book.author;
+                pDesc.textContent = book.desc;
+                
+                // Рендер тегов
+                pTags.innerHTML = '';
+                book.tags.forEach(tag => {
+                    const span = document.createElement('span');
+                    span.className = 'px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold uppercase tracking-wider border border-slate-200';
+                    span.textContent = tag;
+                    pTags.appendChild(span);
+                });
+
+                // Показываем панель (Slide In)
+                panel.classList.remove('translate-x-full');
+            } else {
+                // Если кликнули на узел-концепцию, просто центрируем
+                network.focus(nodeId, {
+                    scale: 1.2,
+                    animation: { duration: 500, easingFunction: 'easeInOutQuad' }
+                });
+            }
+        });
+
+        // Закрытие при клике по пустому месту
+        network.on("deselectNode", function (params) {
+            panel.classList.add('translate-x-full');
+        });
+
+        // Кнопка закрытия
+        closeBtn.addEventListener('click', () => {
+            panel.classList.add('translate-x-full');
+            network.unselectAll();
+        });
+
+        // Прячем инструкцию при первом драге
+        network.on("dragStart", function() {
+            instruction.style.opacity = '0';
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORGO - Just Add Water</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+        }
+        
+        /* Кастомные стили для кнопок, чтобы они выглядели как на макете */
+        .btn-outline {
+            @apply border border-black bg-transparent text-black px-6 py-2 rounded-full text-sm font-medium tracking-wide uppercase hover:bg-black hover:text-white transition-colors duration-300 inline-block;
+        }
+        .btn-outline-white {
+             @apply border border-white bg-transparent text-white px-6 py-2 rounded-full text-sm font-medium tracking-wide uppercase hover:bg-white hover:text-black transition-colors duration-300 inline-block;
+        }
+        .btn-white {
+            @apply bg-white text-black px-6 py-2 rounded-full text-sm font-medium tracking-wide uppercase hover:bg-gray-100 transition-colors duration-300 inline-block;
+        }
+
+        /* Утилита для изображений с сохранением пропорций и покрытием контейнера */
+        .img-cover {
+            @apply w-full h-full object-cover;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- Header -->
+<header class="border-b border-gray-200 bg-white sticky top-0 z-50">
+    <div class="flex items-center justify-between px-4 lg:px-8 py-3 text-sm font-medium tracking-wide uppercase">
+        <!-- Логотип -->
+        <div class="text-xl font-bold tracking-widest shrink-0 mr-8">
+            FORGO
+        </div>
+
+        <!-- Навигация (десктоп) -->
+        <nav class="hidden lg:flex items-center space-x-8 flex-1 justify-center divide-x divide-gray-200">
+            <div class="px-6 hover:text-gray-500 cursor-pointer"><a href="#">Shop</a></div>
+            <div class="px-6 hover:text-gray-500 cursor-pointer"><a href="#">About</a></div>
+            <div class="px-6 hover:text-gray-500 cursor-pointer"><a href="#">Refill</a></div>
+            <div class="px-6 hover:text-gray-500 cursor-pointer"><a href="#">FAQ</a></div>
+            <div class="px-6 hover:text-gray-500 cursor-pointer"><a href="#">Journal</a></div>
+        </nav>
+
+        <!-- Правая часть (Аккаунт, Корзина, Язык) -->
+        <div class="flex items-center space-x-4 shrink-0">
+             <div class="hidden sm:block hover:text-gray-500 cursor-pointer">Login</div>
+             <div class="hidden sm:block hover:text-gray-500 cursor-pointer">Eng / USD</div>
+             
+             <!-- Иконка юзера -->
+             <button class="hover:opacity-70">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+             </button>
+             
+             <!-- Корзина -->
+             <button class="hover:opacity-70 flex items-center">
+                 <span class="mr-1">0</span>
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>
+             </button>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="grid grid-cols-1 md:grid-cols-2 bg-[#e6e2df]">
+    <!-- Левый блок -->
+    <div class="relative h-[60vh] md:h-[80vh]">
+        <img src="https://placehold.co/800x1000/e6e2df/333?text=Hand+Holding+Sachet" alt="Hand holding sachet" class="img-cover absolute inset-0 mix-blend-multiply">
+        <div class="absolute bottom-8 left-8 md:bottom-16 md:left-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 tracking-tight">JUST ADD WATER.</h1>
+            <a href="#" class="btn-outline bg-white/20 backdrop-blur-sm">Our story</a>
+        </div>
+    </div>
+    <!-- Правый блок -->
+    <div class="relative h-[60vh] md:h-[80vh] border-t md:border-t-0 md:border-l border-gray-300">
+        <img src="https://placehold.co/800x1000/e6e2df/333?text=Bottle+and+Sachets" alt="Bottle and sachets" class="img-cover absolute inset-0 mix-blend-multiply">
+    </div>
+</section>
+
+<!-- Banner Strip -->
+<div class="border-y border-gray-300 py-4 px-4 md:px-8 bg-white">
+    <p class="text-sm font-bold tracking-widest uppercase">REFILL. REUSE. REPEAT.</p>
+</div>
+
+<!-- Steps Section -->
+<section class="grid grid-cols-1 md:grid-cols-3">
+    <!-- Шаг 1 -->
+    <div class="relative h-[50vh] md:h-[60vh] bg-[#7d8c80]">
+        <img src="https://placehold.co/600x800/7d8c80/fff?text=Step+1:+Pour+Powder" alt="Step 1" class="img-cover mix-blend-overlay opacity-80">
+        <div class="absolute bottom-8 left-8 text-white pr-4">
+            <h3 class="text-3xl font-bold mb-2">01</h3>
+            <p class="text-sm leading-relaxed max-w-xs">Drop a whole sachet into a bottle. (Includes clean, crisp, cold water)</p>
+        </div>
+    </div>
+    <!-- Шаг 2 -->
+    <div class="relative h-[50vh] md:h-[60vh] bg-[#677769] border-t md:border-t-0 md:border-l border-white/20">
+        <img src="https://placehold.co/600x800/677769/fff?text=Step+2:+Add+Water" alt="Step 2" class="img-cover mix-blend-overlay opacity-80">
+        <div class="absolute bottom-8 left-8 text-white pr-4">
+            <h3 class="text-3xl font-bold mb-2">02</h3>
+            <p class="text-sm leading-relaxed max-w-xs">Fill with hot water, give it a shake, let it sit for a minute, and you're good to go.</p>
+        </div>
+    </div>
+    <!-- Шаг 3 -->
+    <div class="relative h-[50vh] md:h-[60vh] bg-[#536254] border-t md:border-t-0 md:border-l border-white/20">
+        <img src="https://placehold.co/600x800/536254/fff?text=Step+3:+Foam" alt="Step 3" class="img-cover mix-blend-overlay opacity-80">
+        <div class="absolute bottom-8 left-8 text-white pr-4">
+            <h3 class="text-3xl font-bold mb-2">03</h3>
+            <p class="text-sm leading-relaxed max-w-xs">Produces a rich, foaming lather that cleanses without stripping.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Split Section 1 -->
+<section class="grid grid-cols-1 md:grid-cols-2 bg-[#f4f2f0]">
+    <!-- Left: Go Low Waste -->
+    <div class="relative h-[60vh] md:h-[70vh] flex flex-col justify-end p-8 md:p-12">
+        <img src="https://placehold.co/800x800/f4f2f0/777?text=Abstract+Rock+Shape" alt="Abstract shape" class="absolute top-10 left-1/2 -translate-x-1/2 w-2/3 object-contain mix-blend-multiply">
+        <div class="relative z-10 max-w-md">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight">GO LOW WASTE</h2>
+            <p class="text-sm text-gray-600 mb-6 leading-relaxed">Our sachets are composable at home and are 100% water soluble. We use 90% less volume than standard hand wash, resulting in less transport waste.</p>
+            <a href="#" class="btn-outline">Learn more</a>
+        </div>
+    </div>
+    
+    <!-- Right: Body Wash -->
+    <div class="relative h-[60vh] md:h-[70vh] border-t md:border-t-0 md:border-l border-gray-300">
+        <img src="https://placehold.co/800x800/b0b0b0/fff?text=Silver+Bottle" alt="Body Wash Bottle" class="img-cover">
+        <div class="absolute bottom-8 left-8 md:bottom-12 md:left-12 text-white z-10 max-w-sm pr-4">
+            <p class="text-xs font-bold tracking-widest uppercase mb-2">Introducing:</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 tracking-tight">FORGO BODY WASH</h2>
+            <p class="text-sm mb-6 leading-relaxed opacity-90">A new era of body wash is here. Just add water to our powder for a rich, hydrating body wash.</p>
+            <a href="#" class="btn-white">Shop now</a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial / Feature Section -->
+<section class="grid grid-cols-1 md:grid-cols-2">
+     <!-- Left: Image -->
+    <div class="relative h-[50vh] md:h-[60vh] bg-[#d9c4b1]">
+        <img src="https://placehold.co/800x600/d9c4b1/444?text=Washing+Hands+with+Foam" alt="Washing hands" class="img-cover mix-blend-multiply">
+    </div>
+
+    <!-- Right: Text Content -->
+    <div class="bg-white p-8 md:p-16 flex flex-col justify-center">
+        <h2 class="text-2xl md:text-3xl font-bold mb-8 uppercase tracking-tight">ONLY THE ESSENTIALS</h2>
+        <blockquote class="text-lg md:text-xl font-medium leading-relaxed mb-6">
+            "First my eyes caught the simple and clean layout, then the concept of the product made me invest in the idea... The fact that I don't have to buy new soap bottles all the time is very convenient and environment friendly."
+        </blockquote>
+        <p class="text-sm font-bold">— L. E. G.</p>
+        
+        <div class="mt-12 flex space-x-4">
+            <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+            <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors">
+                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Shop Banner -->
+<div class="border-y border-gray-300 py-4 px-4 md:px-8 bg-[#fafafa]">
+    <h2 class="text-sm font-bold tracking-widest uppercase">SHOP ALL</h2>
+</div>
+
+<!-- Products Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 bg-[#e0e2e1]">
+    <!-- Product 1 -->
+    <div class="relative h-[60vh] group overflow-hidden border-b md:border-b-0 border-gray-300">
+        <img src="https://placehold.co/600x800/e0e2e1/555?text=Starter+Kit" alt="Starter Kit" class="img-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
+        <div class="absolute bottom-8 left-8 right-8 flex flex-col items-start z-10">
+            <h3 class="text-xl md:text-2xl font-bold mb-4 tracking-tight">HAND WASH STARTER KIT</h3>
+            <a href="#" class="btn-white opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">Shop Now</a>
+        </div>
+        <!-- Градиент для текста -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
+    
+    <!-- Product 2 -->
+    <div class="relative h-[60vh] group overflow-hidden border-b md:border-b-0 md:border-l border-gray-300 bg-[#d5d0cd]">
+        <img src="https://placehold.co/600x800/d5d0cd/555?text=Refills" alt="Refills" class="img-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
+        <div class="absolute bottom-8 left-8 right-8 flex flex-col items-start z-10">
+            <h3 class="text-xl md:text-2xl font-bold mb-4 tracking-tight">HAND WASH REFILLS</h3>
+            <a href="#" class="btn-white opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">Shop Now</a>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
+
+    <!-- Product 3 -->
+    <div class="relative h-[60vh] group overflow-hidden md:border-l border-gray-300 bg-[#c0c2be]">
+        <img src="https://placehold.co/600x800/c0c2be/555?text=Body+Wash" alt="Body Wash" class="img-cover mix-blend-multiply transition-transform duration-700 group-hover:scale-105">
+        <div class="absolute bottom-8 left-8 right-8 flex flex-col items-start z-10">
+             <h3 class="text-xl md:text-2xl font-bold mb-4 tracking-tight">BODY WASH PRE-ORDER</h3>
+             <a href="#" class="btn-white opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">Pre-Order</a>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
+</section>
+
+<!-- Press Section -->
+<section class="border-y border-gray-300 py-12 px-4 bg-[#fbf8f7]">
+    <div class="max-w-4xl mx-auto text-center mb-10">
+         <p class="text-sm md:text-base italic font-serif">"The brand Forgo champions a personal care revolution with waterless hand wash."</p>
+    </div>
+    
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70">
+        <!-- Заглушки для логотипов прессы -->
+        <span class="text-2xl font-serif font-bold tracking-widest">ELLE</span>
+        <span class="text-xl font-serif font-semibold">FINANCIAL TIMES</span>
+        <span class="text-2xl font-serif italic">Esquire</span>
+        <span class="text-2xl font-bold tracking-tighter">Wallpaper*</span>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-white pt-16 pb-8 border-t border-gray-300 text-xs">
+    <div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+        
+        <!-- About Us -->
+        <div>
+            <h4 class="font-bold uppercase tracking-widest mb-6">About Us</h4>
+            <ul class="space-y-3 text-gray-500">
+                <li><a href="#" class="hover:text-black transition-colors">Our Story</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">FAQ</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Terms & Conditions</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Jobs</a></li>
+            </ul>
+        </div>
+
+        <!-- Connect -->
+        <div>
+             <h4 class="font-bold uppercase tracking-widest mb-6">Connect</h4>
+             <ul class="space-y-3 text-gray-500">
+                <li><a href="#" class="hover:text-black transition-colors">Instagram</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Facebook</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Twitter</a></li>
+                <li><a href="#" class="hover:text-black transition-colors">Press</a></li>
+            </ul>
+        </div>
+
+        <!-- Community / Newsletter -->
+        <div class="md:col-span-2">
+            <h4 class="font-bold uppercase tracking-widest mb-6">Community</h4>
+            <p class="text-gray-500 mb-4">Sign up for updates, first access and more.</p>
+            
+            <form class="space-y-4 max-w-md">
+                <input type="email" placeholder="Email Address" class="w-full border border-gray-300 rounded-full px-6 py-3 outline-none focus:border-black transition-colors bg-transparent">
+                <button type="submit" class="w-full border border-black bg-black text-white rounded-full px-6 py-3 font-medium uppercase tracking-wide hover:bg-white hover:text-black transition-colors duration-300">
+                    Sign Up
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="max-w-7xl mx-auto px-4 md:px-8 mt-16 flex flex-col md:flex-row justify-between items-center text-gray-400">
+        <p>&copy; 2026 FORGO. All rights reserved.</p>
+        <div class="flex space-x-4 mt-4 md:mt-0">
+             <span>Site by UI Maker</span>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

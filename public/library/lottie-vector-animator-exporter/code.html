@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lottie Vector Animation Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains+Mono', monospace;
+    }
+    /* Custom checkerboard background for transparent preview */
+    .bg-checker {
+      background-color: #0f172a;
+      background-image: 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(-45deg, #1e293b 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #1e293b 75%),
+        linear-gradient(-45deg, transparent 75%, #1e293b 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white">
+
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-violet-500 to-cyan-400 p-[2px] shadow-lg shadow-indigo-500/20">
+          <div class="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h1 class="font-bold text-base tracking-tight text-white flex items-center gap-2">
+            Lottie Vector Studio
+            <span class="text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">JSON Gen</span>
+          </h1>
+          <p class="text-xs text-slate-400">Генератор и визуализатор векторных ключевых кадров</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="btn-export-json" class="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md shadow-indigo-600/25 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          <span>Скачать .json</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- LEFT COLUMN: Canvas & Player Controls (7 cols) -->
+    <section class="lg:col-span-7 flex flex-col gap-4">
+      <!-- Player Card -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm">
+        
+        <!-- Canvas Top Bar -->
+        <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-800/80 text-xs text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="font-medium text-slate-300" id="current-preset-label">Checkmark Success</span>
+            <span class="text-slate-600">•</span>
+            <span id="fps-badge">60 FPS</span>
+            <span class="text-slate-600">•</span>
+            <span id="resolution-badge">500x500 SVG</span>
+          </div>
+
+          <!-- Background toggles -->
+          <div class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800">
+            <button id="bg-btn-grid" title="Сетка прозрачности" class="p-1.5 rounded text-indigo-400 bg-slate-800 hover:text-white transition">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+            </button>
+            <button id="bg-btn-dark" title="Темный фон" class="p-1.5 rounded text-slate-400 hover:text-white transition">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="9"/>
+              </svg>
+            </button>
+            <button id="bg-btn-light" title="Светлый фон" class="p-1.5 rounded text-slate-400 hover:text-white transition">
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lottie Animation Container -->
+        <div id="animation-stage" class="w-full aspect-square max-h-[380px] sm:max-h-[420px] rounded-xl bg-checker border border-slate-800/80 flex items-center justify-center relative overflow-hidden transition-colors duration-200">
+          <div id="lottie-container" class="w-full h-full max-w-[340px] max-h-[340px]"></div>
+        </div>
+
+        <div class="mt-5 flex flex-col gap-3">
+          <!-- Timeline scrubber -->
+          <div class="flex items-center gap-3">
+            <span class="text-[11px] font-mono text-slate-400 w-10 text-right" id="current-frame-text">0</span>
+            <input type="range" id="timeline-scrubber" min="0" max="100" value="0" step="1" 
+              class="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none">
+            <span class="text-[11px] font-mono text-slate-400 w-10" id="total-frames-text">180</span>
+          </div>
+
+          <!-- Playback buttons -->
+          <div class="flex items-center justify-between pt-2">
+            <div class="flex items-center gap-2">
+              <button id="btn-play-pause" class="w-10 h-10 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-600/30 transition">
+                <svg id="icon-pause" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+                <svg id="icon-play" class="w-4 h-4 hidden ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </button>
+
+              <button id="btn-restart" title="Заново" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+
+              <div class="h-5 w-px bg-slate-800 mx-1"></div>
+
+              <!-- Speed presets -->
+              <div class="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-mono">
+                <button class="speed-btn px-2 py-1 rounded text-slate-400 hover:text-white" data-speed="0.5">0.5x</button>
+                <button class="speed-btn px-2 py-1 rounded text-indigo-400 bg-slate-800 font-bold" data-speed="1">1x</button>
+                <button class="speed-btn px-2 py-1 rounded text-slate-400 hover:text-white" data-speed="2">2x</button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <label class="flex items-center gap-2 cursor-pointer text-xs text-slate-400 select-none">
+                <input type="checkbox" id="loop-toggle" checked class="rounded border-slate-700 bg-slate-950 text-indigo-600 accent-indigo-600 focus:ring-0">
+                Зациклить
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Explainer Card -->
+      <div class="bg-slate-900/50 border border-slate-800/80 rounded-xl p-4 text-xs text-slate-400 leading-relaxed">
+        <span class="text-indigo-300 font-medium">Как это работает:</span> Анимация ниже создана прямо в веб-формате <strong class="text-white">Lottie Bodymovin JSON</strong>. Векторные пути, трансформации ключевых кадров (масштабирование, сдвиги, прозрачность) просчитываются динамически без растровых картинок и рендерятся через чистый <strong class="text-white">&lt;svg&gt;</strong>.
+      </div>
+    </section>
+
+    <section class="lg:col-span-5 flex flex-col gap-4">
+      
+      <!-- Presets & Controls Card -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl backdrop-blur-sm flex flex-col gap-5">
+        
+        <!-- Preset selector -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+            Выберите векторную анимацию
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="preset-btn px-3 py-2.5 rounded-xl border text-left flex flex-col transition border-indigo-500 bg-indigo-500/10 text-white" data-preset="checkmark">
+              <span class="text-xs font-semibold">Чекмарк & Вспышка</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">Success & Trim path</span>
+            </button>
+            <button class="preset-btn px-3 py-2.5 rounded-xl border text-left flex flex-col transition border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700" data-preset="rocket">
+              <span class="text-xs font-semibold">Взлет Ракеты</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">Hero векторный старт</span>
+            </button>
+            <button class="preset-btn px-3 py-2.5 rounded-xl border text-left flex flex-col transition border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700" data-preset="bell">
+              <span class="text-xs font-semibold">Колокол Notification</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">Вращение & Поп-ап бейдж</span>
+            </button>
+            <button class="preset-btn px-3 py-2.5 rounded-xl border text-left flex flex-col transition border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700" data-preset="loader">
+              <span class="text-xs font-semibold">Неоновый Лоадер</span>
+              <span class="text-[10px] text-slate-400 mt-0.5">Геометрическая петля</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Color & Stroke Settings -->
+        <div class="pt-3 border-t border-slate-800/80 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Параметры стилей</span>
+            <button id="btn-reset-params" class="text-[11px] text-indigo-400 hover:text-indigo-300 transition">Сбросить</button>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-[11px] text-slate-400">Основной</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="param-color-primary" value="#6366f1" class="w-6 h-6 rounded border-0 bg-transparent cursor-pointer">
+                <span class="text-[10px] font-mono text-slate-300" id="hex-primary">#6366f1</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-[11px] text-slate-400">Вторичный</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="param-color-secondary" value="#10b981" class="w-6 h-6 rounded border-0 bg-transparent cursor-pointer">
+                <span class="text-[10px] font-mono text-slate-300" id="hex-secondary">#10b981</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+              <label class="text-[11px] text-slate-400">Акцентный</label>
+              <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg p-1.5">
+                <input type="color" id="param-color-accent" value="#f43f5e" class="w-6 h-6 rounded border-0 bg-transparent cursor-pointer">
+                <span class="text-[10px] font-mono text-slate-300" id="hex-accent">#f43f5e</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slider: Stroke width -->
+          <div>
+            <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+              <span>Толщина контуров (Stroke)</span>
+              <span id="stroke-val" class="font-mono text-indigo-400">12px</span>
+            </div>
+            <input type="range" id="param-stroke" min="4" max="24" value="12" step="1"
+              class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+          </div>
+
+          <!-- Slider: Duration in frames -->
+          <div>
+            <div class="flex justify-between text-[11px] text-slate-400 mb-1">
+              <span>Длительность цикла (кадры)</span>
+              <span id="duration-val" class="font-mono text-indigo-400">120 кадров (2.0 с)</span>
+            </div>
+            <input type="range" id="param-duration" min="60" max="240" value="120" step="30"
+              class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl backdrop-blur-sm flex flex-col flex-1">
+        <!-- Tabs Header -->
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div class="flex gap-2">
+            <button class="tab-btn text-xs font-semibold px-2.5 py-1 rounded-md text-white bg-slate-800" data-tab="json">
+              Lottie JSON
+            </button>
+            <button class="tab-btn text-xs font-medium px-2.5 py-1 rounded-md text-slate-400 hover:text-white" data-tab="react">
+              React (lottie-react)
+            </button>
+            <button class="tab-btn text-xs font-medium px-2.5 py-1 rounded-md text-slate-400 hover:text-white" data-tab="vanilla">
+              Vanilla JS
+            </button>
+          </div>
+
+          <button id="btn-copy-code" class="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1.5 py-1 px-2 rounded hover:bg-slate-800 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="copy-label">Копировать</span>
+          </button>
+        </div>
+
+        <!-- Code Content Area -->
+        <div class="relative flex-1 min-h-[220px]">
+          <pre id="code-output" class="w-full h-full max-h-[240px] overflow-auto text-[11px] font-mono p-3 bg-slate-950 rounded-xl border border-slate-800/80 text-emerald-400 leading-relaxed selection:bg-indigo-900"></pre>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Custom Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-300 bg-slate-900 text-white border border-indigo-500/40 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
+    <div class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</div>
+    <div class="text-xs font-medium" id="toast-message">Файл сохранен</div>
+  </div>
+
+  <script>
+    // Helper: Convert HEX to Lottie Normalized RGBA [0..1, 0..1, 0..1, 1]
+    function hexToLottieColor(hex) {
+      let c = hex.replace('#', '');
+      if (c.length === 3) {
+        c = c.split('').map(x => x + x).join('');
+      }
+      const num = parseInt(c, 16);
+      const r = parseFloat(((num >> 16) & 255) / 255).toFixed(3);
+      const g = parseFloat(((num >> 8) & 255) / 255).toFixed(3);
+      const b = parseFloat((num & 255) / 255).toFixed(3);
+      return [Number(r), Number(g), Number(b), 1];
+    }
+
+    // App State
+    const state = {
+      preset: 'checkmark',
+      colorPrimary: '#6366f1',
+      colorSecondary: '#10b981',
+      colorAccent: '#f43f5e',
+      strokeWidth: 12,
+      duration: 120, // frames
+      fps: 60,
+      isPlaying: true,
+      currentSpeed: 1,
+      activeTab: 'json'
+    };
+
+    let animInstance = null;
+    let currentLottieData = null;
+
+    function generateCheckmarkLottie(params) {
+      const cPrimary = hexToLottieColor(params.colorPrimary);
+      const cSecondary = hexToLottieColor(params.colorSecondary);
+      const op = params.duration;
+      const sw = params.strokeWidth;
+
+      return {
+        v: "5.7.4",
+        fr: 60,
+        ip: 0,
+        op: op,
+        w: 500,
+        h: 500,
+        nm: "Checkmark Success Burst",
+        ddd: 0,
+        assets: [],
+        layers: [
+          // Checkmark Stroke Layer
+          {
+            ddd: 0,
+            ind: 1,
+            ty: 4,
+            nm: "Checkmark Path",
+            sr: 1,
+            ks: {
+              o: { a: 0, k: 100 },
+              r: { a: 0, k: 0 },
+              p: { a: 0, k: [250, 250, 0] },
+              a: { a: 0, k: [0, 0, 0] },
+              s: {
+                a: 1,
+                k: [
+                  { t: 25, s: [0, 0, 100], e: [115, 115, 100], i: { x: [0.3], y: [1] }, o: { x: [0.3], y: [0] } },
+                  { t: 40, s: [115, 115, 100], e: [100, 100, 100], i: { x: [0.4], y: [1] }, o: { x: [0.4], y: [0] } },
+                  { t: 55, s: [100, 100, 100] }
+                ]
+              }
+            },
+            ao: 0,
+            shapes: [
+              {
+                ty: "gr",
+                nm: "Check Shape",
+                it: [
+                  {
+                    ty: "sh",
+                    ks: {
+                      a: 0,
+                      k: {
+                        i: [[0,0], [0,0], [0,0]],
+                        o: [[0,0], [0,0], [0,0]],
+                        v: [[-45, 5], [-12, 38], [52, -35]],
+                        c: false
+                      }
+                    }
+                  },
+                  {
+                    ty: "tm",
+                    s: { a: 0, k: 0 },
+                    e: {
+                      a: 1,
+                      k: [
+                        { t: 15, s: [0], e: [100], i: { x: [0.2], y: [1] }, o: { x: [0.2], y: [0] } },
+                        { t: 45, s: [100] }
+                      ]
+                    },
+                    o: { a: 0, k: 0 },
+                    m: 1
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cSecondary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: sw },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          },
+          // Pulsing Outer Circle
+          {
+            ddd: 0,
+            ind: 2,
+            ty: 4,
+            nm: "Base Circle Ring",
+            sr: 1,
+            ks: {
+              o: {
+                a: 1,
+                k: [
+                  { t: 0, s: [0], e: [100] },
+                  { t: 20, s: [100], e: [100] },
+                  { t: op - 15, s: [100], e: [0] },
+                  { t: op, s: [0] }
+                ]
+              },
+              r: { a: 0, k: 0 },
+              p: { a: 0, k: [250, 250, 0] },
+              a: { a: 0, k: [0, 0, 0] },
+              s: {
+                a: 1,
+                k: [
+                  { t: 0, s: [30, 30, 100], e: [105, 105, 100], i: { x: [0.15], y: [1] }, o: { x: [0.15], y: [0] } },
+                  { t: 30, s: [105, 105, 100], e: [100, 100, 100] },
+                  { t: 45, s: [100, 100, 100] }
+                ]
+              }
+            },
+            ao: 0,
+            shapes: [
+              {
+                ty: "gr",
+                nm: "Ring",
+                it: [
+                  {
+                    ty: "el",
+                    p: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [220, 220] }
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cPrimary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: Math.max(4, sw - 2) },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+    }
+
+    function generateRocketLottie(params) {
+      const cPrimary = hexToLottieColor(params.colorPrimary);
+      const cAccent = hexToLottieColor(params.colorAccent);
+      const cSecondary = hexToLottieColor(params.colorSecondary);
+      const op = params.duration;
+      const sw = params.strokeWidth;
+
+      return {
+        v: "5.7.4",
+        fr: 60,
+        ip: 0,
+        op: op,
+        w: 500,
+        h: 500,
+        nm: "Space Rocket Launch",
+        ddd: 0,
+        assets: [],
+        layers: [
+          // Rocket Body Group
+          {
+            ddd: 0,
+            ind: 1,
+            ty: 4,
+            nm: "Rocket Vessel",
+            sr: 1,
+            ks: {
+              o: { a: 0, k: 100 },
+              r: {
+                a: 1,
+                k: [
+                  { t: 0, s: [0], e: [-4] },
+                  { t: op * 0.25, s: [-4], e: [4] },
+                  { t: op * 0.75, s: [4], e: [0] },
+                  { t: op, s: [0] }
+                ]
+              },
+              p: {
+                a: 1,
+                k: [
+                  { t: 0, s: [250, 240, 0], e: [250, 205, 0], i: { x: [0.5], y: [1] }, o: { x: [0.5], y: [0] } },
+                  { t: op * 0.5, s: [250, 205, 0], e: [250, 240, 0], i: { x: [0.5], y: [1] }, o: { x: [0.5], y: [0] } },
+                  { t: op, s: [250, 240, 0] }
+                ]
+              },
+              a: { a: 0, k: [0, 0, 0] },
+              s: { a: 0, k: [110, 110, 100] }
+            },
+            shapes: [
+              // Rocket Fuselage
+              {
+                ty: "gr",
+                nm: "Fuselage",
+                it: [
+                  {
+                    ty: "sh",
+                    ks: {
+                      a: 0,
+                      k: {
+                        i: [[0, 0], [-25, 40], [0, -30], [25, 40]],
+                        o: [[-25, -40], [0, -30], [25, 40], [0, 0]],
+                        v: [[0, -90], [-45, 40], [0, 25], [45, 40]],
+                        c: true
+                      }
+                    }
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cPrimary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: sw },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              },
+              // Porthole Window
+              {
+                ty: "gr",
+                nm: "Window",
+                it: [
+                  {
+                    ty: "el",
+                    p: { a: 0, k: [0, -20] },
+                    s: { a: 0, k: [34, 34] }
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cSecondary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: Math.max(4, sw - 4) },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              },
+              // Flame Exhaust
+              {
+                ty: "gr",
+                nm: "Flame",
+                it: [
+                  {
+                    ty: "sh",
+                    ks: {
+                      a: 0,
+                      k: {
+                        i: [[0,0], [0,0], [0,0]],
+                        o: [[0,0], [0,0], [0,0]],
+                        v: [[-18, 42], [0, 85], [18, 42]],
+                        c: true
+                      }
+                    }
+                  },
+                  {
+                    ty: "fl",
+                    c: { a: 0, k: cAccent },
+                    o: { a: 0, k: 90 }
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 42] },
+                    s: {
+                      a: 1,
+                      k: [
+                        { t: 0, s: [100, 90], e: [100, 130] },
+                        { t: 15, s: [100, 130], e: [100, 80] },
+                        { t: 30, s: [100, 80], e: [100, 120] },
+                        { t: 45, s: [100, 120], e: [100, 90] },
+                        { t: 60, s: [100, 90] }
+                      ]
+                    },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+    }
+
+    function generateBellLottie(params) {
+      const cPrimary = hexToLottieColor(params.colorPrimary);
+      const cAccent = hexToLottieColor(params.colorAccent);
+      const op = params.duration;
+      const sw = params.strokeWidth;
+
+      return {
+        v: "5.7.4",
+        fr: 60,
+        ip: 0,
+        op: op,
+        w: 500,
+        h: 500,
+        nm: "Notification Bell Shake",
+        ddd: 0,
+        assets: [],
+        layers: [
+          // Red Alert Dot
+          {
+            ddd: 0,
+            ind: 1,
+            ty: 4,
+            nm: "Alert Badge",
+            sr: 1,
+            ks: {
+              o: { a: 0, k: 100 },
+              r: { a: 0, k: 0 },
+              p: { a: 0, k: [315, 175, 0] },
+              a: { a: 0, k: [0, 0, 0] },
+              s: {
+                a: 1,
+                k: [
+                  { t: 10, s: [0, 0, 100], e: [120, 120, 100] },
+                  { t: 25, s: [120, 120, 100], e: [100, 100, 100] },
+                  { t: 35, s: [100, 100, 100] }
+                ]
+              }
+            },
+            shapes: [
+              {
+                ty: "gr",
+                nm: "Badge Shape",
+                it: [
+                  {
+                    ty: "el",
+                    p: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [32, 32] }
+                  },
+                  {
+                    ty: "fl",
+                    c: { a: 0, k: cAccent },
+                    o: { a: 0, k: 100 }
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          },
+          // Swinging Bell
+          {
+            ddd: 0,
+            ind: 2,
+            ty: 4,
+            nm: "Bell Dome",
+            sr: 1,
+            ks: {
+              o: { a: 0, k: 100 },
+              r: {
+                a: 1,
+                k: [
+                  { t: 0, s: [0], e: [-18] },
+                  { t: 15, s: [-18], e: [18] },
+                  { t: 30, s: [18], e: [-10] },
+                  { t: 45, s: [-10], e: [8] },
+                  { t: 60, s: [8], e: [-3] },
+                  { t: 75, s: [-3], e: [0] },
+                  { t: op, s: [0] }
+                ]
+              },
+              p: { a: 0, k: [250, 170, 0] },
+              a: { a: 0, k: [0, -70, 0] },
+              s: { a: 0, k: [100, 100, 100] }
+            },
+            shapes: [
+              {
+                ty: "gr",
+                nm: "Bell Contour",
+                it: [
+                  {
+                    ty: "sh",
+                    ks: {
+                      a: 0,
+                      k: {
+                        i: [[0, 0], [-20, 0], [0, -30], [-15, 0], [0, 0], [15, 0], [0, -30], [20, 0]],
+                        o: [[-20, 0], [0, 0], [0, 30], [0, 0], [0, 0], [0, 0], [0, 30], [0, 0]],
+                        v: [[0, -70], [-55, 30], [-70, 75], [-45, 75], [45, 75], [70, 75], [55, 30], [0, -70]],
+                        c: true
+                      }
+                    }
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cPrimary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: sw },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+    }
+
+    function generateLoaderLottie(params) {
+      const cPrimary = hexToLottieColor(params.colorPrimary);
+      const cSecondary = hexToLottieColor(params.colorSecondary);
+      const op = params.duration;
+      const sw = params.strokeWidth;
+
+      return {
+        v: "5.7.4",
+        fr: 60,
+        ip: 0,
+        op: op,
+        w: 500,
+        h: 500,
+        nm: "Geometric Modern Loop",
+        ddd: 0,
+        assets: [],
+        layers: [
+          {
+            ddd: 0,
+            ind: 1,
+            ty: 4,
+            nm: "Spinning Dual Arc",
+            sr: 1,
+            ks: {
+              o: { a: 0, k: 100 },
+              r: {
+                a: 1,
+                k: [
+                  { t: 0, s: [0], e: [360] },
+                  { t: op, s: [360] }
+                ]
+              },
+              p: { a: 0, k: [250, 250, 0] },
+              a: { a: 0, k: [0, 0, 0] },
+              s: { a: 0, k: [100, 100, 100] }
+            },
+            shapes: [
+              {
+                ty: "gr",
+                nm: "Ring 1",
+                it: [
+                  {
+                    ty: "el",
+                    p: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [180, 180] }
+                  },
+                  {
+                    ty: "tm",
+                    s: {
+                      a: 1,
+                      k: [
+                        { t: 0, s: [0], e: [40] },
+                        { t: op * 0.5, s: [40], e: [0] },
+                        { t: op, s: [0] }
+                      ]
+                    },
+                    e: {
+                      a: 1,
+                      k: [
+                        { t: 0, s: [40], e: [95] },
+                        { t: op * 0.5, s: [95], e: [40] },
+                        { t: op, s: [40] }
+                      ]
+                    },
+                    o: { a: 0, k: 0 },
+                    m: 1
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cPrimary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: sw },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              },
+              {
+                ty: "gr",
+                nm: "Inner Ring",
+                it: [
+                  {
+                    ty: "el",
+                    p: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [110, 110] }
+                  },
+                  {
+                    ty: "tm",
+                    s: { a: 0, k: 10 },
+                    e: { a: 0, k: 65 },
+                    o: {
+                      a: 1,
+                      k: [
+                        { t: 0, s: [0], e: [-360] },
+                        { t: op, s: [-360] }
+                      ]
+                    },
+                    m: 1
+                  },
+                  {
+                    ty: "st",
+                    c: { a: 0, k: cSecondary },
+                    o: { a: 0, k: 100 },
+                    w: { a: 0, k: Math.max(4, sw - 3) },
+                    lc: 2,
+                    lj: 2
+                  },
+                  {
+                    ty: "tr",
+                    p: { a: 0, k: [0, 0] },
+                    a: { a: 0, k: [0, 0] },
+                    s: { a: 0, k: [100, 100] },
+                    r: { a: 0, k: 0 },
+                    o: { a: 0, k: 100 }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      };
+    }
+
+    function loadAndRenderAnimation() {
+      // 1. Generate Lottie JSON based on current selection
+      switch (state.preset) {
+        case 'rocket':
+          currentLottieData = generateRocketLottie(state);
+          document.getElementById('current-preset-label').innerText = 'Space Rocket Launch';
+          break;
+        case 'bell':
+          currentLottieData = generateBellLottie(state);
+          document.getElementById('current-preset-label').innerText = 'Notification Bell Shake';
+          break;
+        case 'loader':
+          currentLottieData = generateLoaderLottie(state);
+          document.getElementById('current-preset-label').innerText = 'Geometric Modern Loop';
+          break;
+        case 'checkmark':
+        default:
+          currentLottieData = generateCheckmarkLottie(state);
+          document.getElementById('current-preset-label').innerText = 'Checkmark Success Burst';
+          break;
+      }
+
+      // 2. Destroy old instance if any
+      if (animInstance) {
+        animInstance.destroy();
+      }
+
+      const container = document.getElementById('lottie-container');
+      container.innerHTML = '';
+
+      // 3. Load with official lottie-web renderer
+      animInstance = lottie.loadAnimation({
+        container: container,
+        renderer: 'svg',
+        loop: document.getElementById('loop-toggle').checked,
+        autoplay: state.isPlaying,
+        animationData: currentLottieData
+      });
+
+      animInstance.setSpeed(state.currentSpeed);
+
+      // 4. Update UI labels
+      document.getElementById('total-frames-text').innerText = currentLottieData.op;
+      const scrubber = document.getElementById('timeline-scrubber');
+      scrubber.max = currentLottieData.op;
+
+      // 5. Hook frame update for scrubber
+      animInstance.addEventListener('enterFrame', () => {
+        const cur = Math.round(animInstance.currentFrame);
+        document.getElementById('current-frame-text').innerText = cur;
+        scrubber.value = cur;
+      });
+
+      // 6. Update code view
+      updateCodeOutput();
+    }
+
+    function updateCodeOutput() {
+      const codeBlock = document.getElementById('code-output');
+      if (!currentLottieData) return;
+
+      if (state.activeTab === 'json') {
+        codeBlock.textContent = JSON.stringify(currentLottieData, null, 2);
+      } else if (state.activeTab === 'react') {
+        codeBlock.textContent = `// 1. Установите библиотеку:
+// npm install lottie-react
+
+import React from 'react';
+import Lottie from 'lottie-react';
+// Импортируйте сохраненный файл:
+import animationData from './animation.json';
+
+export default function VectorAnimation() {
+  return (
+    <div className="w-64 h-64 mx-auto">
+      <Lottie
+        animationData={animationData}
+        loop={${document.getElementById('loop-toggle').checked}}
+        autoplay={true}
+        style={{ width: '100%', height: '100%' }}
+      />
+    </div>
+  );
+}`;
+      } else if (state.activeTab === 'vanilla') {
+        codeBlock.textContent = `<!-- 1. Подключите lottie-web в head -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"><\\/script>
+
+<div id="lottie-box" style="width: 300px; height: 300px;"></div>
+
+<script>
+  // Загрузка через локальный JSON файл:
+  lottie.loadAnimation({
+    container: document.getElementById('lottie-box'),
+    renderer: 'svg',
+    loop: ${document.getElementById('loop-toggle').checked},
+    autoplay: true,
+    path: '/path/to/animation.json' // или свойство animationData: {...}
+  });
+<\\/script>`.replace(/\\/g, '');
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      msg.textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2600);
+    }
+
+    // Export .json trigger
+    document.getElementById('btn-export-json').addEventListener('click', () => {
+      if (!currentLottieData) return;
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentLottieData, null, 2));
+      const dlAnchorElem = document.createElement('a');
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", `${state.preset}-lottie.json`);
+      document.body.appendChild(dlAnchorElem);
+      dlAnchorElem.click();
+      dlAnchorElem.remove();
+      showToast(`Файл "${state.preset}-lottie.json" успешно скачан!`);
+    });
+
+    // Copy to clipboard with fallback
+    document.getElementById('btn-copy-code').addEventListener('click', () => {
+      const textToCopy = document.getElementById('code-output').textContent;
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand('copy');
+        showToast('Код успешно скопирован в буфер обмена!');
+      } catch (err) {
+        showToast('Не удалось скопировать, выделите текст вручную');
+      }
+      document.body.removeChild(textArea);
+    });
+
+    // Play/Pause button
+    const btnPlayPause = document.getElementById('btn-play-pause');
+    const iconPlay = document.getElementById('icon-play');
+    const iconPause = document.getElementById('icon-pause');
+
+    btnPlayPause.addEventListener('click', () => {
+      if (!animInstance) return;
+      if (state.isPlaying) {
+        animInstance.pause();
+        state.isPlaying = false;
+        iconPause.classList.add('hidden');
+        iconPlay.classList.remove('hidden');
+      } else {
+        animInstance.play();
+        state.isPlaying = true;
+        iconPlay.classList.add('hidden');
+        iconPause.classList.remove('hidden');
+      }
+    });
+
+    // Restart button
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      if (animInstance) {
+        animInstance.goToAndPlay(0, true);
+        state.isPlaying = true;
+        iconPlay.classList.add('hidden');
+        iconPause.classList.remove('hidden');
+      }
+    });
+
+    // Scrubber drag
+    const timelineScrubber = document.getElementById('timeline-scrubber');
+    timelineScrubber.addEventListener('input', (e) => {
+      if (animInstance) {
+        animInstance.goToAndStop(parseFloat(e.target.value), true);
+        state.isPlaying = false;
+        iconPause.classList.add('hidden');
+        iconPlay.classList.remove('hidden');
+      }
+    });
+
+    // Speed control buttons
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.speed-btn').forEach(b => {
+          b.classList.remove('text-indigo-400', 'bg-slate-800', 'font-bold');
+          b.classList.add('text-slate-400');
+        });
+        btn.classList.add('text-indigo-400', 'bg-slate-800', 'font-bold');
+        btn.classList.remove('text-slate-400');
+        state.currentSpeed = parseFloat(btn.dataset.speed);
+        if (animInstance) animInstance.setSpeed(state.currentSpeed);
+      });
+    });
+
+    // Loop toggle
+    document.getElementById('loop-toggle').addEventListener('change', (e) => {
+      if (animInstance) {
+        animInstance.setLoop(e.target.checked);
+      }
+      updateCodeOutput();
+    });
+
+    // Background mode toggle
+    const stage = document.getElementById('animation-stage');
+    document.getElementById('bg-btn-grid').addEventListener('click', () => {
+      stage.className = "w-full aspect-square max-h-[380px] sm:max-h-[420px] rounded-xl bg-checker border border-slate-800/80 flex items-center justify-center relative overflow-hidden transition-colors duration-200";
+    });
+    document.getElementById('bg-btn-dark').addEventListener('click', () => {
+      stage.className = "w-full aspect-square max-h-[380px] sm:max-h-[420px] rounded-xl bg-slate-950 border border-slate-800/80 flex items-center justify-center relative overflow-hidden transition-colors duration-200";
+    });
+    document.getElementById('bg-btn-light').addEventListener('click', () => {
+      stage.className = "w-full aspect-square max-h-[380px] sm:max-h-[420px] rounded-xl bg-slate-100 border border-slate-300 flex items-center justify-center relative overflow-hidden transition-colors duration-200";
+    });
+
+    // Preset selection
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          b.classList.remove('border-indigo-500', 'bg-indigo-500/10', 'text-white');
+          b.classList.add('border-slate-800', 'bg-slate-950', 'text-slate-300');
+        });
+        btn.classList.add('border-indigo-500', 'bg-indigo-500/10', 'text-white');
+        btn.classList.remove('border-slate-800', 'bg-slate-950', 'text-slate-300');
+
+        state.preset = btn.dataset.preset;
+        loadAndRenderAnimation();
+      });
+    });
+
+    // Color pickers
+    const pColor = document.getElementById('param-color-primary');
+    const sColor = document.getElementById('param-color-secondary');
+    const aColor = document.getElementById('param-color-accent');
+
+    pColor.addEventListener('input', (e) => {
+      state.colorPrimary = e.target.value;
+      document.getElementById('hex-primary').textContent = e.target.value;
+      loadAndRenderAnimation();
+    });
+    sColor.addEventListener('input', (e) => {
+      state.colorSecondary = e.target.value;
+      document.getElementById('hex-secondary').textContent = e.target.value;
+      loadAndRenderAnimation();
+    });
+    aColor.addEventListener('input', (e) => {
+      state.colorAccent = e.target.value;
+      document.getElementById('hex-accent').textContent = e.target.value;
+      loadAndRenderAnimation();
+    });
+
+    // Stroke slider
+    const strokeInput = document.getElementById('param-stroke');
+    strokeInput.addEventListener('input', (e) => {
+      state.strokeWidth = parseInt(e.target.value, 10);
+      document.getElementById('stroke-val').textContent = `${state.strokeWidth}px`;
+      loadAndRenderAnimation();
+    });
+
+    // Duration slider
+    const durationInput = document.getElementById('param-duration');
+    durationInput.addEventListener('input', (e) => {
+      state.duration = parseInt(e.target.value, 10);
+      const secs = (state.duration / state.fps).toFixed(1);
+      document.getElementById('duration-val').textContent = `${state.duration} кадров (${secs} с)`;
+      loadAndRenderAnimation();
+    });
+
+    // Reset parameters
+    document.getElementById('btn-reset-params').addEventListener('click', () => {
+      state.colorPrimary = '#6366f1';
+      state.colorSecondary = '#10b981';
+      state.colorAccent = '#f43f5e';
+      state.strokeWidth = 12;
+      state.duration = 120;
+
+      pColor.value = state.colorPrimary;
+      sColor.value = state.colorSecondary;
+      aColor.value = state.colorAccent;
+      strokeInput.value = state.strokeWidth;
+      durationInput.value = state.duration;
+
+      document.getElementById('hex-primary').textContent = state.colorPrimary;
+      document.getElementById('hex-secondary').textContent = state.colorSecondary;
+      document.getElementById('hex-accent').textContent = state.colorAccent;
+      document.getElementById('stroke-val').textContent = '12px';
+      document.getElementById('duration-val').textContent = '120 кадров (2.0 с)';
+
+      loadAndRenderAnimation();
+    });
+
+    // Code tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('text-white', 'bg-slate-800');
+          b.classList.add('text-slate-400');
+        });
+        btn.classList.add('text-white', 'bg-slate-800');
+        btn.classList.remove('text-slate-400');
+
+        state.activeTab = btn.dataset.tab;
+        updateCodeOutput();
+      });
+    });
+
+    window.onload = function() {
+      loadAndRenderAnimation();
+    };
+  </script>
+</body>
+</html>

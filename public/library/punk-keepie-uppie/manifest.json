@@ -1,0 +1,20 @@
+{
+  "id": "punk-keepie-uppie",
+  "title": "Punk Keepie-Uppie",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/punk-keepie-uppie/code.html",
+  "previewUrl": "library/punk-keepie-uppie/code.html"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "apple-style-product-page",
+  "title": "Apple-Style Product Page",
+  "tags": [
+    "gemini",
+    "html",
+    "gsap",
+    "tailwind",
+    "svg",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · gsap",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/apple-style-product-page/code.html",
+  "previewUrl": "library/apple-style-product-page/code.html"
+}

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Живая растровая сфера - Глубокие изгибы</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      touch-action: none;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Слой для создания глубины и свечения */
+    #layer-blur {
+      z-index: 1;
+      filter: blur(14px);
+      opacity: 0.7;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* Слой четкой графики */
+    #layer-base {
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="canvas-container">
+    <canvas id="layer-blur"></canvas>
+    <canvas id="layer-base"></canvas>
+  </div>
+
+  <script>
+    const canvasBase = document.getElementById('layer-base');
+    const ctxBase = canvasBase.getContext('2d', { alpha: true });
+    
+    const canvasBlur = document.getElementById('layer-blur');
+    const ctxBlur = canvasBlur.getContext('2d', { alpha: true });
+
+    let width, height;
+    let particles = [];
+    let centerX, centerY;
+    
+    // НАСТРОЙКИ: Кардинально изменены для сильных изгибов
+    const config = {
+      color: '#1a1b4b',
+      mouseRadius: 220,     // Увеличили радиус разрыва от мыши
+      spring: 0.03,         // Пружина стала еще мягче, чтобы точки разлетались дальше
+      friction: 0.90,       // Немного больше скольжения
+      waveSpeed: 0.0012,    // Чуть замедлили волны для грациозности при большой амплитуде
+      waveAmplitude: 75     // КРИТИЧЕСКИЙ ПАРАМЕТР: Сила изгибов (было 18, стало 75)
+    };
+
+    let spacing, particleSize;
+    let mouse = { x: -1000, y: -1000 };
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('touchmove', (e) => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+    window.addEventListener('touchend', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    function init() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      
+      canvasBase.width = width;
+      canvasBase.height = height;
+      canvasBlur.width = width;
+      canvasBlur.height = height;
+
+      centerX = width / 2;
+      centerY = height / 2;
+
+      spacing = Math.max(6, width / 180); 
+      particleSize = spacing * 0.35;
+
+      particles = [];
+      
+      const sphereRadius = Math.min(width, height) * 0.42; 
+
+      for (let y = 0; y < height; y += spacing) {
+        for (let x = 0; x < width; x += spacing) {
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
+
+          if (distanceToCenter < sphereRadius) {
+            const nx = dx / sphereRadius;
+            const ny = dy / sphereRadius;
+
+            particles.push({
+              x: x,
+              y: y,
+              originX: x,
+              originY: y,
+              nx: nx,
+              ny: ny,
+              vx: 0,
+              vy: 0
+            });
+          }
+        }
+      }
+    }
+
+    function animate(time) {
+      ctxBase.clearRect(0, 0, width, height);
+      ctxBlur.clearRect(0, 0, width, height);
+
+      ctxBase.fillStyle = config.color;
+      ctxBlur.fillStyle = config.color;
+
+      ctxBase.beginPath();
+      ctxBlur.beginPath();
+
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+
+        let waveTime = time * config.waveSpeed;
+        
+        // Увеличили "частоту" (множители 7 и 5), чтобы появилось больше складок.
+        // Это заставляет сетку сильнее "рваться" и просвечивать белый фон.
+        let waveOffsetX = Math.sin(p.ny * 7 + waveTime) * config.waveAmplitude + 
+                          Math.cos(p.nx * 5 - waveTime) * (config.waveAmplitude * 0.7);
+        
+        let waveOffsetY = Math.cos(p.nx * 7 + waveTime) * config.waveAmplitude + 
+                          Math.sin(p.ny * 5 + waveTime) * (config.waveAmplitude * 0.7);
+
+        let targetX = p.originX + waveOffsetX;
+        let targetY = p.originY + waveOffsetY;
+
+        // Интерактивность
+        let dxMouse = p.x - mouse.x;
+        let dyMouse = p.y - mouse.y;
+        let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+        if (distMouse < config.mouseRadius) {
+          let force = (config.mouseRadius - distMouse) / config.mouseRadius;
+          force = Math.pow(force, 2); 
+          
+          let forceDirectionX = dxMouse / distMouse;
+          let forceDirectionY = dyMouse / distMouse;
+          
+          // Усилили отталкивание от курсора
+          p.vx += forceDirectionX * force * 18;
+          p.vy += forceDirectionY * force * 18;
+        }
+
+        p.vx += (targetX - p.x) * config.spring;
+        p.vy += (targetY - p.y) * config.spring;
+        
+        p.vx *= config.friction;
+        p.vy *= config.friction;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        ctxBase.moveTo(p.x, p.y);
+        ctxBase.arc(p.x, p.y, particleSize, 0, Math.PI * 2);
+        
+        ctxBlur.moveTo(p.x, p.y);
+        ctxBlur.arc(p.x, p.y, particleSize * 2, 0, Math.PI * 2); 
+      }
+
+      ctxBase.fill();
+      ctxBlur.fill();
+
+      requestAnimationFrame(animate);
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        init();
+      }, 100);
+    });
+
+    init();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

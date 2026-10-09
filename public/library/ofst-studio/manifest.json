@@ -1,0 +1,20 @@
+{
+  "id": "ofst-studio",
+  "title": "OFST Studio",
+  "tags": [
+    "gemini",
+    "html",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Мы проектируем, разрабатываем и развиваем цифровое присутствие. Прага.",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/ofst-studio/code.html",
+  "previewUrl": "library/ofst-studio/code.html"
+}

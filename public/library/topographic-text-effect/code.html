@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topographic Kinetic Typography</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #f5e042; /* Yellow background similar to the image */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Controls for interactivity */
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            gap: 15px;
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"] {
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="topoCanvas"></canvas>
+
+    <div id="controls">
+        <input type="text" id="textInput1" value="MAPLE" placeholder="Line 1">
+        <input type="text" id="textInput2" value="TREE" placeholder="Line 2">
+        <input type="text" id="textInput3" value="CIRCUS" placeholder="Line 3">
+    </div>
+
+    <script>
+        const canvas = document.getElementById('topoCanvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        
+        let width, height;
+        let time = 0;
+        
+        // Simplex noise implementation (port of Stefan Gustavson's java implementation)
+        // Required for smooth topographic lines
+        const SimplexNoise = function() {
+            var F3 = 1.0/3.0;
+            var G3 = 1.0/6.0;
+            var p = new Uint8Array(256);
+            for (var i=0; i<256; i++) {
+                p[i] = Math.floor(Math.random()*256);
+            }
+            var perm = new Uint8Array(512);
+            var permMod12 = new Uint8Array(512);
+            for (var i=0; i<512; i++) {
+                perm[i] = p[i & 255];
+                permMod12[i] = (perm[i] % 12);
+            }
+            return {
+                noise3D: function(xin, yin, zin) {
+                    var n0, n1, n2, n3; 
+                    var s = (xin+yin+zin)*F3; 
+                    var i = Math.floor(xin+s);
+                    var j = Math.floor(yin+s);
+                    var k = Math.floor(zin+s);
+                    var t = (i+j+k)*G3;
+                    var X0 = i-t; 
+                    var Y0 = j-t; 
+                    var Z0 = k-t;
+                    var x0 = xin-X0;
+                    var y0 = yin-Y0;
+                    var z0 = zin-Z0;
+                    var i1, j1, k1; 
+                    var i2, j2, k2; 
+                    if(x0>=y0) {
+                        if(y0>=z0)      { i1=1; j1=0; k1=0; i2=1; j2=1; k2=0; } 
+                        else if(x0>=z0) { i1=1; j1=0; k1=0; i2=1; j2=0; k2=1; } 
+                        else            { i1=0; j1=0; k1=1; i2=1; j2=0; k2=1; } 
+                    } else { 
+                        if(y0<z0)       { i1=0; j1=0; k1=1; i2=0; j2=1; k2=1; } 
+                        else if(x0<z0)  { i1=0; j1=1; k1=0; i2=0; j2=1; k2=1; } 
+                        else            { i1=0; j1=1; k1=0; i2=1; j2=1; k2=0; } 
+                    }
+                    var x1 = x0 - i1 + G3; 
+                    var y1 = y0 - j1 + G3;
+                    var z1 = z0 - k1 + G3;
+                    var x2 = x0 - i2 + 2.0*G3; 
+                    var y2 = y0 - j2 + 2.0*G3;
+                    var z2 = z0 - k2 + 2.0*G3;
+                    var x3 = x0 - 1.0 + 3.0*G3; 
+                    var y3 = y0 - 1.0 + 3.0*G3;
+                    var z3 = z0 - 1.0 + 3.0*G3;
+                    var ii = i & 255;
+                    var jj = j & 255;
+                    var kk = k & 255;
+                    var t0 = 0.6 - x0*x0 - y0*y0 - z0*z0;
+                    if(t0<0) n0 = 0.0;
+                    else {
+                        var gi0 = permMod12[ii+perm[jj+perm[kk]]] * 3;
+                        t0 *= t0;
+                        n0 = t0 * t0 * (grad3[gi0]*x0 + grad3[gi0+1]*y0 + grad3[gi0+2]*z0);
+                    }
+                    var t1 = 0.6 - x1*x1 - y1*y1 - z1*z1;
+                    if(t1<0) n1 = 0.0;
+                    else {
+                        var gi1 = permMod12[ii+i1+perm[jj+j1+perm[kk+k1]]] * 3;
+                        t1 *= t1;
+                        n1 = t1 * t1 * (grad3[gi1]*x1 + grad3[gi1+1]*y1 + grad3[gi1+2]*z1);
+                    }
+                    var t2 = 0.6 - x2*x2 - y2*y2 - z2*z2;
+                    if(t2<0) n2 = 0.0;
+                    else {
+                        var gi2 = permMod12[ii+i2+perm[jj+j2+perm[kk+k2]]] * 3;
+                        t2 *= t2;
+                        n2 = t2 * t2 * (grad3[gi2]*x2 + grad3[gi2+1]*y2 + grad3[gi2+2]*z2);
+                    }
+                    var t3 = 0.6 - x3*x3 - y3*y3 - z3*z3;
+                    if(t3<0) n3 = 0.0;
+                    else {
+                        var gi3 = permMod12[ii+1+perm[jj+1+perm[kk+1]]] * 3;
+                        t3 *= t3;
+                        n3 = t3 * t3 * (grad3[gi3]*x3 + grad3[gi3+1]*y3 + grad3[gi3+2]*z3);
+                    }
+                    return 32.0*(n0 + n1 + n2 + n3);
+                }
+            };
+        };
+        const grad3 = new Float32Array([1,1,0,-1,1,0,1,-1,0,-1,-1,0,1,0,1,-1,0,1,1,0,-1,-1,0,-1,0,1,1,0,-1,1,0,1,-1,0,-1,-1]);
+        const simplex = SimplexNoise();
+
+        // We will render text to an offscreen canvas and create a distance field
+        const offscreenCanvas = document.createElement('canvas');
+        const offCtx = offscreenCanvas.getContext('2d', { willReadFrequently: true });
+        let textData = [];
+        let distanceField = [];
+        
+        // Configuration
+        const config = {
+            lines: 50,          // Increased number of topographic lines for more detail
+            smoothness: 0.003,  // Noise scale
+            speed: 0.002,       // Animation speed
+            thickness: 2.0,     // Increased line thickness
+            textInfluence: 1.2, // Increased text influence for more pronounced effect
+            resolution: 4       // Higher = faster but lower quality (pixel step size)
+        };
+
+        const inputs = [
+            document.getElementById('textInput1'),
+            document.getElementById('textInput2'),
+            document.getElementById('textInput3')
+        ];
+
+        function updateTextData() {
+            // Setup offscreen canvas size (scaled down for performance)
+            const scale = 1 / config.resolution;
+            // Убедимся, что размеры хотя бы 1x1, чтобы избежать IndexSizeError
+            const w = Math.max(1, Math.floor(width * scale));
+            const h = Math.max(1, Math.floor(height * scale));
+            
+            offscreenCanvas.width = w;
+            offscreenCanvas.height = h;
+            
+            // Clear and draw text
+            offCtx.fillStyle = 'white';
+            offCtx.fillRect(0, 0, w, h);
+            
+            offCtx.fillStyle = 'black';
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            
+            // Draw 3 lines of text
+            const textLines = inputs.map(input => input.value);
+            
+            // Adjust font size based on width and line count
+            // The reference image uses very tall, condensed fonts
+            const baseFontSize = h / 3.5;
+            
+            // Try to find a condensed font, fallback to standard sans-serif
+            offCtx.font = `bold condensed ${baseFontSize}px 'Impact', 'Arial Narrow', sans-serif`;
+            
+            // Add a slight vertical scale to make it look taller like the reference
+            offCtx.scale(1, 1.5);
+            
+            const lineHeights = [h * 0.2, h * 0.5, h * 0.8];
+            
+            textLines.forEach((text, i) => {
+                // Adjust Y position to account for the vertical scale
+                offCtx.fillText(text, w / 2, (lineHeights[i] / 1.5));
+            });
+            
+            // Reset scale for pixel reading
+            offCtx.setTransform(1, 0, 0, 1, 0, 0);
+
+            // Read pixels
+            const imgData = offCtx.getImageData(0, 0, w, h).data;
+            
+            // Simple distance field approximation
+            textData = new Float32Array(w * h);
+            
+            // First pass: mark text pixels as 0, empty space as large number
+            for (let i = 0; i < w * h; i++) {
+                // Check red channel (since it's black and white, R=G=B)
+                // Black text = 0 value in array
+                textData[i] = imgData[i * 4] < 128 ? 0 : 999; 
+            }
+            
+            // Simple 2-pass distance transform (Manhattan distance for speed)
+            // Forward pass
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    let i = y * w + x;
+                    if (textData[i] > 0) {
+                        let min = textData[i];
+                        if (x > 0) min = Math.min(min, textData[i - 1] + 1);
+                        if (y > 0) min = Math.min(min, textData[i - w] + 1);
+                        textData[i] = min;
+                    }
+                }
+            }
+            
+            // Backward pass
+            for (let y = h - 1; y >= 0; y--) {
+                for (let x = w - 1; x >= 0; x--) {
+                    let i = y * w + x;
+                    if (x < w - 1) textData[i] = Math.min(textData[i], textData[i + 1] + 1);
+                    if (y < h - 1) textData[i] = Math.min(textData[i], textData[i + w] + 1);
+                }
+            }
+        }
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Need to recalculate text data on resize
+            updateTextData();
+        }
+
+        window.addEventListener('resize', resize);
+        
+        // Listen to inputs
+        inputs.forEach(input => {
+            input.addEventListener('input', updateTextData);
+        });
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const w = offscreenCanvas.width;
+            const h = offscreenCanvas.height;
+            const res = config.resolution;
+            
+            // Draw lines
+            ctx.lineWidth = config.thickness;
+            // Changed color to a reddish-orange for a thermal/heatmap look
+            ctx.strokeStyle = 'rgba(255, 80, 0, 0.9)'; 
+            ctx.lineJoin = 'round';
+            
+            // Calculate a scalar field based on noise + distance to text
+            const field = new Float32Array(w * h);
+            
+            let minVal = 9999;
+            let maxVal = -9999;
+            
+            // Generate field values
+            for (let y = 0; y < h; y++) {
+                for (let x = 0; x < w; x++) {
+                    const idx = y * w + x;
+                    
+                    // Base noise
+                    let nx = x * config.smoothness;
+                    let ny = y * config.smoothness;
+                    let noiseVal = simplex.noise3D(nx, ny, time);
+                    
+                    // Mix with text distance
+                    // Close to text (low distance) -> creates a "valley" or specific contour shape
+                    let textDist = textData[idx];
+                    
+                    // Shape the text influence to create sharp ridges at letter edges
+                    let textEffect = 0;
+                    if (textDist < 20) {
+                         // Inside or very close to letters: pattern follows letter shape closely
+                         textEffect = Math.sin(textDist * 0.5) * config.textInfluence;
+                    } else {
+                         // Farther away: blend back into pure noise
+                         let falloff = Math.max(0, 1 - (textDist - 20) / 50);
+                         textEffect = Math.sin(textDist * 0.3) * config.textInfluence * falloff;
+                    }
+                    
+                    let val = noiseVal + textEffect;
+                    field[idx] = val;
+                    
+                    if (val < minVal) minVal = val;
+                    if (val > maxVal) maxVal = val;
+                }
+            }
+            
+            // To render true contours fast in JS without WebGL, 
+            // we'll draw dots or short line segments where the field crosses thresholds.
+            // A visual trick is to map the field values to a saw wave and threshold it.
+            
+            ctx.beginPath();
+            
+            // Optimization: instead of marching squares, we evaluate the gradient
+            // and draw small segments. This creates a slightly sketchy, organic look
+            // similar to the printed poster.
+            
+            const numLevels = config.lines;
+            const levelStep = (maxVal - minVal) / numLevels;
+            
+            for (let y = 1; y < h - 1; y++) {
+                for (let x = 1; x < w - 1; x++) {
+                    const idx = y * w + x;
+                    const val = field[idx];
+                    
+                    // Calculate which contour interval we are in
+                    const level = (val - minVal) / levelStep;
+                    const fractionalPart = level - Math.floor(level);
+                    
+                    // If we are close to a contour line integer value
+                    if (fractionalPart < 0.15) {
+                        
+                        // Calculate gradient to know edge direction
+                        const dx = field[idx + 1] - field[idx - 1];
+                        const dy = field[idx + w] - field[idx - w];
+                        
+                        // Only draw if there's a significant slope
+                        if (Math.abs(dx) > 0.01 || Math.abs(dy) > 0.01) {
+                            
+                            // Normalize vector, rotate 90 deg to get tangent
+                            const len = Math.sqrt(dx*dx + dy*dy);
+                            const tx = -dy / len;
+                            const ty = dx / len;
+                            
+                            // Map back to screen space
+                            const sx = x * res;
+                            const sy = y * res;
+                            
+                            // Draw a small line segment along the contour
+                            const segmentLength = res * 0.8; 
+                            ctx.moveTo(sx - tx * segmentLength, sy - ty * segmentLength);
+                            ctx.lineTo(sx + tx * segmentLength, sy + ty * segmentLength);
+                        }
+                    }
+                }
+            }
+            ctx.stroke();
+
+            time += config.speed;
+            requestAnimationFrame(draw);
+        }
+
+        // Init
+        resize(); // sets initial sizes and generates text data
+        
+        // Start loop
+        requestAnimationFrame(draw);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "id": "bento-motion-layout",
+  "title": "Bento Motion Layout",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-motion-layout/code.html",
+  "previewUrl": "library/bento-motion-layout/code.html"
+}

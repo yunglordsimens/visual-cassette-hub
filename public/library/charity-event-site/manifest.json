@@ -1,0 +1,22 @@
+{
+  "id": "charity-event-site",
+  "title": "Charity Event Site",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll",
+    "audio"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · audio",
+  "created": "2026-04-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/charity-event-site/code.tsx",
+  "previewUrl": "library/charity-event-site/preview.html"
+}

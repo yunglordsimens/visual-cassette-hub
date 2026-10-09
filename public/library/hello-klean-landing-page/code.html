@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello Klean</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff; /* Clean white background */
+            color: #1a1a1a;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Custom scrollbar to match sleek design */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+
+        /* Gradient for product cards mimicking the reference lighting */
+        .product-card-bg {
+            background: linear-gradient(180deg, #9ca3af 0%, #d1d5db 100%);
+        }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="px-2 pt-2 md:px-4 md:pt-4 mx-auto max-w-[1600px]">
+        <section class="relative w-full h-[55vh] md:h-[65vh] lg:h-[75vh] overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
+            <!-- Placeholder for the dark shower head hero image -->
+            <img src="https://placehold.co/1600x900/1a1a1a/333333?text=Macro+Shot+of+Black+Shower+Head" alt="Water upgrade" class="w-full h-full object-cover object-center absolute inset-0">
+            
+            <!-- Overlay content (Top centered) -->
+            <div class="absolute inset-x-0 top-0 flex flex-col items-center justify-start pt-12 md:pt-16 z-10 text-center px-4">
+                <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-medium tracking-tight mb-4 max-w-lg leading-snug drop-shadow-sm">
+                    Your water's upgrade is within reach.
+                </h1>
+                <a href="#" class="bg-white text-black px-6 py-2.5 rounded-full text-sm font-semibold tracking-wide hover:bg-gray-100 transition-colors duration-300">
+                    Shop Now
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <section class="py-12 md:py-20 px-4 text-center max-w-4xl mx-auto flex flex-col items-center justify-center">
+        <!-- Logo matching reference (Hello Klean with circled HK) -->
+        <div class="mb-4 flex items-start justify-center">
+            <h2 class="text-5xl md:text-7xl font-bold tracking-tight text-gray-900 flex items-start gap-1">
+                Hello Klean
+                <span class="inline-flex items-center justify-center border-[1.5px] border-black rounded-full w-5 h-5 md:w-6 md:h-6 text-[9px] md:text-[11px] font-semibold mt-2 md:mt-3">
+                    HK
+                </span>
+            </h2>
+        </div>
+        
+        <!-- Mission Statement -->
+        <p class="text-gray-800 text-sm md:text-base font-medium leading-relaxed max-w-2xl px-4">
+            We help you break free from hard water's sneaky damage. So your hair and skin can get back to how it used to be.
+        </p>
+    </section>
+
+    <section class="px-2 md:px-4 mx-auto max-w-[1600px] mb-12">
+        <div class="relative flex flex-col items-center">
+            
+            <!-- Banner Image -->
+            <div class="relative w-full h-[40vh] md:h-[50vh] overflow-hidden rounded-[2rem] md:rounded-[2.5rem]">
+                <!-- Placeholder for hands holding light shower head -->
+                <img src="https://placehold.co/1600x600/e5e5e5/999999?text=Hands+Holding+Beige+Shower+Head" alt="The Shower Stack" class="w-full h-full object-cover object-center">
+                
+                <!-- Overlay content centered in banner -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center z-10 text-white pointer-events-none">
+                    <span class="border border-white/60 bg-white/10 backdrop-blur-sm px-4 py-0.5 rounded-full text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-3 pointer-events-auto">
+                        FILTER
+                    </span>
+                    <h3 class="text-2xl md:text-4xl font-medium drop-shadow-md">
+                        The Shower Stack
+                    </h3>
+                </div>
+            </div>
+            
+            <!-- Floating Category Toggles (Overlapping the bottom) -->
+            <div class="relative -mt-6 z-20 flex bg-white p-1 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100">
+                <button class="bg-black text-white px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-colors">Filter</button>
+                <button class="text-gray-500 hover:text-black px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-colors">Hair</button>
+                <button class="text-gray-500 hover:text-black px-6 py-2 rounded-full text-xs md:text-sm font-medium transition-colors">Body</button>
+            </div>
+            
+        </div>
+    </section>
+
+    <section class="px-2 md:px-4 mx-auto max-w-[1600px]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            
+            <div class="flex flex-col group">
+                <div class="relative product-card-bg aspect-[4/5] rounded-[2rem] overflow-hidden mb-4 p-4 md:p-5 flex flex-col justify-between">
+                    <!-- Top labels -->
+                    <div class="flex justify-between items-start z-10 w-full">
+                        <span class="border border-white text-white px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase">FILTER 01</span>
+                        <!-- Mockup of the GQ award badge -->
+                        <div class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center text-[6px] text-center leading-none text-gray-800 font-bold opacity-60">
+                            GQ<br>WINNER
+                        </div>
+                    </div>
+                    
+                    <!-- Product Image -->
+                    <div class="absolute inset-0 flex items-center justify-center mt-4 pointer-events-none">
+                        <img src="https://placehold.co/400x500/transparent/333333?text=Shower+Head" alt="Shower Head 2.0" class="w-3/5 md:w-1/2 h-auto object-contain">
+                    </div>
+
+                    <!-- Side arrows -->
+                    <div class="absolute inset-y-0 left-2 right-2 flex justify-between items-center z-10 pointer-events-none">
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+
+                    <!-- Bottom UI: Color dots & Pagination -->
+                    <div class="relative z-10 mt-auto flex flex-col justify-end h-full pointer-events-none">
+                        <div class="flex flex-col gap-2 items-end mb-4 pointer-events-auto">
+                             <button class="w-4 h-4 rounded-full bg-[#e3ddd5] border-2 border-transparent hover:border-white shadow-sm" title="Beige"></button>
+                             <button class="w-4 h-4 rounded-full bg-black border-2 border-white shadow-sm" title="Black"></button>
+                             <button class="w-4 h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-400 border-2 border-transparent hover:border-white shadow-sm" title="Chrome"></button>
+                        </div>
+                        <div class="flex justify-center gap-1.5 w-full pointer-events-auto">
+                            <div class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Details -->
+                <div class="flex flex-col gap-1 px-1">
+                    <h4 class="font-medium text-sm md:text-base text-gray-900 leading-tight">Hello Klean<br>Shower Head 2.0</h4>
+                    <p class="text-[13px] text-gray-500 mt-0.5">€75,00</p>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <div class="flex text-black text-[10px]">★★★★★</div>
+                        <span class="text-[11px] text-gray-400 font-medium">(287)</span>
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <button class="flex-1 py-2 rounded-full border border-gray-300 text-[13px] font-medium hover:border-black transition-colors">View more</button>
+                        <button class="flex-1 py-2 rounded-full bg-[#3a3a3a] text-white text-[13px] font-medium hover:bg-black transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col group">
+                <div class="relative product-card-bg aspect-[4/5] rounded-[2rem] overflow-hidden mb-4 p-4 md:p-5 flex flex-col justify-between">
+                    <div class="flex justify-between items-start z-10 w-full">
+                        <span class="border border-white text-white px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase">FILTER 01</span>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center mt-4 pointer-events-none">
+                        <img src="https://placehold.co/400x500/transparent/333333?text=Shower+Filter" alt="Shower Filter 2.0" class="w-3/5 md:w-1/2 h-auto object-contain">
+                    </div>
+                    <div class="absolute inset-y-0 left-2 right-2 flex justify-between items-center z-10 pointer-events-none">
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="relative z-10 mt-auto flex flex-col justify-end h-full pointer-events-none">
+                        <div class="flex flex-col gap-2 items-end mb-4 pointer-events-auto">
+                             <button class="w-4 h-4 rounded-full bg-[#e3ddd5] border-2 border-transparent hover:border-white shadow-sm" title="Beige"></button>
+                             <button class="w-4 h-4 rounded-full bg-black border-2 border-white shadow-sm" title="Black"></button>
+                             <button class="w-4 h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-400 border-2 border-transparent hover:border-white shadow-sm" title="Chrome"></button>
+                        </div>
+                        <div class="flex justify-center gap-1.5 w-full pointer-events-auto">
+                            <div class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1 px-1">
+                    <h4 class="font-medium text-sm md:text-base text-gray-900 leading-tight">Hello Klean<br>Shower Filter 2.0</h4>
+                    <p class="text-[13px] text-gray-500 mt-0.5">€68,00</p>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <div class="flex text-black text-[10px]">★★★★★</div>
+                        <span class="text-[11px] text-gray-400 font-medium">(68)</span>
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <button class="flex-1 py-2 rounded-full border border-gray-300 text-[13px] font-medium hover:border-black transition-colors">View more</button>
+                        <button class="flex-1 py-2 rounded-full bg-[#3a3a3a] text-white text-[13px] font-medium hover:bg-black transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col group">
+                <div class="relative product-card-bg aspect-[4/5] rounded-[2rem] overflow-hidden mb-4 p-4 md:p-5 flex flex-col justify-between">
+                    <div class="flex justify-between items-start z-10 w-full">
+                        <span class="border border-white text-white px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase">FILTER 01</span>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center mt-4 pointer-events-none">
+                        <img src="https://placehold.co/400x500/transparent/333333?text=Rain+Shower" alt="Rain Shower" class="w-3/5 md:w-1/2 h-auto object-contain">
+                    </div>
+                    <div class="absolute inset-y-0 left-2 right-2 flex justify-between items-center z-10 pointer-events-none">
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        </button>
+                        <button class="w-6 h-6 rounded-full bg-white/40 flex items-center justify-center text-white backdrop-blur-sm pointer-events-auto hover:bg-white/60 transition">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </button>
+                    </div>
+                    <div class="relative z-10 mt-auto flex flex-col justify-end h-full pointer-events-none">
+                        <div class="flex flex-col gap-2 items-end mb-4 pointer-events-auto">
+                             <button class="w-4 h-4 rounded-full bg-[#e3ddd5] border-2 border-transparent hover:border-white shadow-sm" title="Beige"></button>
+                             <button class="w-4 h-4 rounded-full bg-black border-2 border-white shadow-sm" title="Black"></button>
+                             <button class="w-4 h-4 rounded-full bg-gradient-to-br from-gray-200 to-gray-400 border-2 border-transparent hover:border-white shadow-sm" title="Chrome"></button>
+                        </div>
+                        <div class="flex justify-center gap-1.5 w-full pointer-events-auto">
+                            <div class="w-1.5 h-1.5 rounded-full bg-black"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1 px-1">
+                    <h4 class="font-medium text-sm md:text-base text-gray-900 leading-tight">Hello Klean<br>Rain Shower</h4>
+                    <p class="text-[13px] text-gray-500 mt-0.5">€95,00</p>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <div class="flex text-black text-[10px]">★★★★★</div>
+                        <span class="text-[11px] text-gray-400 font-medium">(9)</span>
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <button class="flex-1 py-2 rounded-full border border-gray-300 text-[13px] font-medium hover:border-black transition-colors">View more</button>
+                        <button class="flex-1 py-2 rounded-full bg-[#3a3a3a] text-white text-[13px] font-medium hover:bg-black transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col group">
+                <div class="relative product-card-bg aspect-[4/5] rounded-[2rem] overflow-hidden mb-4 p-4 md:p-5 flex flex-col justify-between">
+                    <div class="flex justify-between items-start z-10 w-full">
+                        <span class="border border-white text-white px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase">FILTER 02</span>
+                        <span class="text-white text-[10px] font-medium tracking-widest uppercase mt-1 mr-1">REFILL</span>
+                    </div>
+                    <div class="absolute inset-0 flex items-center justify-center mt-4 pointer-events-none">
+                        <img src="https://placehold.co/400x500/transparent/333333?text=Refill+Cartridge" alt="Refill Cartridges 2.0" class="w-3/5 md:w-1/2 h-auto object-contain">
+                    </div>
+                    <div class="relative z-10 mt-auto flex flex-col justify-end h-full pointer-events-none">
+                        <div class="flex justify-center gap-1.5 w-full pointer-events-auto">
+                            <!-- No color selection for refill based on ref -->
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1 px-1">
+                    <h4 class="font-medium text-sm md:text-base text-gray-900 leading-tight">Hello Klean<br>Refill Cartridges 2.0</h4>
+                    <p class="text-[13px] text-gray-500 mt-0.5">€40,00</p>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <div class="flex text-black text-[10px]">★★★★★</div>
+                        <span class="text-[11px] text-gray-400 font-medium">(287)</span>
+                    </div>
+                    <div class="flex gap-2 mt-3">
+                        <button class="flex-1 py-2 rounded-full border border-gray-300 text-[13px] font-medium hover:border-black transition-colors">View more</button>
+                        <button class="flex-1 py-2 rounded-full bg-[#3a3a3a] text-white text-[13px] font-medium hover:bg-black transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div class="fixed bottom-6 right-6 z-50">
+        <button class="bg-[#4d4d4d] hover:bg-black text-white w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300 hover:scale-105">
+            <!-- Outline Shopping Bag Icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 md:w-6 md:h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.076.721-.506 1.393-1.233 1.393H4.364c-.727 0-1.309-.672-1.233-1.393l1.263-12c.07-.665.65-1.193 1.328-1.193h12.556c.678 0 1.258.528 1.328 1.193z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 13.5v.01M15 13.5v.01" />
+            </svg>
+        </button>
+    </div>
+
+</body>
+</html>

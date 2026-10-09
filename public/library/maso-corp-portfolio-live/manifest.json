@@ -1,0 +1,21 @@
+{
+  "id": "maso-corp-portfolio-live",
+  "title": "Maso_Corp_Portfolio_Live",
+  "tags": [
+    "gemini",
+    "html",
+    "p5js",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-01-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maso-corp-portfolio-live/code.html",
+  "previewUrl": "library/maso-corp-portfolio-live/code.html"
+}

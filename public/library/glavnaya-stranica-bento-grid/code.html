@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMPRUM Type — Home Playground</title>
+    <style>
+        :root {
+            --home-bg: #111118;
+            --home-fg: #f2f2ef;
+            --home-muted: rgba(242, 242, 239, 0.6);
+            --home-faint: rgba(242, 242, 239, 0.35);
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+            --header-h: 60px;
+            --footer-h: 40px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: var(--home-bg);
+            color: var(--home-fg);
+            overflow: hidden; 
+            overscroll-behavior: none;
+            -webkit-font-smoothing: antialiased;
+            opacity: 0;
+            transition: opacity 0.8s var(--ease);
+        }
+        
+        body.is-loaded { opacity: 1; }
+
+        .home-layout {
+            position: fixed; inset: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            background: var(--home-bg);
+        }
+
+        /* Навигация */
+        .home-nav {
+            position: relative; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 22px; height: var(--header-h);
+            font-size: 13px; letter-spacing: 0.01em;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            background: rgba(17,17,24,0.6);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
+        .home-nav__logo { font-weight: 500; text-decoration: none; color: inherit; }
+        .home-nav__links { display: flex; gap: 22px; list-style: none; }
+        .home-nav__links a { color: var(--home-muted); text-decoration: none; transition: color 0.3s var(--ease); }
+        .home-nav__links a:hover { color: var(--home-fg); }
+
+        /* Bento Контейнер */
+        .bento {
+            position: relative; overflow: hidden;
+            display: flex; flex-direction: column; height: 100%;
+        }
+
+        .bento__row {
+            flex: 1; display: flex; align-items: stretch;
+            will-change: transform; cursor: grab;
+        }
+        .bento__row:active { cursor: grabbing; }
+        
+        .bento__row--top { border-bottom: 1px solid rgba(255,255,255,0.06); height: 55%; flex: none; }
+        .bento__row--bot { height: 45%; flex: none; }
+
+        /* Bento Блок */
+        .bento-block {
+            position: relative; flex: 0 0 auto; overflow: hidden;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transition: flex-basis 1800ms var(--ease);
+            isolation: isolate; text-decoration: none; color: inherit;
+        }
+
+        /* Шум и Градиент */
+        .bento-block::before {
+            content: ""; position: absolute; inset: 0;
+            background-image:
+              url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+              var(--b-gradient, linear-gradient(135deg, #2a2a3a, #151520));
+            background-size: 140px 140px, cover;
+            background-blend-mode: overlay, normal;
+            z-index: -1;
+            transition: filter 600ms var(--ease), transform 600ms var(--ease);
+        }
+        
+        /* Блок с фото (Проекты) */
+        .bento-block.has-image::before {
+            background-image: 
+              url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"),
+              var(--bg-img);
+            background-blend-mode: overlay, normal;
+            background-position: center; background-size: 140px 140px, cover;
+            filter: grayscale(100%) brightness(0.4);
+        }
+
+        .bento-block:hover::before { filter: brightness(1.15) saturate(1.15); transform: scale(1.02); }
+        .bento-block.has-image:hover::before { filter: grayscale(0%) brightness(0.8); }
+
+        .bento-block__content {
+            position: absolute; inset: 0; padding: 18px 22px;
+            display: flex; align-items: center; justify-content: center; text-align: center;
+        }
+        
+        /* --- PLAYGROUND: Интерактивная типографика --- */
+        .playground-text {
+            font-size: clamp(3rem, 7vw, 10rem);
+            line-height: 0.9;
+            letter-spacing: -0.03em;
+            word-break: break-word;
+            /* Плавный возврат в исходное состояние когда мышь уходит */
+            transition: transform 0.6s var(--ease), letter-spacing 0.6s var(--ease), opacity 0.4s var(--ease);
+            will-change: transform, letter-spacing;
+        }
+
+        /* Specimen */
+        .bento-block__specimen {
+            position: absolute;
+            font-size: clamp(2rem, 5vw, 6rem);
+            line-height: 1; opacity: 0; transform: translateY(20px);
+            transition: opacity 0.5s var(--ease), transform 0.5s var(--ease), letter-spacing 0.5s var(--ease);
+            pointer-events: none; padding: 0 2rem; text-align: center; width: 100%;
+        }
+
+        /* --- БЕГУЩАЯ СТРОКА ДЛЯ ЖУРНАЛА --- */
+        .marquee-wrapper {
+            position: absolute; inset: 0;
+            display: flex; align-items: center;
+            overflow: hidden;
+            background: var(--home-bg);
+        }
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            font-size: clamp(4rem, 10vw, 12rem);
+            font-weight: 500;
+            line-height: 1;
+            animation: marquee 15s linear infinite;
+            will-change: transform;
+        }
+        .marquee-content span { padding-right: 1em; }
+        
+        .bento-block:hover .marquee-content { animation-play-state: paused; }
+        
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* --- BLEND MODES ДЛЯ ПРОЕКТОВ --- */
+        .project-title {
+            font-size: clamp(2rem, 4vw, 5rem);
+            line-height: 0.9;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #fff;
+            /* Инверсия цвета на фоне фотки */
+            mix-blend-mode: exclusion;
+            transition: transform 0.4s var(--ease);
+            text-align: left;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        /* Ховеры */
+        .bento-block.type-block:hover .playground-text { opacity: 0; pointer-events: none; }
+        .bento-block.type-block:hover .bento-block__specimen { opacity: 1; transform: translateY(0); }
+        .bento-block.project-block:hover .project-title { transform: translateY(-8px); }
+
+        /* Метаданные */
+        .bento-block__kind {
+            position: absolute; top: 18px; left: 22px;
+            font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+            color: var(--home-faint); z-index: 2; mix-blend-mode: exclusion; color: white;
+        }
+
+        .bento-block__hover {
+            position: absolute; left: 22px; right: 22px; bottom: 18px;
+            display: flex; flex-wrap: wrap; gap: 6px;
+            opacity: 0; transform: translateY(10px);
+            transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+            pointer-events: none; z-index: 2;
+        }
+        .bento-block:hover .bento-block__hover { opacity: 1; transform: translateY(0); }
+        .bento-block__tag {
+            font-size: 11px; padding: 4px 10px; border-radius: 999px;
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.18); color: var(--home-fg);
+        }
+
+        /* Footer */
+        .home-foot {
+            position: relative; z-index: 10;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 22px; height: var(--footer-h);
+            font-size: 11px; letter-spacing: 0.05em; color: var(--home-faint);
+            border-top: 1px solid rgba(255,255,255,0.08); background: rgba(17,17,24,0.5);
+        }
+
+        .font-sans { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+        .font-serif { font-family: "Times New Roman", Times, serif; }
+        .font-mono { font-family: "Courier New", Courier, monospace; letter-spacing: -0.05em; }
+
+        @media (max-width: 768px) {
+            .home-nav__links { display: none; }
+            .home-foot { font-size: 9px; }
+            .bento { overflow-y: auto; overflow-x: hidden; }
+            .bento__row { flex-direction: column; height: auto; }
+            .bento-block { width: 100% !important; flex-basis: 50vh !important; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="home-layout">
+        <nav class="home-nav">
+            <a href="#" class="home-nav__logo">UMPRUM Type</a>
+            <ul class="home-nav__links">
+                <li><a href="#">Typefaces</a></li>
+                <li><a href="#">Projects</a></li>
+                <li><a href="#">Journal</a></li>
+                <li><a href="#">Store</a></li>
+                <li><a href="#">Info</a></li>
+            </ul>
+        </nav>
+
+        <div class="bento" id="bento">
+            <!-- ВЕРХНИЙ РЯД -->
+            <div class="bento__row bento__row--top" id="rowA">
+                
+                <!-- PLAYGROUND BLOCK -->
+                <a href="#" class="bento-block type-block" data-block>
+                    <span class="bento-block__kind">typeface</span>
+                    <span class="bento-block__content">
+                        <!-- Этот элемент будет реагировать на мышь -->
+                        <span class="playground-text font-serif">Ananas</span>
+                        <!-- Specimen (тоже может реагировать) -->
+                        <span class="bento-block__specimen font-serif interactive">A a B b C c</span>
+                    </span>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">Jaromír Květoň</span>
+                        <span class="bento-block__tag">2025</span>
+                    </span>
+                </a>
+
+                <!-- PROJECT BLOCK (Blend Modes) -->
+                <a href="#" class="bento-block project-block has-image" data-block style="--bg-img: url('https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=800&q=80');">
+                    <span class="bento-block__kind">project</span>
+                    <span class="bento-block__content" style="align-items: flex-end; padding-bottom: 40px;">
+                        <span class="project-title font-sans">Critical<br>Alphabet</span>
+                    </span>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">exhibition</span>
+                        <span class="bento-block__tag">Šimon Brzobohatý</span>
+                    </span>
+                </a>
+
+                <!-- PLAYGROUND BLOCK -->
+                <a href="#" class="bento-block type-block" data-block>
+                    <span class="bento-block__kind">typeface</span>
+                    <span class="bento-block__content">
+                        <span class="playground-text font-mono">B-ROT</span>
+                        <span class="bento-block__specimen font-mono interactive">01001000</span>
+                    </span>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">Šimon Brzobohatý</span>
+                        <span class="bento-block__tag">mono</span>
+                    </span>
+                </a>
+            </div>
+
+            <!-- НИЖНИЙ РЯД -->
+            <div class="bento__row bento__row--bot" id="rowB">
+                
+                <!-- PLAYGROUND BLOCK -->
+                <a href="#" class="bento-block type-block" data-block>
+                    <span class="bento-block__kind">typeface</span>
+                    <span class="bento-block__content">
+                        <span class="playground-text font-sans" style="font-weight: 800; text-transform: uppercase;">Chlebi<br>czech</span>
+                        <span class="bento-block__specimen font-sans interactive" style="font-weight: 800;">PRAHA</span>
+                    </span>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">Žofia Kosová</span>
+                        <span class="bento-block__tag">display</span>
+                    </span>
+                </a>
+
+                <!-- JOURNAL BLOCK (Marquee) -->
+                <a href="#" class="bento-block" data-block style="--b-gradient: #111;">
+                    <span class="bento-block__kind">journal</span>
+                    <div class="marquee-wrapper">
+                        <div class="marquee-content font-serif">
+                            <span>Die Steinmetzschrift</span>
+                            <span>Essay by Filip Kraus</span>
+                            <span>Die Steinmetzschrift</span>
+                            <span>Essay by Filip Kraus</span>
+                        </div>
+                    </div>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">essay</span>
+                        <span class="bento-block__tag">Filip Kraus</span>
+                    </span>
+                </a>
+
+                <!-- PLAYGROUND BLOCK -->
+                <a href="#" class="bento-block type-block" data-block>
+                    <span class="bento-block__kind">typeface</span>
+                    <span class="bento-block__content">
+                        <span class="playground-text font-sans" style="font-style: italic;">Asyste<br>matik</span>
+                        <span class="bento-block__specimen font-sans interactive" style="font-style: italic;">Chaos & Order</span>
+                    </span>
+                    <span class="bento-block__hover">
+                        <span class="bento-block__tag">Jaroslav Lekeš</span>
+                        <span class="bento-block__tag">script</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <footer class="home-foot">
+            <span>Umprum Type · Prague · 2026</span>
+            <span class="hint">scroll · drag · interact</span>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('is-loaded');
+
+            const palettes = [
+                ['#1a1c29', '#2a1a29'], ['#0f2027', '#203a43'], ['#232526', '#414345'],
+                ['#1e130c', '#3a1c1a'], ['#000428', '#004e92'], ['#16222a', '#3a6073']
+            ];
+            const rand = (n) => Math.floor(Math.random() * n);
+            const pickGradient = () => `linear-gradient(${rand(360)}deg, ${palettes[rand(palettes.length)][0]}, ${palettes[rand(palettes.length)][1]})`;
+
+            // --- ФИЗИКА БЕСКОНЕЧНОГО СКРОЛЛА ---
+            function setupRow(rowId, initialSpeed) {
+                const row = document.getElementById(rowId);
+                if (!row || window.innerWidth <= 768) return;
+
+                const originalBlocks = Array.from(row.querySelectorAll('[data-block]'));
+                originalBlocks.forEach(b => row.appendChild(b.cloneNode(true)));
+                originalBlocks.forEach(b => row.appendChild(b.cloneNode(true)));
+
+                const blocks = row.querySelectorAll('[data-block]');
+
+                blocks.forEach((b) => {
+                    if (!b.classList.contains('has-image') && !b.querySelector('.marquee-wrapper')) {
+                        b.style.setProperty('--b-gradient', pickGradient());
+                    }
+                    const base = 250 + rand(400); 
+                    b.style.flexBasis = base + 'px';
+                    b.dataset.base = String(base);
+                    
+                    // --- ЛОГИКА PLAYGROUND (Реакция на курсор) ---
+                    // Привязываем мышь к шрифтовым блокам
+                    if(b.classList.contains('type-block')) {
+                        b.addEventListener('mousemove', (e) => {
+                            const rect = b.getBoundingClientRect();
+                            // Нормализуем координаты мыши от -1 до 1 внутри блока
+                            const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                            const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+                            const title = b.querySelector('.playground-text');
+                            const specimen = b.querySelector('.interactive');
+                            
+                            // Изменяем трекинг и наклон на лету. 
+                            // Если у вас вариативные шрифты, здесь будет: 
+                            // title.style.fontVariationSettings = `'wght' ${400 + x*300}, 'wdth' ${100 + y*50}`;
+                            
+                            const tracking = x * 0.1; // от -0.1em до 0.1em
+                            const skew = x * -10;     // от -10deg до 10deg
+                            const scale = 1 + Math.abs(y * 0.1); 
+
+                            // Убираем transition во время движения для мгновенной реакции
+                            if(title) {
+                                title.style.transition = 'none';
+                                title.style.letterSpacing = `${tracking}em`;
+                                title.style.transform = `skewX(${skew}deg) scale(${scale})`;
+                            }
+                            if(specimen) {
+                                specimen.style.transition = 'none';
+                                specimen.style.letterSpacing = `${tracking*0.5}em`;
+                                specimen.style.transform = `skewX(${skew}deg)`;
+                            }
+                        });
+
+                        // Возвращаем в нормальное состояние когда мышь уходит
+                        b.addEventListener('mouseleave', () => {
+                            const title = b.querySelector('.playground-text');
+                            const specimen = b.querySelector('.interactive');
+                            if(title) {
+                                title.style.transition = 'transform 0.6s var(--ease), letter-spacing 0.6s var(--ease), opacity 0.4s var(--ease)';
+                                title.style.letterSpacing = 'normal';
+                                title.style.transform = 'skewX(0deg) scale(1)';
+                            }
+                            if(specimen) {
+                                specimen.style.transition = 'transform 0.6s var(--ease), letter-spacing 0.6s var(--ease), opacity 0.4s var(--ease)';
+                                specimen.style.letterSpacing = 'normal';
+                                specimen.style.transform = 'skewX(0deg) scale(1)';
+                            }
+                        });
+                    }
+                });
+
+                let offset = 0;
+                let velocity = initialSpeed;
+                let dragStart = null;
+                let dragBase = 0;
+                let isDragging = false;
+                const segmentWidth = () => row.scrollWidth / 3;
+
+                function tick() {
+                    offset += velocity;
+                    const w = segmentWidth();
+                    if (w === 0) { requestAnimationFrame(tick); return; }
+                    
+                    if (offset <= -w) offset += w;
+                    if (offset >= 0 && velocity < 0) offset -= w;
+                    if (offset > 0) offset -= w;
+                    
+                    row.style.transform = `translate3d(${offset}px, 0, 0)`;
+                    requestAnimationFrame(tick);
+                }
+                tick();
+
+                row.addEventListener('wheel', (e) => {
+                    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                    velocity = Math.max(-12, Math.min(12, velocity - d * 0.02));
+                    e.preventDefault();
+                }, { passive: false });
+
+                row.addEventListener('pointerdown', (e) => {
+                    isDragging = true; dragStart = e.clientX; dragBase = offset;
+                    row.setPointerCapture(e.pointerId);
+                });
+                row.addEventListener('pointermove', (e) => {
+                    if (!isDragging) return;
+                    offset = dragBase + (e.clientX - dragStart);
+                    velocity *= 0.8; 
+                });
+                const release = (e) => {
+                    if (!isDragging) return;
+                    isDragging = false;
+                    try { row.releasePointerCapture(e.pointerId); } catch {}
+                    velocity += (e.movementX || 0) * 0.25;
+                };
+                row.addEventListener('pointerup', release);
+                row.addEventListener('pointercancel', release);
+
+                setInterval(() => {
+                    velocity *= 0.985;
+                    if (Math.abs(velocity) < Math.abs(initialSpeed)) velocity = initialSpeed;
+                }, 60);
+
+                setInterval(() => {
+                    blocks.forEach((b) => {
+                        const delta = rand(200) - 100;
+                        const base = Math.max(200, (+b.dataset.base || 300) + delta);
+                        b.style.flexBasis = base + 'px';
+                        b.dataset.base = String(base);
+                    });
+                }, 3000);
+            }
+
+            setupRow('rowA', -0.4); 
+            setupRow('rowB',  0.35); 
+        });
+    </script>
+</body>
+</html>

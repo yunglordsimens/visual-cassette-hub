@@ -1,0 +1,20 @@
+{
+  "id": "mariia-spa-portfolio",
+  "title": "Mariia_SPA_Portfolio",
+  "tags": [
+    "gemini",
+    "html",
+    "p5js"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-03-18",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/mariia-spa-portfolio/code.html",
+  "previewUrl": "library/mariia-spa-portfolio/code.html"
+}

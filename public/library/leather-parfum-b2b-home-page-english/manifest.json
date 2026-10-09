@@ -1,0 +1,22 @@
+{
+  "id": "leather-parfum-b2b-home-page-english",
+  "title": "Leather Parfum B2B - Home Page (English)",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Клиенты",
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/leather-parfum-b2b-home-page-english/code.tsx",
+  "previewUrl": "library/leather-parfum-b2b-home-page-english/preview.html"
+}

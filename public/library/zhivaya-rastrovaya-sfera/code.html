@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Живая растровая сфера - Эффект ткани</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      touch-action: none;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Слой для создания глубины и свечения (эффект размытия) */
+    #layer-blur {
+      z-index: 1;
+      filter: blur(14px);
+      opacity: 0.7;
+      mix-blend-mode: multiply;
+      pointer-events: none;
+    }
+
+    /* Слой четкой графики (растр) */
+    #layer-base {
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="canvas-container">
+    <canvas id="layer-blur"></canvas>
+    <canvas id="layer-base"></canvas>
+  </div>
+
+  <script>
+    const canvasBase = document.getElementById('layer-base');
+    const ctxBase = canvasBase.getContext('2d', { alpha: true });
+    
+    const canvasBlur = document.getElementById('layer-blur');
+    const ctxBlur = canvasBlur.getContext('2d', { alpha: true });
+
+    let width, height;
+    let particles = [];
+    let centerX, centerY;
+    
+    // Настройки физики и волн
+    const config = {
+      color: '#1a1b4b',
+      mouseRadius: 160,
+      spring: 0.05,        // Меньше пружина = более мягкие, "тканевые" движения
+      friction: 0.88,
+      waveSpeed: 0.0015,   // Скорость фоновой анимации
+      waveAmplitude: 18    // Насколько сильно искажается сетка сама по себе
+    };
+
+    let spacing, particleSize;
+    let mouse = { x: -1000, y: -1000 };
+
+    // Интерактивность
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('touchmove', (e) => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+    window.addEventListener('touchend', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    function init() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      
+      canvasBase.width = width;
+      canvasBase.height = height;
+      canvasBlur.width = width;
+      canvasBlur.height = height;
+
+      centerX = width / 2;
+      centerY = height / 2;
+
+      // Плотность растра
+      spacing = Math.max(6, width / 180); 
+      particleSize = spacing * 0.35;
+
+      particles = [];
+      
+      const sphereRadius = Math.min(width, height) * 0.42; 
+
+      for (let y = 0; y < height; y += spacing) {
+        for (let x = 0; x < width; x += spacing) {
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
+
+          if (distanceToCenter < sphereRadius) {
+            // Нормализуем координаты от центра для красивого расчета волн
+            const nx = dx / sphereRadius;
+            const ny = dy / sphereRadius;
+
+            particles.push({
+              x: x,
+              y: y,
+              originX: x,
+              originY: y,
+              nx: nx, // Сохраняем для математики волн
+              ny: ny,
+              vx: 0,
+              vy: 0
+            });
+          }
+        }
+      }
+    }
+
+    function animate(time) {
+      ctxBase.clearRect(0, 0, width, height);
+      ctxBlur.clearRect(0, 0, width, height);
+
+      ctxBase.fillStyle = config.color;
+      ctxBlur.fillStyle = config.color;
+
+      ctxBase.beginPath();
+      ctxBlur.beginPath();
+
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+
+        // 1. ФОНОВАЯ АНИМАЦИЯ (Эффект ткани/дыхания)
+        // Используем синусы и косинусы от времени и позиции частицы
+        let waveTime = time * config.waveSpeed;
+        
+        // Сложная волна, создающая эффект оптического муара или складок ткани
+        let waveOffsetX = Math.sin(p.ny * 5 + waveTime) * config.waveAmplitude + 
+                          Math.cos(p.nx * 3 - waveTime) * (config.waveAmplitude / 2);
+        
+        let waveOffsetY = Math.cos(p.nx * 5 + waveTime) * config.waveAmplitude + 
+                          Math.sin(p.ny * 3 + waveTime) * (config.waveAmplitude / 2);
+
+        // Целевая позиция - это не просто начальная точка, а точка, плывущая по волне
+        let targetX = p.originX + waveOffsetX;
+        let targetY = p.originY + waveOffsetY;
+
+        // 2. ИНТЕРАКТИВНОСТЬ (Разрыв ткани от курсора)
+        let dxMouse = p.x - mouse.x;
+        let dyMouse = p.y - mouse.y;
+        let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+        if (distMouse < config.mouseRadius) {
+          let force = (config.mouseRadius - distMouse) / config.mouseRadius;
+          force = Math.pow(force, 2); // Нелинейная сила для более органичного "разреза"
+          
+          let forceDirectionX = dxMouse / distMouse;
+          let forceDirectionY = dyMouse / distMouse;
+          
+          p.vx += forceDirectionX * force * 15;
+          p.vy += forceDirectionY * force * 15;
+        }
+
+        // 3. ФИЗИКА (Стремление к плывущей целевой позиции)
+        p.vx += (targetX - p.x) * config.spring;
+        p.vy += (targetY - p.y) * config.spring;
+        
+        p.vx *= config.friction;
+        p.vy *= config.friction;
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Рисуем
+        ctxBase.moveTo(p.x, p.y);
+        ctxBase.arc(p.x, p.y, particleSize, 0, Math.PI * 2);
+        
+        ctxBlur.moveTo(p.x, p.y);
+        ctxBlur.arc(p.x, p.y, particleSize * 2, 0, Math.PI * 2); 
+      }
+
+      ctxBase.fill();
+      ctxBlur.fill();
+
+      requestAnimationFrame(animate);
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        init();
+      }, 100);
+    });
+
+    init();
+    // Передаем performance.now() для старта расчета волн
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

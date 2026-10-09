@@ -1,0 +1,22 @@
+{
+  "id": "oryza-premium-trend",
+  "title": "Oryza Premium Trend",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg",
+    "scroll"
+  ],
+  "groups": [
+    "Клиенты"
+  ],
+  "type": "html",
+  "description": "Specialty coffee, Vietnamese phin, banh mi, poke, pastries, ice cream and beer. A premium neighbourhood café in Smíchov, Prague.",
+  "created": "2026-06-06",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/oryza-premium-trend/code.html",
+  "previewUrl": "library/oryza-premium-trend/code.html"
+}

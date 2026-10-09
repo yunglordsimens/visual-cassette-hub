@@ -1,0 +1,21 @@
+{
+  "id": "deep-blue-sequence",
+  "title": "Deep Blue Sequence",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/deep-blue-sequence/code.tsx",
+  "previewUrl": "library/deep-blue-sequence/preview.html"
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Интерактивная растровая сфера</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff; /* Белый фон, как на референсе */
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      touch-action: none; /* Отключаем скролл на мобильных при касании canvas */
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Наслоение холстов */
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Второй слой: Размытие для создания свечения и глубины (блюр) */
+    #layer-blur {
+      z-index: 1;
+      filter: blur(12px);
+      opacity: 0.65;
+      mix-blend-mode: multiply; /* Режим наложения для правильного смешивания цвета */
+      pointer-events: none; /* Чтобы события мыши шли только на верхний слой */
+    }
+
+    /* Первый слой: Четкая графика */
+    #layer-base {
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="canvas-container">
+    <!-- Слой с размытием -->
+    <canvas id="layer-blur"></canvas>
+    <!-- Основной четкий слой -->
+    <canvas id="layer-base"></canvas>
+  </div>
+
+  <script>
+    const canvasBase = document.getElementById('layer-base');
+    const ctxBase = canvasBase.getContext('2d', { alpha: true });
+    
+    const canvasBlur = document.getElementById('layer-blur');
+    const ctxBlur = canvasBlur.getContext('2d', { alpha: true });
+
+    let width, height;
+    let particles = [];
+    
+    // Настройки сетки и физики
+    const config = {
+      color: '#1a1b4b',     // Глубокий сине-фиолетовый цвет
+      mouseRadius: 150,     // Радиус искажения от курсора
+      spring: 0.08,         // Сила возврата на исходную позицию
+      friction: 0.85        // Трение (плавность затухания)
+    };
+
+    // Глобальные переменные для адаптивного размера частиц
+    let spacing, particleSize;
+
+    let mouse = { x: -1000, y: -1000 };
+
+    // Обработка событий мыши
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    
+    // Обработка тач-событий для мобильных устройств
+    window.addEventListener('touchmove', (e) => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    });
+
+    // Убираем влияние курсора, когда он покидает окно
+    window.addEventListener('mouseleave', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+    
+    window.addEventListener('touchend', () => {
+      mouse.x = -1000;
+      mouse.y = -1000;
+    });
+
+    function init() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      
+      canvasBase.width = width;
+      canvasBase.height = height;
+      canvasBlur.width = width;
+      canvasBlur.height = height;
+
+      // Адаптируем плотность сетки под размер экрана, чтобы не перегружать устройство
+      spacing = Math.max(6, width / 180); 
+      particleSize = spacing * 0.35;
+
+      particles = [];
+      
+      // Создаем сферу из точек
+      const centerX = width / 2;
+      const centerY = height / 2;
+      // Радиус сферы зависит от меньшей стороны экрана
+      const sphereRadius = Math.min(width, height) * 0.42; 
+
+      for (let y = 0; y < height; y += spacing) {
+        for (let x = 0; x < width; x += spacing) {
+          const dx = x - centerX;
+          const dy = y - centerY;
+          const distanceToCenter = Math.sqrt(dx * dx + dy * dy);
+
+          // Обрезаем прямоугольную сетку по форме круга (сферы)
+          if (distanceToCenter < sphereRadius) {
+            particles.push({
+              x: x,
+              y: y,
+              originX: x,
+              originY: y,
+              vx: 0,
+              vy: 0
+            });
+          }
+        }
+      }
+    }
+
+    function animate() {
+      // Очищаем оба холста перед каждым кадром
+      ctxBase.clearRect(0, 0, width, height);
+      ctxBlur.clearRect(0, 0, width, height);
+
+      ctxBase.fillStyle = config.color;
+      ctxBlur.fillStyle = config.color;
+
+      ctxBase.beginPath();
+      ctxBlur.beginPath();
+
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+
+        // Вычисляем расстояние от частицы до мыши
+        let dxMouse = p.x - mouse.x;
+        let dyMouse = p.y - mouse.y;
+        let distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+
+        // Интерактивность: отталкивание частиц от курсора (эффект разреза)
+        if (distMouse < config.mouseRadius) {
+          let force = (config.mouseRadius - distMouse) / config.mouseRadius;
+          // Добавляем нелинейность силы для более резкого "разрыва"
+          force = Math.pow(force, 2); 
+          let forceDirectionX = dxMouse / distMouse;
+          let forceDirectionY = dyMouse / distMouse;
+          
+          p.vx += forceDirectionX * force * 12;
+          p.vy += forceDirectionY * force * 12;
+        }
+
+        // Анимация: возвращение на исходную позицию (эффект упругой пружины)
+        p.vx += (p.originX - p.x) * config.spring;
+        p.vy += (p.originY - p.y) * config.spring;
+        
+        // Применяем затухание (трение)
+        p.vx *= config.friction;
+        p.vy *= config.friction;
+
+        // Обновляем текущую позицию
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Рисуем точку на первом (четком) слое
+        ctxBase.moveTo(p.x, p.y);
+        ctxBase.arc(p.x, p.y, particleSize, 0, Math.PI * 2);
+        
+        // Рисуем увеличенную точку на нижнем слое для создания глубокого блюра
+        ctxBlur.moveTo(p.x, p.y);
+        ctxBlur.arc(p.x, p.y, particleSize * 2, 0, Math.PI * 2); 
+      }
+
+      ctxBase.fill();
+      ctxBlur.fill();
+
+      requestAnimationFrame(animate);
+    }
+
+    // Перестраиваем сетку при изменении размера окна
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        init();
+      }, 100);
+    });
+
+    // Инициализация и запуск цикла анимации
+    init();
+    animate();
+  </script>
+</body>
+</html>

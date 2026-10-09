@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-Dynamic Music | Independent Alternative Music Radio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #111; /* Dark background to mimic the image context */
+            color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        /* The main container mimicking the "paper" */
+        .paper-container {
+            background-color: #fff;
+            width: 100%;
+            max-width: 1200px; /* Adjust max width as needed */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Utility for sharp borders to get that grid/newspaper look */
+        .border-sharp {
+            border-color: #000;
+            border-width: 1px;
+        }
+
+        /* Custom scrollbar for a cleaner look if needed inside elements */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888; 
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555; 
+        }
+
+        /* Text truncation for multi-line */
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="paper-container border-sharp border-t-8 border-t-black">
+        
+        <!-- HEADER SECTION -->
+        <header class="p-6 pb-4 border-b border-sharp">
+            <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tighter mb-2">
+                S—Dynamic Music<br>
+                Independent Alternative Music Radio
+            </h1>
+        </header>
+
+        <!-- TOP INFO BAR -->
+        <div class="flex justify-between items-center px-6 py-2 border-b border-sharp text-xs font-medium uppercase tracking-widest">
+            <div>INDEX: About</div>
+            <div>25/4/2023, 3:45 PM, MSC</div>
+            <div>MENU</div>
+        </div>
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex flex-col lg:flex-row flex-grow">
+            
+            <!-- LEFT COLUMN (Main Text) -->
+            <div class="w-full lg:w-2/3 border-b lg:border-b-0 lg:border-r border-sharp p-6 flex flex-col">
+                
+                <!-- Large Introductory Text -->
+                <p class="text-3xl md:text-4xl font-medium leading-tight mb-8">
+                    SDM is an independent radio specializing in experimental and heavy music. Initially, SDM focused on black metal bands, and noise bands. Later, the radio expanded its list by adding experimental electronic music groups, deathcore, metalcore, sludge, as well as stoner rock bands. SDM has its own publishing house called SDM_01 Publishing.
+                </p>
+
+                <!-- Nested Columns for smaller text -->
+                <div class="flex flex-col md:flex-row gap-6 mt-auto">
+                    <!-- Column 1 -->
+                    <div class="w-full md:w-1/3">
+                        <h2 class="text-sm font-bold uppercase mb-2">S—Dynamic Music</h2>
+                    </div>
+                    
+                    <!-- Column 2 (Main description) -->
+                    <div class="w-full md:w-2/3 text-sm text-gray-800 leading-relaxed space-y-4">
+                        <p class="font-medium text-black">
+                            Our music label specializes in publishing and promoting metal music. We strive to support talented artists who create quality and original music in this genre. Our goal is to provide musicians with a platform to spread their creativity and help them succeed in the music industry.
+                        </p>
+                        <div class="flex gap-4">
+                            <div class="w-1/3 text-xs text-gray-500">1.0</div>
+                            <div class="w-2/3">
+                                <p class="text-xs text-gray-500 mb-4">
+                                    We are actively looking for new talented artists who can contribute to the development of the metal scene. Our label is open to musicians of all metal genres from classic heavy metal to more modern genres such as black metal, death metal. We hold auditions and select the most promising artists to offer them a collaboration.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Image embedded in text -->
+                        <div class="flex gap-4 items-start">
+                             <img src="https://images.unsplash.com/photo-1493225457124-a1a2a4af7d7c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Band playing live" class="w-32 h-24 object-cover grayscale">
+                             <p class="text-xs text-gray-500 flex-1">
+                                Once we find the right artist, we start collaborating with them. Our team of professionals helps musicians in recording, mixing and mastering their tracks, as well as in creating high-quality music videos. We also organize concerts and tours for our artists so that they can present their music to a wider audience.
+                             </p>
+                        </div>
+                        
+                        <p class="text-xs text-gray-500">
+                             One of the key aspects of our work is promotion and marketing. We actively use social media, online platforms and other channels to promote our artists. We create advertising campaigns, organize press releases and cooperate with other music labels and distributors. Our goal is not only to help our artists achieve success, but also to contribute to the development and growth of the metal scene as a whole. We support young musicians, give them the opportunity to express themselves and create quality music. We also participate in organizing festivals, concerts and other events dedicated to metal culture.
+                        </p>
+                        <p class="text-xs text-gray-500">
+                            In general, our music label aims to become a reliable partner for talented metal performers, helping them to realize their potential and achieve success in the music world.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Bottom Left Section (Version & List) -->
+                <div class="mt-12 flex items-end justify-between border-t border-sharp pt-4">
+                    <div class="text-8xl font-bold leading-none tracking-tighter">1.0</div>
+                    <div class="flex gap-8 text-xs font-medium">
+                        <ul class="space-y-1 text-gray-400">
+                            <li>01</li><li>02</li><li>03</li><li>04</li><li>05</li><li>06</li><li>07</li>
+                        </ul>
+                        <ul class="space-y-1">
+                            <li>Abnormality</li>
+                            <li>Act of Defiance</li>
+                            <li>Downfall of Gaia</li>
+                            <li>Hate</li>
+                            <li>Six Feet Under</li>
+                            <li>Transatlantic</li>
+                            <li>Tyr</li>
+                            <li>The Zenith Passage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (Articles/Images) -->
+            <div class="w-full lg:w-1/3 flex flex-col bg-gray-50">
+                
+                <!-- Article 1 -->
+                <article class="p-4 border-b border-sharp flex flex-col gap-2">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>22.07.24</span>
+                        <span>01</span>
+                    </div>
+                    <h3 class="font-medium text-sm leading-tight">Founded upon owner Brian Slagel's enduring drive to find great bands.</h3>
+                    <img src="https://images.unsplash.com/photo-1598387181032-a310322db5b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Two musicians posing" class="w-full h-48 object-cover grayscale mt-2">
+                    <p class="text-[10px] text-gray-500 leading-tight mt-1">Founded upon owner Brian Slagel's enduring drive to find great bands and get their music out to as many people as possible, since 1982 Metal Blade has brought wave after wave of powerful, innovative, and often genre-defining music to the ever-hungry metal masses.</p>
+                </article>
+
+                <!-- Article 2 -->
+                <article class="p-4 border-b border-sharp flex flex-col gap-2">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>18.02.23</span>
+                        <span>02</span>
+                    </div>
+                    <h3 class="font-medium text-sm leading-tight">Founded upon owner Brian Slagel's enduring drive to find great bands.</h3>
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Musician performing live with blue lighting" class="w-full h-48 object-cover mt-2">
+                    <p class="text-[10px] text-gray-500 leading-tight mt-1">The band Jimi we didn't highly evaluate his importance at the recording and in other people's additions. Over the years it has impacted my self-worth and we treated my bands with people around me.</p>
+                </article>
+
+                 <!-- Article 3 -->
+                <article class="p-4 border-b lg:border-b-0 border-sharp flex flex-col gap-2 flex-grow">
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>03.01.24</span>
+                        <span>03</span>
+                    </div>
+                    <h3 class="font-medium text-sm leading-tight">Founded upon owner Brian Slagel's enduring drive to find great bands.</h3>
+                    <img src="https://images.unsplash.com/photo-1470229722913-7c090be5c5a4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Live concert lighting" class="w-full h-48 object-cover mt-2">
+                    <p class="text-[10px] text-gray-500 leading-tight mt-1">Founded upon owner Brian Slagel's enduring drive to find great bands and get their music out to as many people as possible, since 1982 Metal Blade has brought wave after wave of powerful, innovative, and often genre-defining music to the ever-hungry metal masses.</p>
+                </article>
+                
+                 <!-- Tiny bottom article snippet -->
+                 <div class="p-4 flex justify-between text-xs border-t border-sharp bg-white">
+                    <span class="text-gray-500">22.07.24</span>
+                    <h3 class="font-medium">Founded upon owner Brian Slagel's</h3>
+                 </div>
+
+            </div>
+        </div>
+
+        <!-- PLAYER FOOTER (Bottom Bar) -->
+        <footer class="bg-black text-white px-6 py-3 flex justify-between items-center text-xs w-full">
+            <div class="flex items-center gap-8">
+                <span class="font-bold">Now Playing</span>
+                <span class="text-gray-400">Плач Земли | Jörmungandr</span>
+            </div>
+            
+            <div class="flex items-center gap-4 flex-grow justify-center px-8">
+                <!-- Simple progress bar representation -->
+                <div class="h-[1px] bg-gray-600 w-full max-w-md relative">
+                    <div class="absolute top-0 left-0 h-full bg-white w-1/3"></div>
+                </div>
+                <span>00:30 / 02:43</span>
+            </div>
+
+            <!-- Player Controls (Blue box in design) -->
+            <div class="bg-blue-600 flex items-center px-4 py-1 gap-3 ml-auto">
+                <button aria-label="Previous" class="hover:opacity-75 transition-opacity">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+                </button>
+                <button aria-label="Play" class="hover:opacity-75 transition-opacity">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button aria-label="Next" class="hover:opacity-75 transition-opacity">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                </button>
+            </div>
+        </footer>
+
+    </main>
+
+</body>
+</html>

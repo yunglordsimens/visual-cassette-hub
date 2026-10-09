@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materials Archive</title>
+    <style>
+        /* Базовый сброс стилей: убираем все отступы, ставим шрифт Arial */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 100%;
+        }
+
+        /* Настройка сетки-таблицы на всю ширину */
+        .list-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Строка "таблицы" */
+        .row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Настройка колонок. 
+           Название и количество занимают равное свободное место, 
+           фотография фиксирована для аккуратности, но можно и её растянуть */
+        .col-name {
+            flex: 1;
+        }
+
+        .col-count {
+            flex: 1;
+        }
+
+        .col-photo {
+            width: 150px; 
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .col-photo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="list-container" class="list-container">
+        <!-- Сюда вставляются строки -->
+    </div>
+
+    <script>
+        // Ваш точный список
+        const materials = [
+            { name: "Saigon 9", count: "9", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Veo red", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Veo pink", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Elysee", count: "2", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Rotmans double cupsule", count: "4", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "LD slim", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Terea mint turquoise", count: "13", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Malboro gold", count: "3", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Malboro blue", count: "2", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Malboro red", count: "5", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Malboro red small", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Marlboro gold (spacial) from Izrael", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Camel mint", count: "115(new edition) + 27(old edition)", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Camel blue", count: "73 + 4(special edition) + 3(special edition) + 1(soft box)", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Camel black", count: "2", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Camel yellow", count: "2", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Camel activate cigarillos", count: "7 (new design) + 4 (old design)", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Davidoff gold slim", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Davidoff gold", count: "13", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Davidoff black", count: "26", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Davidoff white", count: "2", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "Winston blue", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "LM Loft", count: "1", imageSrc: "https://placehold.co/100x150?text=Photo" },
+            { name: "LM blue", count: "10", imageSrc: "https://placehold.co/100x150?text=Photo" }
+        ];
+
+        const listContainer = document.getElementById('list-container');
+
+        // Отрисовка списка
+        materials.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'row';
+
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'col-name';
+            nameDiv.textContent = item.name;
+
+            const countDiv = document.createElement('div');
+            countDiv.className = 'col-count';
+            countDiv.textContent = item.count;
+
+            const photoDiv = document.createElement('div');
+            photoDiv.className = 'col-photo';
+            
+            const img = document.createElement('img');
+            img.src = item.imageSrc;
+            img.alt = item.name;
+            img.loading = "lazy";
+            
+            photoDiv.appendChild(img);
+
+            row.appendChild(nameDiv);
+            row.appendChild(countDiv);
+            row.appendChild(photoDiv);
+            
+            listContainer.appendChild(row);
+        });
+    </script>
+</body>
+</html>

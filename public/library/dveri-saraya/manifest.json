@@ -1,0 +1,23 @@
+{
+  "id": "dveri-saraya",
+  "title": "Двери Сарая",
+  "tags": [
+    "gemini",
+    "html",
+    "threejs",
+    "webgl",
+    "canvas",
+    "audio"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/dveri-saraya/code.html",
+  "previewUrl": "library/dveri-saraya/code.html"
+}

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roast Magazine Layout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'roast-blue': '#2F67A5',
+                        'roast-gray': '#EAEAEA',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #2F67A5; /* roast-blue */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a1a;
+        }
+
+        /* 
+           Applying a subtle noise texture to simulate the print look in the image.
+           The noise is applied to a pseudo-element over the gray cards.
+        */
+        .card-texture {
+            position: relative;
+            background-color: #EAEAEA; /* roast-gray */
+            overflow: hidden;
+            /* Using a very tight gap with the parent container's background to create the star shapes */
+            box-shadow: 0 0 0 1px transparent; /* Prevent gap issues */
+        }
+
+        .card-texture::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.4;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: multiply;
+        }
+
+        /* 
+           The layout is a specific grid. 
+           We use a black background on the container and gap to create the 
+           "star" shape intersections where rounded corners meet.
+        */
+        .magazine-grid {
+            background-color: #000000;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 2px; /* This gap creates the lines between blocks */
+            max-width: 800px;
+            width: 100%;
+            /* 
+               We don't round the outer container itself because the image shows 
+               the blue background coming right up to the outer black border.
+            */
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 640px) {
+            .magazine-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="magazine-grid">
+
+        <!-- Title Block -->
+        <div class="card-texture rounded-br-4xl flex items-center justify-center p-8 sm:p-12 min-h-[250px]">
+            <h1 class="text-4xl sm:text-5xl font-medium tracking-tight text-center leading-snug">
+                ROAST<br>MAGAZINE
+            </h1>
+        </div>
+        
+        <!-- Issue Info Block -->
+        <div class="card-texture rounded-bl-4xl flex items-center justify-start p-8 sm:p-12 min-h-[250px]">
+            <div class="text-lg leading-relaxed">
+                Issue 115<br>
+                Jan | Feb 2023<br>
+                $30
+            </div>
+        </div>
+
+        <!-- Features Label Block -->
+        <div class="card-texture rounded-tr-4xl rounded-br-4xl flex items-center justify-center p-8 min-h-[200px]">
+            <span class="text-xl italic text-gray-700">Features</span>
+        </div>
+
+        <!-- Feature 1 Block -->
+        <div class="card-texture rounded-tl-4xl rounded-bl-4xl flex flex-col items-center justify-center p-8 sm:p-12 text-center min-h-[200px]">
+            <p class="text-lg mb-2">Additive Fermentation</p>
+            <h2 class="text-xl font-medium mb-6">"Infused" Coffee Is Gaining Popularity<br>—and Sparking Industry Debate</h2>
+            <p class="text-gray-700 italic">by Mike Ebert</p>
+        </div>
+
+        <!-- About Block (Spans 2 rows on desktop) -->
+        <div class="card-texture rounded-tr-4xl rounded-bl-4xl row-span-2 flex items-end p-8 sm:p-10 min-h-[400px]">
+            <p class="text-base leading-relaxed text-gray-800">
+                Roast addresses the art, science and business of coffee by covering the issues most important to the industry, with high-quality editorials focused on the technical aspects of coffee.
+            </p>
+        </div>
+
+        <!-- Feature 2 Block -->
+        <div class="card-texture rounded-tl-4xl rounded-bl-4xl flex flex-col items-center justify-center p-8 sm:p-12 text-center min-h-[200px]">
+            <p class="text-lg mb-2">Minding Your Business</p>
+            <h2 class="text-xl font-medium mb-6">Five Keys to Roaster-Retailer Success</h2>
+            <p class="text-gray-700 italic">by Ever Meister</p>
+        </div>
+
+        <!-- Feature 3 Block -->
+        <div class="card-texture rounded-tl-4xl rounded-br-4xl flex flex-col items-center justify-center p-8 sm:p-12 text-center min-h-[250px]">
+            <p class="text-lg mb-2">Think Globally, Drink Locally</p>
+            <h2 class="text-xl font-medium mb-6 max-w-sm mx-auto">How Increasing Domestic Consumption in Coffee-Producing Countries Impacts Direct Trade Relationships</h2>
+            <p class="text-gray-700 italic">by Anne Cooper</p>
+        </div>
+
+    </main>
+
+</body>
+</html>

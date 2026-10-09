@@ -1,0 +1,20 @@
+{
+  "id": "portfolio-website-3",
+  "title": "Portfolio Website",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-01",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/portfolio-website-3/code.tsx",
+  "previewUrl": "library/portfolio-website-3/preview.html"
+}

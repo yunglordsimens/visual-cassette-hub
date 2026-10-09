@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative Type Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050505;
+            color: #f0f0f0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* Кастомный инпут */
+        input[type="text"] {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- UI -->
+    <div class="absolute top-0 left-0 w-full z-10 flex flex-col items-center pt-8 pointer-events-none">
+        <input type="text" id="textInput" value="UMPRUM" class="mb-6 px-4 py-2 pointer-events-auto" autocomplete="off" maxlength="10">
+        
+        <div class="flex flex-wrap justify-center gap-2 px-4 pointer-events-auto" id="nav-container">
+            <button class="nav-btn bg-white/10 hover:bg-white/20 text-xs uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 transition-all" data-mode="0">1. Moiré</button>
+            <button class="nav-btn bg-white/10 hover:bg-white/20 text-xs uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 transition-all" data-mode="1">2. Point Cloud</button>
+            <!-- Новая кнопка добавлена сюда -->
+            <button class="nav-btn bg-white text-black text-xs uppercase tracking-widest px-4 py-2 rounded-full border border-white/20 transition-all" data-mode="2">3. Capsule Grid</button>
+        </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const textInput = document.getElementById('textInput');
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    let width, height;
+    let currentMode = 2; // По умолчанию включен новый эффект
+    let text = textInput.value;
+    let animationFrameId;
+    let activeEffect = null;
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+        initEffect();
+    }
+
+    window.addEventListener('resize', resize);
+    
+    window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+    });
+
+    textInput.addEventListener('input', (e) => {
+        text = e.target.value.toUpperCase() || ' ';
+        initEffect();
+    });
+
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            navBtns.forEach(b => {
+                b.classList.remove('bg-white', 'text-black');
+                b.classList.add('bg-white/10', 'text-white');
+            });
+            e.target.classList.remove('bg-white/10', 'text-white');
+            e.target.classList.add('bg-white', 'text-black');
+            
+            currentMode = parseInt(e.target.dataset.mode);
+            initEffect();
+        });
+    });
+
+    // Утилита для шрифта
+    function getTextPoints(str, fontSize = 200, resolution = 4) {
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+
+        tempCtx.fillStyle = 'white';
+        tempCtx.font = `900 ${fontSize}px Inter, sans-serif`;
+        tempCtx.textAlign = 'center';
+        tempCtx.textBaseline = 'middle';
+        tempCtx.fillText(str, width / 2, height / 2);
+
+        const imgData = tempCtx.getImageData(0, 0, width, height).data;
+        const points = [];
+
+        for (let y = 0; y < height; y += resolution) {
+            for (let x = 0; x < width; x += resolution) {
+                const index = (y * width + x) * 4;
+                const alpha = imgData[index + 3];
+                if (alpha > 128) {
+                    points.push({ x, y });
+                }
+            }
+        }
+        return points;
+    }
+
+    // Утилита для капсул (совместимость)
+    function drawRoundRect(ctx, x, y, w, h, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    }
+
+
+    // --- ЭФФЕКТЫ ---
+
+    // 1. Optical Moiré
+    class MoireEffect {
+        constructor() {
+            this.fontSize = window.innerWidth > 768 ? 300 : 120;
+            this.time = 0;
+        }
+        update() { this.time += 0.02; }
+        draw(ctx) {
+            ctx.clearRect(0, 0, width, height);
+            ctx.font = `900 ${this.fontSize}px sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.globalCompositeOperation = 'difference';
+            
+            const layers = 5;
+            for(let i=0; i<layers; i++) {
+                let mouseOffsetX = (mouse.x - width/2) * 0.05 * i;
+                let mouseOffsetY = (mouse.y - height/2) * 0.05 * i;
+                let offsetX = Math.sin(this.time + i) * 20 + mouseOffsetX;
+                let offsetY = Math.cos(this.time + i*0.5) * 15 + mouseOffsetY;
+                
+                if (i % 3 === 0) ctx.fillStyle = '#FF0055'; 
+                else if (i % 3 === 1) ctx.fillStyle = '#00FFAA'; 
+                else ctx.fillStyle = '#FFFFFF';
+                
+                ctx.fillText(text, width / 2 + offsetX, height / 2 + offsetY);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'white';
+                ctx.strokeText(text, width / 2 - offsetX, height / 2 - offsetY);
+            }
+            ctx.globalCompositeOperation = 'source-over';
+        }
+    }
+
+    // 2. Volumetric Point Clouds
+    class ParticlesEffect {
+        constructor() {
+            this.fontSize = window.innerWidth > 768 ? 250 : 90;
+            const res = window.innerWidth > 768 ? 4 : 3;
+            let rawPoints = getTextPoints(text, this.fontSize, res);
+            this.particles = rawPoints.map(p => ({
+                x: p.x + (Math.random() - 0.5) * 500,
+                y: p.y + (Math.random() - 0.5) * 500,
+                targetX: p.x, targetY: p.y,
+                vx: 0, vy: 0,
+                radius: Math.random() * 2 + 1
+            }));
+        }
+        update() {
+            this.particles.forEach(p => {
+                let dx = mouse.x - p.x;
+                let dy = mouse.y - p.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+                let force = 0;
+                
+                if (dist < 100) {
+                    force = (100 - dist) / 100;
+                    p.vx -= (dx / dist) * force * 5;
+                    p.vy -= (dy / dist) * force * 5;
+                }
+                p.vx += (p.targetX - p.x) * 0.05;
+                p.vy += (p.targetY - p.y) * 0.05;
+                p.vx *= 0.85;
+                p.vy *= 0.85;
+                p.x += p.vx;
+                p.y += p.vy;
+            });
+        }
+        draw(ctx) {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = 'white';
+            this.particles.forEach(p => {
+                let speed = Math.abs(p.vx) + Math.abs(p.vy);
+                ctx.globalAlpha = Math.min(1, 0.3 + speed * 0.1);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    // 3. Capsule Grid (Новый референс)
+    class CapsuleEffect {
+        constructor() {
+            this.fontSize = window.innerWidth > 768 ? 400 : 180;
+            
+            // Настройки сетки
+            this.w = window.innerWidth > 768 ? 20 : 12; // Ширина капсулы
+            this.h = window.innerWidth > 768 ? 120 : 80; // Высота капсулы
+            this.gap = 4; // Зазор между ними
+            this.radius = this.w / 2;
+            
+            // Невидимый холст для "светящегося текста"
+            this.tCanvas = document.createElement('canvas');
+            this.tCtx = this.tCanvas.getContext('2d');
+            
+            // 1. Создаем карту ТЕНЕЙ (Volume Shading)
+            this.shadingCanvas = document.createElement('canvas');
+            this.shadingCanvas.width = this.w;
+            this.shadingCanvas.height = this.h;
+            let sCtx = this.shadingCanvas.getContext('2d');
+            let grad = sCtx.createLinearGradient(0, 0, this.w, 0);
+            grad.addColorStop(0, 'rgba(0,0,0,0.95)');   // Жесткая тень на левом закруглении
+            grad.addColorStop(0.15, 'rgba(0,0,0,0.2)'); 
+            grad.addColorStop(0.5, 'rgba(0,0,0,0.0)');  // Прозрачный центр
+            grad.addColorStop(0.85, 'rgba(0,0,0,0.3)'); 
+            grad.addColorStop(1, 'rgba(0,0,0,0.95)');   // Жесткая тень на правом закруглении
+            sCtx.fillStyle = grad;
+            sCtx.fillRect(0, 0, this.w, this.h);
+
+            // 2. Создаем карту БЛИКОВ (Glass Reflection)
+            this.highlightCanvas = document.createElement('canvas');
+            this.highlightCanvas.width = this.w;
+            this.highlightCanvas.height = this.h;
+            let hCtx = this.highlightCanvas.getContext('2d');
+            let hGrad = hCtx.createLinearGradient(0, 0, this.w, 0);
+            hGrad.addColorStop(0, 'rgba(255,255,255,0)');
+            hGrad.addColorStop(0.2, 'rgba(255,255,255,0)');
+            hGrad.addColorStop(0.28, 'rgba(255,255,255,0.8)'); // Резкий "студийный" блик слева
+            hGrad.addColorStop(0.35, 'rgba(255,255,255,0)');
+            hGrad.addColorStop(0.85, 'rgba(255,255,255,0)');
+            hGrad.addColorStop(0.95, 'rgba(255,255,255,0.4)'); // Мягкий рефлекс на правом краю
+            hGrad.addColorStop(1, 'rgba(255,255,255,0)');
+            hCtx.fillStyle = hGrad;
+            hCtx.fillRect(0, 0, this.w, this.h);
+        }
+        
+        update() {
+            // Без динамического апдейта
+        }
+        
+        draw(ctx) {
+            // Ресайз теневого холста с небольшим запасом для сдвигов лупы
+            if (this.tCanvas.width !== width + 100) {
+                this.tCanvas.width = width + 100;
+                this.tCanvas.height = height + 100;
+            }
+            
+            ctx.fillStyle = '#050505';
+            ctx.fillRect(0, 0, width, height);
+
+            // Отрисовка светящейся маски
+            this.tCtx.fillStyle = 'black';
+            this.tCtx.fillRect(0, 0, this.tCanvas.width, this.tCanvas.height);
+            
+            this.tCtx.filter = 'blur(15px)';
+            this.tCtx.fillStyle = 'white';
+            this.tCtx.font = `900 ${this.fontSize}px sans-serif`;
+            this.tCtx.textAlign = 'center';
+            this.tCtx.textBaseline = 'middle';
+            
+            let parallaxX = (mouse.x - width/2) * 0.05;
+            let parallaxY = (mouse.y - height/2) * 0.05;
+            // Центрируем с учетом нашего расширенного холста (+50px)
+            let cx = width / 2 + 50 + parallaxX;
+            let cy = height / 2 + 50 + parallaxY;
+            
+            this.tCtx.fillText(text, cx, cy);
+            this.tCtx.filter = 'blur(5px)';
+            this.tCtx.fillText(text, cx, cy);
+
+            let cols = Math.ceil(width / (this.w + this.gap));
+            let rows = Math.ceil(height / (this.h + this.gap));
+            let lenticularShift = (mouse.x - width/2) * 0.04;
+            
+            for(let i = 0; i < cols; i++) {
+                let x = i * (this.w + this.gap);
+                let yOffset = (i % 2 === 0) ? 0 : (this.h + this.gap) / 2;
+                
+                for(let j = -1; j < rows + 1; j++) {
+                    let y = j * (this.h + this.gap) + yOffset;
+                    
+                    ctx.save();
+                    drawRoundRect(ctx, x, y, this.w, this.h, this.radius);
+                    ctx.clip();
+                    
+                    let shiftX = (i % 2 === 0) ? lenticularShift : -lenticularShift;
+                    
+                    // ЭФФЕКТ ЛИНЗЫ (Refraction): 
+                    // Берем только 50% ширины исходника и растягиваем на 100% ширины капсулы
+                    let zoom = 0.5; 
+                    let sx = (x + 50) + shiftX + (this.w * (1 - zoom) / 2);
+                    let sy = y + 50;
+                    let sw = this.w * zoom;
+                    
+                    // Защита от выхода за границы холста (чтобы canvas api не ругался)
+                    sx = Math.max(0, Math.min(sx, this.tCanvas.width - sw));
+                    
+                    // Рисуем преломленный (увеличенный) кусок текста
+                    ctx.drawImage(this.tCanvas, sx, sy, sw, this.h, x, y, this.w, this.h);
+                    
+                    // Накладываем 3D-тень (затемняет края)
+                    ctx.globalCompositeOperation = 'multiply'; 
+                    ctx.drawImage(this.shadingCanvas, x, y);
+
+                    // Накладываем БЛИК стекла (осветляет)
+                    ctx.globalCompositeOperation = 'screen'; 
+                    ctx.drawImage(this.highlightCanvas, x, y);
+                    
+                    ctx.restore();
+                }
+            }
+        }
+    }
+
+
+    // --- ИГРОВОЙ ЦИКЛ ---
+
+    function initEffect() {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'source-over';
+
+        switch(currentMode) {
+            case 0: activeEffect = new MoireEffect(); break;
+            case 1: activeEffect = new ParticlesEffect(); break;
+            case 2: activeEffect = new CapsuleEffect(); break;
+        }
+
+        animate();
+    }
+
+    function animate() {
+        if (activeEffect) {
+            activeEffect.update();
+            activeEffect.draw(ctx);
+        }
+        animationFrameId = requestAnimationFrame(animate);
+    }
+
+    // Запуск
+    resize();
+    initEffect();
+
+</script>
+</body>
+</html>

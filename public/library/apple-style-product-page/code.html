@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сфера Pro - Apple Style Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- GSAP for scroll animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            /* Убираем стандартный скроллбар для эстетики */
+            scrollbar-width: none;
+        }
+        body::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Градиентный шар (плейсхолдер для 3D) */
+        .gradient-sphere {
+            background: radial-gradient(circle at 30% 30%, #4facfe 0%, #00f2fe 50%, #000000 100%);
+            box-shadow: 0 0 100px rgba(79, 172, 254, 0.5);
+        }
+
+        /* Анимированный фон для "видео" секции */
+        .mesh-gradient {
+            background-color: #0a0a0a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Навигация -->
+    <nav class="fixed top-0 w-full z-50 bg-black/70 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between text-xs font-medium text-gray-300">
+            <div class="hover:text-white cursor-pointer transition">Logo</div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="hover:text-white transition">Обзор</a>
+                <a href="#" class="hover:text-white transition">Характеристики</a>
+                <a href="#" class="hover:text-white transition">Дизайн</a>
+            </div>
+            <a href="#" class="bg-white text-black px-4 py-1.5 rounded-full hover:bg-gray-200 transition">Купить</a>
+        </div>
+    </nav>
+
+    <!-- Секция 1: Hero -->
+    <section id="hero" class="h-screen flex flex-col items-center justify-center relative overflow-hidden">
+        <div class="text-center z-10 mt-20">
+            <h1 class="hero-title text-6xl md:text-8xl font-bold tracking-tighter mb-4">Сфера Pro.</h1>
+            <p class="hero-subtitle text-xl md:text-3xl text-gray-400 tracking-tight font-light">Абсолютная мощь. Идеальная форма.</p>
+        </div>
+        <!-- Плейсхолдер 3D объекта -->
+        <div class="hero-object absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 rounded-full gradient-sphere opacity-60 blur-xl mt-20"></div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-500 animate-pulse">
+            <span class="text-xs mb-2">Скролльте вниз</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </section>
+
+    <!-- Секция 2: Скролл-сиквенс "Взаимодействие с формой" -->
+    <!-- Контейнер имеет высоту 300vh, чтобы дать пространство для скролла -->
+    <section id="sequence-1" class="h-[300vh] relative bg-black">
+        <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+            <!-- Текст, который будет меняться -->
+            <div id="seq1-text-container" class="absolute z-20 text-center w-full px-4">
+                <h2 id="seq1-text-1" class="text-4xl md:text-7xl font-bold tracking-tighter absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0">Прорывная архитектура.</h2>
+                <h2 id="seq1-text-2" class="text-4xl md:text-7xl font-bold tracking-tighter absolute w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 text-gradient">Создана для тех, кто создает.</h2>
+            </div>
+            
+            <!-- Фигура, имитирующая 3D модель, которая вращается и увеличивается при скролле -->
+            <div id="seq1-shape" class="relative w-48 h-48 md:w-80 md:h-80 z-10">
+                <div class="absolute inset-0 rounded-full border border-blue-500/30"></div>
+                <div class="absolute inset-4 rounded-full border border-purple-500/40 rotate-45"></div>
+                <div class="absolute inset-8 rounded-full gradient-sphere opacity-80 mix-blend-screen"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция 3: Скролл-сиквенс "Имитация Видео/Распаковки" -->
+    <section id="sequence-2" class="h-[400vh] relative bg-zinc-950">
+        <div class="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden px-4 md:px-0">
+            
+            <!-- Плейсхолдер для видео: начинает как маленькая карточка, вырастает на весь экран -->
+            <div id="video-placeholder" class="w-[300px] h-[200px] md:w-[600px] md:h-[350px] bg-zinc-900 rounded-3xl overflow-hidden relative flex items-center justify-center mesh-gradient border border-white/10 shadow-2xl">
+                <!-- Векторная имитация интерфейса или внутренностей -->
+                <svg id="video-inner-svg" class="w-32 h-32 md:w-64 md:h-64 text-white/20" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.5">
+                    <circle cx="50" cy="50" r="40" stroke-dasharray="4 4" />
+                    <circle cx="50" cy="50" r="30" stroke-width="1" />
+                    <circle cx="50" cy="50" r="20" stroke-dasharray="2 6" />
+                    <path d="M50 10 L50 90 M10 50 L90 50" stroke-width="0.2" />
+                </svg>
+                
+                <div id="video-text" class="absolute inset-0 flex flex-col items-center justify-center bg-black/40 opacity-0 backdrop-blur-sm">
+                    <h3 class="text-5xl md:text-8xl font-bold tracking-tighter text-white">Уровень: Pro</h3>
+                    <p class="text-lg mt-4 text-gray-300">Производительность вне рамок.</p>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Секция 4: Bento Grid (Стиль Apple) -->
+    <section id="features" class="py-32 px-6 max-w-7xl mx-auto">
+        <div class="mb-16 text-center md:text-left">
+            <h2 class="text-4xl md:text-6xl font-bold tracking-tighter">Всё в деталях.</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Карточка 1 -->
+            <div class="feature-card bg-zinc-900 rounded-3xl p-8 md:col-span-2 min-h-[400px] flex flex-col justify-between border border-white/5 relative overflow-hidden group">
+                <div class="z-10 relative">
+                    <h3 class="text-3xl font-semibold mb-2">Чип M4X</h3>
+                    <p class="text-gray-400 text-lg max-w-sm">Нейронный движок нового поколения для задач машинного обучения.</p>
+                </div>
+                <!-- Векторная графика -->
+                <div class="absolute -bottom-10 -right-10 w-96 h-96 bg-gradient-to-br from-blue-900/40 to-transparent rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+                <svg class="absolute bottom-10 right-10 w-48 h-48 text-white/5 group-hover:text-white/10 transition-colors duration-700" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm3 3h6v6H9V9z"/>
+                </svg>
+            </div>
+            
+            <!-- Карточка 2 -->
+            <div class="feature-card bg-zinc-900 rounded-3xl p-8 min-h-[400px] flex flex-col justify-between border border-white/5 relative overflow-hidden group">
+                <div class="z-10 relative">
+                    <h3 class="text-3xl font-semibold mb-2">Батарея</h3>
+                    <p class="text-gray-400 text-lg">До 24 часов на одном заряде.</p>
+                </div>
+                <div class="flex justify-center items-end h-full pb-8">
+                    <div class="w-16 h-32 border-4 border-gray-700 rounded-xl relative overflow-hidden">
+                        <div class="absolute bottom-0 w-full h-3/4 bg-green-500 rounded-b-lg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Карточка 3 -->
+            <div class="feature-card bg-zinc-900 rounded-3xl p-8 min-h-[400px] flex flex-col justify-between border border-white/5 relative overflow-hidden group">
+                 <div class="z-10 relative">
+                    <h3 class="text-3xl font-semibold mb-2">Дисплей</h3>
+                    <p class="text-gray-400 text-lg">Яркость 2000 нит.</p>
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors duration-700"></div>
+            </div>
+
+             <!-- Карточка 4 -->
+             <div class="feature-card bg-zinc-900 rounded-3xl p-8 md:col-span-2 min-h-[400px] flex flex-col justify-end border border-white/5 relative overflow-hidden group">
+                <div class="z-10 relative">
+                    <h3 class="text-3xl font-semibold mb-2">Подключение</h3>
+                    <p class="text-gray-400 text-lg">Wi-Fi 7 и Thunderbolt 5.</p>
+                </div>
+                <div class="absolute top-0 right-0 w-full h-full opacity-30">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="w-full h-full stroke-blue-500 stroke-[0.2] fill-none">
+                        <path d="M0 50 Q 25 20, 50 50 T 100 50" class="animate-pulse"/>
+                        <path d="M0 60 Q 25 30, 50 60 T 100 60" class="animate-pulse" style="animation-delay: 0.5s;"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="border-t border-white/10 py-12 text-center text-gray-500 text-sm">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+            <p>&copy; 2026 Сфера Корп. Все права защищены.</p>
+            <div class="space-x-4 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition">Политика конфиденциальности</a>
+                <a href="#" class="hover:text-white transition">Условия использования</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Инициализация GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. Анимация появления первого экрана (Hero)
+        gsap.from(".hero-title", { y: 50, opacity: 0, duration: 1.2, ease: "power4.out", delay: 0.2 });
+        gsap.from(".hero-subtitle", { y: 30, opacity: 0, duration: 1, ease: "power4.out", delay: 0.5 });
+        gsap.to(".hero-object", { 
+            scale: 1.1, 
+            duration: 4, 
+            repeat: -1, 
+            yoyo: true, 
+            ease: "sine.inOut" 
+        });
+
+        // 2. Секция 1: Трансформация формы при скролле (Имитация 3D)
+        const tl1 = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#sequence-1",
+                start: "top top", // Начинаем, когда секция касается верха окна
+                end: "+=200%",    // Длительность скролла 200% высоты экрана
+                scrub: 1,         // Привязка к скроллу с небольшим сглаживанием
+                pin: true         // Закрепляем контейнер
+            }
+        });
+
+        tl1.to("#seq1-shape", { scale: 5, rotate: 180, opacity: 0.2, duration: 1 })
+           // Появляется первый текст
+           .fromTo("#seq1-text-1", { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, "<0.2")
+           // Исчезает первый текст
+           .to("#seq1-text-1", { y: -100, opacity: 0, duration: 0.5 }, ">0.5")
+           // Появляется второй текст
+           .fromTo("#seq1-text-2", { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5 });
+
+        // 3. Секция 2: Имитация видео-плеера или развертывания
+        const tl2 = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#sequence-2",
+                start: "top top",
+                end: "+=300%",
+                scrub: 1,
+                pin: true
+            }
+        });
+
+        tl2.to("#video-placeholder", { 
+                width: "100vw", 
+                height: "100vh", 
+                borderRadius: "0px", 
+                duration: 1,
+                ease: "power2.inOut"
+            })
+           .to("#video-inner-svg", { scale: 3, rotate: 360, opacity: 0.1, duration: 1 }, "<")
+           // Текст поверх "видео"
+           .fromTo("#video-text", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.5 }, ">-0.2");
+
+        // 4. Появление карточек Bento Grid
+        gsap.utils.toArray('.feature-card').forEach((card, i) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%", // Анимация начинается, когда карточка на 85% высоты экрана
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                ease: "power3.out"
+            });
+        });
+    </script>
+</body>
+</html>

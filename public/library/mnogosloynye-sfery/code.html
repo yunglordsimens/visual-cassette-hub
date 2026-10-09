@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Желейные Сферы | Слои и Глубина</title>
+    <style>
+        /* Базовые настройки и типографика */
+        :root {
+            --bg-color-1: #fdfaf8;
+            --bg-color-2: #f2e8e3;
+            --bg-color-3: #ebdcd6;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at 50% 50%, var(--bg-color-1), var(--bg-color-2), var(--bg-color-3));
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Чистая типографика */
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* Контейнер сцены */
+        #scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px; /* Расстояние между сферами */
+        }
+
+        /* Обертка для каждой сферы */
+        .sphere-wrapper {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            /* Убираем pointer-events, чтобы мышь трекалась по всему окну */
+            pointer-events: none; 
+        }
+
+        /* Базовый класс для всех слоев */
+        .layer {
+            position: absolute;
+            border-radius: 50%;
+            /* Плавность применяется только к фильтрам, позиция управляется через JS (requestAnimationFrame) */
+            transition: filter 0.3s ease, backdrop-filter 0.3s ease; 
+        }
+
+        /* 1 СЛОЙ: Падающая тень (находится глубже всего) */
+        .shadow {
+            width: 80%;
+            height: 80%;
+            top: 30%;
+            left: 10%;
+            background: rgba(130, 110, 100, 0.3);
+            filter: blur(25px);
+            z-index: 1;
+        }
+
+        /* 2 СЛОЙ: Ядро (внутренняя начинка) */
+        .core {
+            width: 35%;
+            height: 35%;
+            top: 32.5%;
+            left: 32.5%;
+            filter: blur(12px); /* Базовый блюр ядра */
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        /* Вариации цветов для ядер */
+        .core.green { background: radial-gradient(circle, #4a752c, #2b4519); }
+        .core.brown { background: radial-gradient(circle, #63433a, #36201a); }
+        .core.pink  { background: radial-gradient(circle, #912745, #541124); }
+
+        /* 3 СЛОЙ: Желейная оболочка (рефракция и объем) */
+        .jelly {
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 60%, rgba(255, 255, 255, 0.0) 100%);
+            /* Эффект матового стекла (размывает слои под ним) */
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            /* Внутренние тени для придания 3D объема оболочке */
+            box-shadow: 
+                inset -15px -15px 30px rgba(0, 0, 0, 0.03),
+                inset 15px 15px 30px rgba(255, 255, 255, 0.8),
+                0 10px 20px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            z-index: 3;
+        }
+
+        /* 4 СЛОЙ: Главный блик света (на поверхности) */
+        .highlight-main {
+            width: 40%;
+            height: 40%;
+            top: 8%;
+            left: 15%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 60%);
+            filter: blur(3px);
+            z-index: 4;
+        }
+
+        /* 5 СЛОЙ: Вторичный рефлекс (снизу справа) */
+        .highlight-sec {
+            width: 20%;
+            height: 20%;
+            bottom: 12%;
+            right: 18%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 60%);
+            filter: blur(4px);
+            z-index: 5;
+        }
+
+        /* Панель управления (типографика в стиле UI) */
+        .controls {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            gap: 30px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 20px 35px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        input[type=range] {
+            width: 140px;
+            accent-color: #912745; /* Цвет акцента под розовую сферу */
+            cursor: pointer;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 800px) {
+            #scene {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .sphere-wrapper {
+                width: 150px;
+                height: 150px;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+                bottom: 20px;
+                padding: 15px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Сцена со сферами -->
+    <div id="scene">
+        <!-- Сфера 1 (Зеленая) -->
+        <div class="sphere-wrapper">
+            <div class="layer shadow" data-depth="0.1"></div>
+            <div class="layer core green" data-depth="0.3"></div>
+            <div class="layer jelly" data-depth="0.6"></div>
+            <div class="layer highlight-main" data-depth="0.9"></div>
+            <div class="layer highlight-sec" data-depth="1.1"></div>
+        </div>
+
+        <!-- Сфера 2 (Коричневая/Нейтральная) -->
+        <div class="sphere-wrapper">
+            <div class="layer shadow" data-depth="0.1"></div>
+            <div class="layer core brown" data-depth="0.3"></div>
+            <div class="layer jelly" data-depth="0.6"></div>
+            <div class="layer highlight-main" data-depth="0.9"></div>
+            <div class="layer highlight-sec" data-depth="1.1"></div>
+        </div>
+
+        <!-- Сфера 3 (Розовая) -->
+        <div class="sphere-wrapper">
+            <div class="layer shadow" data-depth="0.1"></div>
+            <div class="layer core pink" data-depth="0.3"></div>
+            <div class="layer jelly" data-depth="0.6"></div>
+            <div class="layer highlight-main" data-depth="0.9"></div>
+            <div class="layer highlight-sec" data-depth="1.1"></div>
+        </div>
+    </div>
+
+    <!-- UI для управления эффектами (разная глубина резкости) -->
+    <div class="controls">
+        <div class="control-group">
+            <label for="blurCore">Размытие ядра (Core Blur)</label>
+            <input type="range" id="blurCore" min="0" max="30" value="12">
+        </div>
+        <div class="control-group">
+            <label for="blurJelly">Преломление (Backdrop Blur)</label>
+            <input type="range" id="blurJelly" min="0" max="25" value="10">
+        </div>
+        <div class="control-group">
+            <label for="parallaxPower">Сила параллакса (Depth)</label>
+            <input type="range" id="parallaxPower" min="0" max="100" value="40">
+        </div>
+    </div>
+
+    <script>
+        // --- Настройка Параллакса (Память глубины) ---
+        const layers = document.querySelectorAll('.layer');
+        let mouseX = 0;
+        let mouseY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let parallaxIntensity = 0.4; // Базовая сила смещения
+
+        // Отслеживаем координаты мыши относительно центра экрана
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2);
+            mouseY = (e.clientY - window.innerHeight / 2);
+        });
+
+        // Плавная анимация с помощью requestAnimationFrame и интерполяции (Lerp)
+        function animate() {
+            // Плавное приближение текущих координат к координатам мыши
+            currentX += (mouseX - currentX) * 0.05;
+            currentY += (mouseY - currentY) * 0.05;
+
+            layers.forEach(layer => {
+                // Читаем атрибут data-depth (насколько "близко" или "далеко" слой)
+                const depth = parseFloat(layer.getAttribute('data-depth'));
+                
+                // Вычисляем смещение. Чем больше depth, тем сильнее двигается слой
+                const moveX = currentX * depth * parallaxIntensity;
+                const moveY = currentY * depth * parallaxIntensity;
+
+                // Применяем трансформацию аппаратно-ускоренным методом
+                layer.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+        
+        // Запускаем цикл анимации
+        animate();
+
+
+        // --- Настройка Блюра и UI ---
+        const cores = document.querySelectorAll('.core');
+        const jellies = document.querySelectorAll('.jelly');
+        
+        const coreInput = document.getElementById('blurCore');
+        const jellyInput = document.getElementById('blurJelly');
+        const parallaxInput = document.getElementById('parallaxPower');
+
+        // Управление блюром ядра (физическое размытие внутреннего элемента)
+        coreInput.addEventListener('input', (e) => {
+            cores.forEach(core => {
+                core.style.filter = `blur(${e.target.value}px)`;
+            });
+        });
+
+        // Управление блюром оболочки (эффект преломления матового стекла)
+        jellyInput.addEventListener('input', (e) => {
+            jellies.forEach(jelly => {
+                jelly.style.backdropFilter = `blur(${e.target.value}px)`;
+                jelly.style.webkitBackdropFilter = `blur(${e.target.value}px)`;
+            });
+        });
+
+        // Управление силой 3D глубины
+        parallaxInput.addEventListener('input', (e) => {
+            parallaxIntensity = e.target.value / 100;
+        });
+    </script>
+</body>
+</html>

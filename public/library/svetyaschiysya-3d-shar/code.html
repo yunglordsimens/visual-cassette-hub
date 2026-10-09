@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глубинный Свечащийся Шар</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-color: #030305;
+            margin: 0;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        /* Настройка перспективы для 3D пространства */
+        .perspective-container {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        /* Сохраняем 3D трансформации для дочерних элементов */
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+
+        /* Медленная пульсация для живости (независимо от движения мыши) */
+        @keyframes pulse-slow {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .animate-blob {
+            animation: pulse-slow 4s ease-in-out infinite alternate;
+        }
+
+        /* Индивидуальные задержки для асинхронного дыхания слоев */
+        .delay-1 { animation-delay: -1s; }
+        .delay-2 { animation-delay: -2s; }
+        .delay-3 { animation-delay: -3s; }
+        .delay-4 { animation-delay: -4s; }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen w-full relative">
+
+    <!-- Главная сцена с перспективой -->
+    <div id="scene" class="perspective-container relative w-full h-full flex items-center justify-center">
+
+        <!-- Якорь шара -->
+        <div class="relative w-[400px] h-[400px] preserve-3d flex items-center justify-center">
+
+            <!-- СЛОЙ 1: Глубокий синий фон (Самый дальний, большое размытие) -->
+            <div class="layer absolute w-[600px] h-[600px]" data-depth="-400">
+                <div class="w-full h-full rounded-full bg-[#0022ff] blur-[120px] opacity-40 mix-blend-screen animate-blob delay-4"></div>
+            </div>
+
+            <!-- СЛОЙ 2: Фиолетовое свечение справа -->
+            <div class="layer absolute top-[10%] right-[-30%] w-[400px] h-[400px]" data-depth="-200">
+                <div class="w-full h-full rounded-full bg-[#6a00ff] blur-[100px] opacity-60 mix-blend-screen animate-blob delay-2"></div>
+            </div>
+
+            <!-- СЛОЙ 3: Яркий синий снизу справа -->
+            <div class="layer absolute bottom-[-10%] right-[0%] w-[350px] h-[350px]" data-depth="-50">
+                <div class="w-full h-full rounded-full bg-[#0066ff] blur-[80px] opacity-70 mix-blend-screen animate-blob delay-1"></div>
+            </div>
+
+            <!-- СЛОЙ 4: Яркий циан (голубой) сверху слева (Самый интенсивный цвет) -->
+            <div class="layer absolute top-[-10%] left-[-20%] w-[400px] h-[400px]" data-depth="150">
+                <div class="w-full h-full rounded-full bg-[#00e5ff] blur-[70px] opacity-80 mix-blend-screen animate-blob"></div>
+            </div>
+
+            <!-- СЛОЙ 5: Теплый оранжево-красный снизу слева (Самый близкий из цветных) -->
+            <div class="layer absolute bottom-[10%] left-[-20%] w-[300px] h-[300px]" data-depth="250">
+                <div class="w-full h-full rounded-full bg-[#ff5500] blur-[60px] opacity-70 mix-blend-screen animate-blob delay-3"></div>
+            </div>
+
+            <!-- СЛОЙ 6: Темная сердцевина (Маскирует центр, создавая объемную пустоту) -->
+            <!-- Меньший блюр делает края пустоты более четкими на фоне свечения -->
+            <div class="layer absolute w-[320px] h-[320px] z-10" data-depth="350">
+                <div class="w-full h-full rounded-full bg-[#030305] blur-[45px]"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Типографика (с учетом любви к аккуратным шрифтам) -->
+    <div class="absolute bottom-12 left-0 w-full text-center z-20 pointer-events-none">
+        <!-- Широкий трекинг создает ощущение пространства -->
+        <h1 class="text-white/30 text-[11px] uppercase tracking-[2em] font-light ml-[2em]">Глубина</h1>
+    </div>
+
+    <script>
+        const layers = document.querySelectorAll('.layer');
+        const scene = document.getElementById('scene');
+
+        // Инициализация начальных позиций Z
+        layers.forEach(layer => {
+            const depth = layer.getAttribute('data-depth');
+            layer.style.transform = `translate3d(0px, 0px, ${depth}px)`;
+        });
+
+        // Эффект параллакса при движении мыши
+        document.addEventListener('mousemove', (e) => {
+            // Нормализуем координаты мыши от -1 до 1
+            const x = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+            const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+
+            layers.forEach(layer => {
+                const depth = parseFloat(layer.getAttribute('data-depth'));
+                
+                // Рассчитываем смещение. Чем больше глубина, тем сильнее смещение.
+                // Множитель 0.1 регулирует общую чувствительность параллакса.
+                const moveX = x * depth * 0.1;
+                const moveY = y * depth * 0.1;
+
+                // Применяем смещение по X и Y, сохраняя оригинальную глубину по Z
+                layer.style.transform = `translate3d(${moveX}px, ${moveY}px, ${depth}px)`;
+            });
+        });
+
+        // Плавное возвращение в центр, если курсор покидает окно
+        document.addEventListener('mouseleave', () => {
+            layers.forEach(layer => {
+                const depth = layer.getAttribute('data-depth');
+                layer.style.transition = 'transform 1s cubic-bezier(0.25, 1, 0.5, 1)';
+                layer.style.transform = `translate3d(0px, 0px, ${depth}px)`;
+                
+                // Убираем transition после возвращения, чтобы параллакс снова был мгновенным
+                setTimeout(() => {
+                    layer.style.transition = 'none';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>

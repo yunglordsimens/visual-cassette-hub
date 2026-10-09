@@ -1,0 +1,21 @@
+{
+  "id": "arhiv-tipografiki-umprum",
+  "title": "Архив Типографики UMPRUM",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Типографика",
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/arhiv-tipografiki-umprum/code.tsx",
+  "previewUrl": "library/arhiv-tipografiki-umprum/preview.html"
+}

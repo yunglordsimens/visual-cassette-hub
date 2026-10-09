@@ -1,0 +1,22 @@
+{
+  "id": "hqvipsos-2",
+  "title": "HQVIPSOS",
+  "tags": [
+    "gemini",
+    "react",
+    "canvas",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · canvas",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/hqvipsos-2/code.tsx",
+  "previewUrl": "library/hqvipsos-2/preview.html"
+}

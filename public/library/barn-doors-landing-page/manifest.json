@@ -1,0 +1,24 @@
+{
+  "id": "barn-doors-landing-page",
+  "title": "Barn Doors - Landing Page",
+  "tags": [
+    "gemini",
+    "html",
+    "threejs",
+    "webgl",
+    "canvas",
+    "svg",
+    "audio"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-03",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/barn-doors-landing-page/code.html",
+  "previewUrl": "library/barn-doors-landing-page/code.html"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "spektralnaya-illyuziya",
+  "title": "Спектральная Иллюзия",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/spektralnaya-illyuziya/code.html",
+  "previewUrl": "library/spektralnaya-illyuziya/code.html"
+}

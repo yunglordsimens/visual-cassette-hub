@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Bento Grid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Используем акцидентный шрифт для массивных заголовков -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --mouse-x: 0;
+            --mouse-y: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #3a000f; /* Глубокий рубиновый вместо черного */
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* --- СТИЛИ БЕНТО КАРТОЧЕК --- */
+        .bento-card {
+            background: rgba(255, 255, 255, 0.03); /* Убрали черный тинт, добавили легкий фрост */
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 100, 180, 0.15); /* Розоватая граница */
+            border-radius: 1.5rem;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            /* Легкое внутреннее свечение вместо внешней тени */
+            box-shadow: inset 0 0 40px rgba(255, 20, 147, 0.1);
+        }
+
+        .bento-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 20, 147, 0.6);
+            /* Усиливаем внутреннее свечение при наведении */
+            box-shadow: inset 0 0 80px rgba(255, 20, 147, 0.3);
+        }
+
+        /* Неоновый текст как на картинке OPEN */
+        .neon-text {
+            color: transparent;
+            -webkit-text-stroke: 1px #ff1493;
+            text-shadow: none; /* Убрали внешнее свечение */
+            transition: all 0.3s ease;
+        }
+
+        .bento-card:hover .neon-text {
+            color: rgba(255, 20, 147, 0.2); /* Легкая заливка внутри букв */
+            text-shadow: none;
+        }
+
+        /* Шум поверх стекла для текстурности */
+        .noise-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #3a000f; }
+        ::-webkit-scrollbar-thumb { background: #ff1493; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff4dff; }
+    </style>
+</head>
+<body class="antialiased selection:bg-pink-500 selection:text-white">
+
+    <!-- Основной контент -->
+    <main class="container mx-auto px-4 py-8 md:py-12 max-w-7xl relative z-10 flex flex-col justify-center min-h-screen">
+
+        <!-- Бенто Сетка -->
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 auto-rows-[250px] w-full">
+            
+            <!-- Карточка 1: Массивный текст (Широкая) -->
+            <div class="bento-card md:col-span-2 lg:col-span-2 row-span-1 p-8 flex flex-col justify-end">
+                <div class="noise-overlay"></div>
+                <h2 class="text-4xl md:text-5xl font-extrabold uppercase tracking-tight z-20 relative">
+                    Визуальные <br>
+                    <span class="text-fuchsia-400">Слои</span>
+                </h2>
+                <p class="text-sm text-gray-300 mt-2 z-20 relative max-w-sm">
+                    Наслоение градиентов и сеток с разными уровнями блюра создает глубину.
+                </p>
+            </div>
+
+            <!-- Карточка 2: Фотография (Высокая) -->
+            <div class="bento-card md:col-span-1 lg:col-span-1 row-span-2 group">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" 
+                     alt="Абстрактный арт" 
+                     class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105 transform">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#3a000f]/90 via-transparent to-transparent pointer-events-none"></div>
+                <div class="absolute bottom-6 left-6 right-6">
+                    <span class="uppercase tracking-widest text-xs font-bold text-pink-300">Арт-дирекшн</span>
+                </div>
+            </div>
+
+            <!-- Карточка 3: Квадрат с текстом -->
+            <div class="bento-card md:col-span-1 lg:col-span-1 row-span-1 p-6 flex items-center justify-center text-center">
+                <div class="noise-overlay"></div>
+                <h3 class="text-3xl font-black uppercase text-white/90 z-20 relative leading-none">
+                    Свечение<br>& Блюр
+                </h3>
+            </div>
+
+            <!-- Карточка 4: Большая фотография (Широкая) -->
+            <div class="bento-card md:col-span-2 lg:col-span-2 row-span-2 group">
+                <!-- Абсолютный путь без './' -->
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2670&auto=format&fit=crop" 
+                     alt="Неоновые огни" 
+                     class="w-full h-full object-cover opacity-60 group-hover:opacity-90 transition-all duration-700">
+                <div class="absolute inset-0 bg-[#3a000f]/30 group-hover:bg-transparent transition-colors duration-500 pointer-events-none"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                    <h2 class="text-7xl md:text-9xl font-black uppercase neon-text opacity-70 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                        OPEN
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Карточка 5: Типографика (Широкая) -->
+            <div class="bento-card md:col-span-2 lg:col-span-1 row-span-1 p-6 relative overflow-hidden">
+                <div class="noise-overlay"></div>
+                <!-- Декоративный круг внутри карточки -->
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-red-600 rounded-full filter blur-2xl opacity-40"></div>
+                
+                <div class="h-full flex flex-col justify-between z-20 relative">
+                    <div class="w-8 h-8 rounded-full border-2 border-fuchsia-500 flex items-center justify-center">
+                        <div class="w-2 h-2 bg-fuchsia-500 rounded-full"></div>
+                    </div>
+                    <p class="font-medium text-lg mt-4 text-gray-200">
+                        Идеальное пространство для тестирования акцидентных шрифтов.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Карточка 6: Темный контраст (Теперь светлый блик) -->
+            <div class="bento-card md:col-span-1 lg:col-span-1 row-span-1 p-6 bg-white/5 flex items-center justify-center">
+                <div class="noise-overlay"></div>
+                <div class="text-center z-20 relative">
+                    <span class="block text-5xl font-black text-white">01</span>
+                    <span class="block text-xs uppercase tracking-[0.3em] mt-2 text-pink-200">Сетка</span>
+                </div>
+            </div>
+
+            <!-- Карточка 7: Фотография (Длинная горизонтальная) -->
+            <div class="bento-card md:col-span-full lg:col-span-3 row-span-1 group relative overflow-hidden flex items-center">
+                <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=2670&auto=format&fit=crop" 
+                     alt="Детализация" 
+                     class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-700">
+                <div class="absolute inset-0 bg-gradient-to-r from-[#3a000f] to-transparent z-10"></div>
+                
+                <div class="z-20 p-8 relative">
+                    <h3 class="text-3xl md:text-5xl font-black uppercase tracking-tight text-white mb-2">
+                        Глубина & Свет
+                    </h3>
+                    <p class="text-pink-100/80 max-w-lg text-sm md:text-base">
+                        Карточки подсвечены изнутри, создавая чистый и аккуратный объем без лишнего внешнего шума.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

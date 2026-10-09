@@ -1,0 +1,21 @@
+{
+  "id": "aura-app-clone",
+  "title": "Aura App Clone",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/aura-app-clone/code.html",
+  "previewUrl": "library/aura-app-clone/code.html"
+}

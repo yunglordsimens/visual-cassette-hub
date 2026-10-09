@@ -1,0 +1,20 @@
+{
+  "id": "roast-magazine-layout",
+  "title": "Roast Magazine Layout",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/roast-magazine-layout/code.html",
+  "previewUrl": "library/roast-magazine-layout/code.html"
+}

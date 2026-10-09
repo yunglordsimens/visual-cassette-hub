@@ -1,0 +1,23 @@
+{
+  "id": "morph-studio-v6",
+  "title": "Morph Studio v6",
+  "tags": [
+    "gemini",
+    "react",
+    "webgl",
+    "canvas"
+  ],
+  "groups": [
+    "Лендинги",
+    "3D / WebGL",
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · webgl, canvas",
+  "created": "2026-01-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/morph-studio-v6/code.tsx",
+  "previewUrl": "library/morph-studio-v6/preview.html"
+}

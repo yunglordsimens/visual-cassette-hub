@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тренировка «Песочные часы»</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            900: '#881337',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom Checkbox */
+        .ex-checkbox:checked + div {
+            background-color: #f43f5e;
+            border-color: #f43f5e;
+        }
+        .ex-checkbox:checked + div svg {
+            display: block;
+        }
+        /* Hide scrollbar for nav */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .timer-circle {
+            transition: stroke-dashoffset 1s linear;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased pb-24">
+
+    <!-- Header -->
+    <header class="bg-white px-6 pt-10 pb-4 shadow-sm sticky top-0 z-40">
+        <div class="max-w-2xl mx-auto">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Проект «Песочные часы»</h1>
+            <p class="text-sm text-gray-500 mt-1 font-medium">Анатомический фокус: Плечи, Ягодицы, Плоский кор</p>
+            
+            <!-- Navigation -->
+            <nav class="flex space-x-2 mt-6 overflow-x-auto no-scrollbar pb-2">
+                <button onclick="switchTab('day1')" id="btn-day1" class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-brand-500 text-white transition-colors">День 1</button>
+                <button onclick="switchTab('day2')" id="btn-day2" class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">День 2</button>
+                <button onclick="switchTab('day3')" id="btn-day3" class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">День 3</button>
+                <button onclick="switchTab('day4')" id="btn-day4" class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">День 4</button>
+                <button onclick="switchTab('info')" id="btn-info" class="nav-btn whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">Гайд & Спина</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-2xl mx-auto px-4 py-6">
+
+        <!-- DAY 1 -->
+        <section id="day1" class="tab-content active">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Ягодицы + Колени + Пресс</h2>
+                <p class="text-brand-600 text-sm font-medium bg-brand-50 inline-block px-3 py-1 rounded-lg">Цель: Нижняя часть «песочных часов»</p>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Warmup -->
+                <div class="bg-gray-100 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⏱️</span>
+                        <h3 class="font-bold">Разминка (5 мин)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">Круговые движения суставами + 2 минуты шагов с высоким подъемом колен.</p>
+                </div>
+
+                <!-- Exercise 1 -->
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative overflow-hidden group">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x25 повторений</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">1. Ягодичный мостик с резинкой</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Наверху задержись на 2 секунды и сделай 3 мелких разведения коленей в стороны, только потом опускай таз.</p>
+                </label>
+
+                <!-- Exercise 2 -->
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative overflow-hidden group">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20-25 на ногу</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">2. Разгибания ног сидя (в обуви)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Выпрямляй ногу максимально мощно, фиксируй колено на 2 секунды, а опускай супер-медленно на 4 счета.</p>
+                </label>
+
+                <!-- Exercise 3 -->
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative overflow-hidden group">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x20 + пружина</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">3. Махи назад стоя (в обуви)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Без раскачки корпуса. На последнем повторении каждого подхода задержи ногу вверху и сделай 15 мелких пружинящих движений.</p>
+                </label>
+
+                <!-- Exercise 4 -->
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative overflow-hidden group">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20 скручиваний</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">4. Косые скручивания «крест-накрест»</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Лежа на спине, руки за головой. Медленно тяни локоть к противоположному колену. Выдыхай весь воздух в момент касания, чтобы включился глубокий пресс.</p>
+                </label>
+                
+                <!-- Cooldown -->
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🧘‍♀️</span>
+                        <h3 class="font-bold text-blue-900">Растяжка (10 мин)</h3>
+                    </div>
+                    <p class="text-blue-800 text-sm">Растяжка квадрицепса стоя (пятка к ягодице) + растяжка ягодиц лежа. Не пропускать обязательный блок спины (см. в Гайде).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DAY 2 -->
+        <section id="day2" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Острые плечи + Косые</h2>
+                <p class="text-brand-600 text-sm font-medium bg-brand-50 inline-block px-3 py-1 rounded-lg">Цель: Развернуть плечи, плоский кор</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-100 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⏱️</span>
+                        <h3 class="font-bold">Разминка (5 мин)</h3>
+                    </div>
+                    <p class="text-gray-600 text-sm">Вращения плечами, раскрытие грудной клетки.</p>
+                </div>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x15-20 раз</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">1. Разведение рук в стороны (резинка)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Встань ровно, наступи на резинку. Поднимай руки строго до параллели с полом. Локти чуть согнуты. Это строит дельты, визуально сужая талию.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20 раз</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">2. Тяга резинки к поясу сидя</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Спина идеально прямая. Тяни локти назад, максимально сводя лопатки. Укрепит корсет и избавит от болей в спине.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x20 раз</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">3. Разведение перед собой</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Резинка в руках перед грудью. Растягивай ее в стороны, задействуя заднюю поверхность плеча и лопатки.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20 скручиваний</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">4. Твист в планке на локтях</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">В планке медленно скручивай таз то вправо, то влево, почти касаясь бедром пола. Живот при этом держи втянутым (подкручивай таз!).</p>
+                </label>
+                
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🧘‍♀️</span>
+                        <h3 class="font-bold text-blue-900">Вытяжение (10 мин)</h3>
+                    </div>
+                    <p class="text-blue-800 text-sm">Поза «Кобры» (мягкий прогиб на локтях для пресса) + Поза ребенка (таз на пятках) — расслабляет поясницу.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DAY 3 -->
+        <section id="day3" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Боковые бедра + Нижний пресс</h2>
+                <p class="text-brand-600 text-sm font-medium bg-brand-50 inline-block px-3 py-1 rounded-lg">Цель: Округлость бедер и тонус ног</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-100 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⏱️</span>
+                        <h3 class="font-bold">Разминка (5 мин)</h3>
+                    </div>
+                </div>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x24 шага всего</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">1. Шаги в полуприседе (с резинкой)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Шагай вбок в рваном темпе: два шага вправо, два влево. Резинка на щиколотках, всегда натянута.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20 на ногу</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">2. Махи в сторону стоя (в обуви)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Отводи прямую ногу строго вбок. Обувь дает вес для проработки средней ягодичной (отвечает за округлость сбоку).</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x22 раза</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">3. Сгибания ног стоя (в обуви)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Стоя лицом к стене, подтягивай пятку к попе. Отделяет ягодицы от ног, делая их визуально длиннее.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">4x20 раз</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">4. Мертвый жук (нижний пресс)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Лежа на спине, медленно опускай разноименную руку и ногу. Поясница намертво прижата к полу! Контролируй это.</p>
+                </label>
+
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🧘‍♀️</span>
+                        <h3 class="font-bold text-blue-900">Растяжка (10 мин)</h3>
+                    </div>
+                    <p class="text-blue-800 text-sm">Мягкая складка к прямым ногам сидя (тянись животом, а не головой) для вытяжения задней линии ног.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- DAY 4 -->
+        <section id="day4" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-gray-900 mb-2">Фуллбоди-дефайн</h2>
+                <p class="text-brand-600 text-sm font-medium bg-brand-50 inline-block px-3 py-1 rounded-lg">Цель: Закрепить рельеф, выгнать воду</p>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="bg-gray-100 rounded-2xl p-5">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⏱️</span>
+                        <h3 class="font-bold">Разминка (5 мин)</h3>
+                    </div>
+                </div>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x12 подъемов</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">1. Динамическая планка</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Из планки на локтях поднимаешься на ладони и обратно. Держи таз неподвижным (подкручивай его).</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x15 на ногу</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">2. Мостик на одной ноге (в обуви)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Одну ногу подними вверх, второй (опорной) мощно выталкивай таз.</p>
+                </label>
+
+                <label class="block bg-white rounded-2xl shadow-sm border border-gray-100 p-5 cursor-pointer relative">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-300 rounded-md flex items-center justify-center transition-colors">
+                        <svg class="w-4 h-4 text-white hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded mb-3">3x20 раз</span>
+                    <h3 class="text-lg font-bold pr-8 mb-2">3. Разгибание на трицепс (резинка)</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Прорабатываем заднюю линию рук, чтобы они были точеными.</p>
+                </label>
+
+                <!-- Superset -->
+                <label class="block bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg border border-gray-800 p-5 cursor-pointer relative text-white mt-6">
+                    <input type="checkbox" class="ex-checkbox absolute opacity-0 w-0 h-0 group">
+                    <div class="absolute right-5 top-5 w-6 h-6 border-2 border-gray-500 rounded-md flex items-center justify-center transition-colors bg-gray-900">
+                        <svg class="w-4 h-4 text-white hidden group-checked:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <span class="inline-block px-3 py-1 bg-brand-500 text-white text-xs font-bold rounded-full mb-3 uppercase tracking-wide">Суперсет на пресс (3 круга)</span>
+                    <h3 class="text-lg font-bold pr-8 mb-3">4. Без отдыха внутри круга!</h3>
+                    <ul class="text-gray-300 text-sm leading-relaxed space-y-2 list-disc pl-4">
+                        <li>Велосипед (в обуви) — <span class="text-white font-bold">45 секунд</span></li>
+                        <li>Боковая планка — <span class="text-white font-bold">по 30 секунд</span> на сторону</li>
+                    </ul>
+                    <p class="mt-3 text-xs text-gray-400 font-mono">* Отдых 1 минута после полного круга.</p>
+                </label>
+
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5 mt-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🧘‍♀️</span>
+                        <h3 class="font-bold text-blue-900">Растяжка (10 мин)</h3>
+                    </div>
+                    <p class="text-blue-800 text-sm">Полный комплекс расслабления и вытяжения спины.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- INFO & GUIDE -->
+        <section id="info" class="tab-content">
+            <div class="space-y-6">
+                <!-- Back Health -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
+                        <span class="bg-green-100 text-green-700 p-1.5 rounded-lg">🛡️</span>
+                        Здоровая спина и Поясница
+                    </h2>
+                    <p class="text-sm text-gray-600 mb-4">Поясница болит, когда слабеет пресс или не включаются ягодицы. Правила:</p>
+                    <ul class="text-sm text-gray-600 space-y-2 mb-4 pl-4 list-disc marker:text-green-500">
+                        <li>В упражнениях стоя чуть присогибай опорную ногу.</li>
+                        <li>В планке <strong class="text-gray-900">всегда подкручивай таз под себя</strong> (как будто поджимаешь хвост). Это мгновенно переносит нагрузку на пресс.</li>
+                    </ul>
+                    
+                    <h3 class="font-bold text-sm text-gray-900 mt-6 mb-3 uppercase tracking-wider">Обязательный блок после тренировки</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-xl">
+                            <strong class="text-sm block text-gray-900">1. «Кошка-корова» (12 раз)</strong>
+                            <span class="text-sm text-gray-500">Плавные перекаты. На выдохе округляй спину и лопатки в потолок.</span>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl">
+                            <strong class="text-sm block text-gray-900">2. Скручивание лежа (по 1 мин)</strong>
+                            <span class="text-sm text-gray-500">Ляг на спину. Согни правое колено и перенеси влево к полу, голову вправо. Снимает спазм.</span>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl">
+                            <strong class="text-sm block text-gray-900">3. Поза ребенка (2 мин)</strong>
+                            <span class="text-sm text-gray-500">Таз на пятки, вытяни руки вперед, расслабь шею.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progressive Overload -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h2 class="text-lg font-bold flex items-center gap-2 mb-4">
+                        <span class="bg-brand-100 text-brand-700 p-1.5 rounded-lg">📈</span>
+                        Прогрессия нагрузок
+                    </h2>
+                    <p class="text-sm text-gray-600 mb-4">Когда через 3-4 недели станет легко:</p>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-gray-100 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                            <p class="text-sm text-gray-700"><strong>Двойные резинки:</strong> надевай легкую и среднюю одновременно.</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-gray-100 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                            <p class="text-sm text-gray-700"><strong>Принцип 1-к-4:</strong> поднимай вес быстро (1 сек), опускай медленно (4 сек).</p>
+                        </div>
+                        <div class="flex gap-3 items-start">
+                            <span class="bg-gray-100 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                            <p class="text-sm text-gray-700"><strong>Сокращение отдыха:</strong> снизь отдых до 30 секунд.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating Timer for Rest (45 sec) -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3 bg-white p-2 pr-4 rounded-full shadow-lg border border-gray-200">
+        <button id="timer-btn" onclick="toggleTimer()" class="relative w-12 h-12 flex items-center justify-center bg-gray-50 rounded-full hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500">
+            <!-- SVG Progress Ring -->
+            <svg class="absolute inset-0 w-full h-full transform -rotate-90">
+                <circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="3" fill="transparent" class="text-gray-200" />
+                <circle id="timer-progress" cx="24" cy="24" r="20" stroke="currentColor" stroke-width="3" fill="transparent" class="text-brand-500 timer-circle" stroke-dasharray="125.6" stroke-dashoffset="0" />
+            </svg>
+            <!-- Play/Stop Icon -->
+            <span id="timer-icon" class="text-sm font-bold text-gray-700 relative z-10">45s</span>
+        </button>
+        <div class="text-sm font-semibold text-gray-700">
+            <span id="timer-status">Отдых</span>
+        </div>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            // Reset all buttons
+            document.querySelectorAll('.nav-btn').forEach(el => {
+                el.classList.remove('bg-brand-500', 'text-white');
+                el.classList.add('bg-gray-100', 'text-gray-600');
+            });
+
+            // Show active content
+            document.getElementById(tabId).classList.add('active');
+            // Style active button
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('bg-gray-100', 'text-gray-600');
+            activeBtn.classList.add('bg-brand-500', 'text-white');
+        }
+
+        // Timer Logic
+        let timerInterval;
+        let timeLeft = 45;
+        let isRunning = false;
+        const FULL_DASH_ARRAY = 125.6; // 2 * pi * r (r=20)
+
+        function toggleTimer() {
+            if (isRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            if(timeLeft === 0) timeLeft = 45; // Reset if finished
+            
+            isRunning = true;
+            document.getElementById('timer-status').textContent = 'Идет...';
+            document.getElementById('timer-status').classList.add('text-brand-600');
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    document.getElementById('timer-status').textContent = 'Готово!';
+                    document.getElementById('timer-icon').textContent = '45s';
+                    // Optional: Play a short sound or vibrate on mobile
+                    if (navigator.vibrate) navigator.vibrate(200);
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            document.getElementById('timer-status').textContent = 'Отдых';
+            document.getElementById('timer-status').classList.remove('text-brand-600');
+            if (timeLeft > 0) {
+                document.getElementById('timer-icon').textContent = '⏸️';
+            } else {
+                timeLeft = 45; // reset internally
+                updateTimerUI(true); 
+            }
+        }
+
+        function updateTimerUI(reset = false) {
+            document.getElementById('timer-icon').textContent = timeLeft;
+            
+            const circle = document.getElementById('timer-progress');
+            if(reset) {
+                circle.style.transition = 'none';
+                circle.style.strokeDashoffset = '0';
+                // Trigger reflow
+                circle.offsetHeight; 
+                circle.style.transition = 'stroke-dashoffset 1s linear';
+            } else {
+                const fraction = timeLeft / 45;
+                const dashoffset = FULL_DASH_ARRAY - (fraction * FULL_DASH_ARRAY);
+                circle.style.strokeDashoffset = dashoffset;
+            }
+        }
+    </script>
+</body>
+</html>

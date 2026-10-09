@@ -1,0 +1,19 @@
+{
+  "id": "mnogosloynye-sfery",
+  "title": "Многослойные Сферы",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/mnogosloynye-sfery/code.html",
+  "previewUrl": "library/mnogosloynye-sfery/code.html"
+}

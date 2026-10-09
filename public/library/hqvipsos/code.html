@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HQVIPSOS - Cinematic Solid Globe</title>
+    <!-- Шрифт Michroma -->
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #020203;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Michroma', sans-serif;
+            overflow-x: hidden;
+            overscroll-behavior: none; 
+        }
+
+        .scroll-trigger {
+            height: 400vh;
+            width: 100%;
+        }
+
+        .fixed-viewport {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-layer {
+            position: absolute;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url('image.png'); /* Без ./ */
+            background-size: cover;
+            background-position: center;
+            opacity: 0.2;
+            filter: blur(12px); /* Усиленный блюр на фоне */
+            z-index: 1;
+            transform: translateY(calc(var(--scroll-y, 0) * -0.05px));
+        }
+
+        #globeCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .horizontal-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            z-index: 10;
+            will-change: transform;
+            width: 300vw; 
+        }
+
+        .panel {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* * ХРОМИРОВАННЫЙ ТЕКСТ БЕЗ ОБВОДКИ
+         */
+        .text-container {
+            position: relative;
+            margin-top: -25vh; 
+            /* Мягкое, но сильное свечение вокруг текста */
+            filter: drop-shadow(0px 0px 30px rgba(0, 150, 255, 0.8))
+                    drop-shadow(0px 0px 70px rgba(100, 200, 255, 0.4));
+        }
+
+        .chrome-text {
+            font-size: 7vw;
+            letter-spacing: 0.15em;
+            margin: 0;
+            position: relative;
+            display: inline-block;
+            
+            /* Более контрастный хром, чтобы работать без обводки */
+            background: linear-gradient(
+                to bottom,
+                #ffffff 0%,
+                #e0e5f0 20%,
+                #707580 45%,
+                #000000 50%,
+                #3a3d45 55%,
+                #9a9fac 75%,
+                #ffffff 100%
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            
+            /* ОБВОДКА УДАЛЕНА по вашему запросу */
+        }
+
+        /* Блик на тексте (Flare) */
+        .chrome-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                110deg, 
+                transparent 0%, 
+                transparent 40%, 
+                rgba(255, 255, 255, 1) 50%, 
+                transparent 60%, 
+                transparent 100%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: flareAnimation 4s infinite linear;
+            mix-blend-mode: color-dodge;
+        }
+
+        @keyframes flareAnimation {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .extra-content {
+            background: rgba(5, 10, 15, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 600px;
+            box-shadow: 0 0 50px rgba(0, 100, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.05);
+            margin-top: -10vh;
+        }
+
+        .extra-content h2 {
+            font-size: 1.5vw;
+            letter-spacing: 0.2em;
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(100, 180, 255, 0.9);
+        }
+
+        .extra-content p {
+            font-family: sans-serif;
+            line-height: 1.8;
+            color: #b0c0d0;
+            font-size: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="scroll-trigger"></div>
+
+    <div class="fixed-viewport">
+        <div class="bg-layer" id="bgLayer"></div>
+        <canvas id="globeCanvas"></canvas>
+        
+        <div class="horizontal-container" id="hzContainer">
+            <section class="panel">
+                <div class="text-container">
+                    <h1 class="chrome-text" data-text="HQVIPSOS">HQVIPSOS</h1>
+                </div>
+            </section>
+            
+            <section class="panel">
+                <div class="extra-content">
+                    <h2>SECURE NODES</h2>
+                    <p>Uplink established. Visualizing global arc-connections. Depth masking and focal tracking engaged.</p>
+                </div>
+            </section>
+            
+            <section class="panel">
+                <div class="extra-content">
+                    <h2>SUNLIGHT PROTOCOL</h2>
+                    <p>Background stellar radiation detected. Solid planetary body shielding active data streams.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const hzContainer = document.getElementById('hzContainer');
+        const bgLayer = document.getElementById('bgLayer');
+        
+        let scrollY = 0;
+        let targetScrollY = 0;
+        let maxScroll = document.body.scrollHeight - window.innerHeight; 
+        
+        window.addEventListener('resize', () => {
+            maxScroll = document.body.scrollHeight - window.innerHeight;
+        });
+
+        window.addEventListener('scroll', () => {
+            targetScrollY = window.scrollY;
+        });
+
+        const canvas = document.getElementById('globeCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, cx, cy, sphereRadius;
+
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            
+            cx = width / 2;
+            cy = height * 0.95; 
+            sphereRadius = Math.max(width * 0.4, height * 0.6);
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const focalLength = 1200;
+        let currentRotationY = 0;
+        let targetRotationY = 0;
+        let baseRotation = 0; // Для постоянного плавного движения
+        const tiltX = 0.35; 
+
+        const dots = [];
+        const arcs = [];
+        const numDots = 50;
+
+        for (let i = 0; i < numDots; i++) {
+            dots.push({
+                lat: (Math.random() - 0.5) * 160,
+                lon: (Math.random() - 0.5) * 360,
+                pulseSpeed: 0.002 + Math.random() * 0.003,
+                offset: Math.random() * 100
+            });
+        }
+
+        function latLonTo3D(lat, lon, radius) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lon + 180) * (Math.PI / 180);
+            return {
+                x: -(radius * Math.sin(phi) * Math.cos(theta)),
+                y: radius * Math.cos(phi),
+                z: radius * Math.sin(phi) * Math.sin(theta)
+            };
+        }
+
+        function rotateX(p, angle) {
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            return { x: p.x, y: p.y * cos - p.z * sin, z: p.y * sin + p.z * cos };
+        }
+
+        function rotateY(p, angle) {
+            const cos = Math.cos(angle), sin = Math.sin(angle);
+            return { x: p.x * cos - p.z * sin, y: p.y, z: p.x * sin + p.z * cos };
+        }
+
+        function project(p) {
+            const scale = focalLength / (focalLength + p.z);
+            return { x: cx + p.x * scale, y: cy + p.y * scale, scale: scale, z: p.z };
+        }
+
+        function lerp(start, end, amt) {
+            return (1 - amt) * start + amt * end;
+        }
+
+        for (let i = 0; i < numDots; i++) {
+            let targetIdx = Math.floor(Math.random() * numDots);
+            if (targetIdx !== i) {
+                let path = [];
+                let segments = 25; 
+                let maxArcHeight = sphereRadius * (0.05 + Math.random() * 0.15); 
+
+                for (let j = 0; j <= segments; j++) {
+                    let t = j / segments;
+                    let currentLat = lerp(dots[i].lat, dots[targetIdx].lat, t);
+                    let currentLon = lerp(dots[i].lon, dots[targetIdx].lon, t);
+                    let currentRadius = sphereRadius + Math.sin(t * Math.PI) * maxArcHeight;
+                    
+                    let p3d = latLonTo3D(currentLat, currentLon, currentRadius);
+                    path.push(p3d);
+                }
+
+                arcs.push({
+                    path: path,
+                    progress: Math.random(), 
+                    speed: 0.002 + Math.random() * 0.004
+                });
+            }
+        }
+
+        /**
+         * Плавное исчезновение (Anti-Glitch)
+         * Возвращает прозрачность от 0 до 1 в зависимости от Z
+         */
+        function getDepthAlpha(p3d) {
+            // Если точка глубоко сзади (-0.2 радиуса от центра), она полностью прозрачна
+            // Если она спереди (+0.3 радиуса), она полностью непрозрачна
+            // Это создает плавный фейд (Fade) на горизонте без резких обрывов
+            let alpha = (p3d.z + sphereRadius * 0.15) / (sphereRadius * 0.4);
+            return Math.max(0, Math.min(1, alpha));
+        }
+
+        let lastTime = performance.now();
+
+        function render() {
+            let timeNow = performance.now();
+            let dt = timeNow - lastTime;
+            lastTime = timeNow;
+
+            scrollY += (targetScrollY - scrollY) * 0.08;
+            let scrollRatio = Math.max(0, Math.min(1, scrollY / maxScroll));
+            hzContainer.style.transform = `translateX(${scrollRatio * -200}vw)`;
+            bgLayer.style.setProperty('--scroll-y', scrollY);
+
+            // Плавное вращение (скролл + медленное постоянное движение)
+            targetRotationY = scrollY * 0.0025;
+            currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+            baseRotation += 0.0003; // Постоянный дрифт
+            let finalRotY = currentRotationY + baseRotation;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Свечение Солнца за планетой
+            const sunGradient = ctx.createRadialGradient(cx, cy - sphereRadius*0.1, sphereRadius*0.7, cx, cy - sphereRadius*0.1, sphereRadius * 2.2);
+            sunGradient.addColorStop(0, 'rgba(15, 40, 90, 0.9)'); 
+            sunGradient.addColorStop(0.4, 'rgba(5, 15, 40, 0.4)');
+            sunGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            
+            ctx.fillStyle = sunGradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // 2. ОСВЕЩЕННОЕ ТЕЛО ГЛОБУСА (Свет падает спереди)
+            ctx.beginPath();
+            ctx.arc(cx, cy, sphereRadius, 0, Math.PI * 2);
+            
+            // Смещаем центр градиента влево-вверх, чтобы имитировать освещение
+            const globeGradient = ctx.createRadialGradient(cx - sphereRadius*0.3, cy - sphereRadius*0.4, sphereRadius*0.1, cx, cy, sphereRadius);
+            globeGradient.addColorStop(0, '#3a5a8c'); // Яркий свет на сфере
+            globeGradient.addColorStop(0.4, '#12203b'); // Полутень
+            globeGradient.addColorStop(0.8, '#04070d'); // Собственная тень
+            globeGradient.addColorStop(1, '#000000'); // Темный край
+            
+            ctx.fillStyle = globeGradient;
+            ctx.fill();
+
+            // Мягкая атмосферная кромка
+            ctx.strokeStyle = 'rgba(100, 180, 255, 0.15)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 3. СЛОИ ДЛЯ 3D БЛЮРА
+            const depthLayers = [
+                { blur: 8, items: [] }, // Слой 0: Дальний (самый размытый)
+                { blur: 4, items: [] }, // Слой 1: Средне-дальний
+                { blur: 2, items: [] }, // Слой 2: Средне-ближний
+                { blur: 0, items: [] }  // Слой 3: Ближний (четкий)
+            ];
+
+            // Дуги и Сигналы
+            arcs.forEach(arc => {
+                arc.progress += arc.speed;
+                if (arc.progress > 1) arc.progress = 0;
+
+                for (let i = 0; i < arc.path.length - 1; i++) {
+                    let p1_3d = rotateY(rotateX(arc.path[i], tiltX), finalRotY);
+                    let p2_3d = rotateY(rotateX(arc.path[i+1], tiltX), finalRotY);
+                    
+                    let alpha1 = getDepthAlpha(p1_3d);
+                    let alpha2 = getDepthAlpha(p2_3d);
+
+                    // Пропускаем, если обе точки сегмента невидимы
+                    if (alpha1 <= 0.01 && alpha2 <= 0.01) continue;
+
+                    let proj1 = project(p1_3d);
+                    let proj2 = project(p2_3d);
+                    
+                    if (proj1 && proj2) {
+                        let avgZ = (p1_3d.z + p2_3d.z) / 2;
+                        let normalizedZ = (avgZ + sphereRadius) / (sphereRadius * 2); 
+                        
+                        let layerIdx = Math.floor(normalizedZ * 3.99); 
+                        layerIdx = Math.max(0, Math.min(3, layerIdx));
+
+                        let segmentAlpha = (alpha1 + alpha2) / 2;
+
+                        depthLayers[layerIdx].items.push({
+                            type: 'line', p1: proj1, p2: proj2, alpha: segmentAlpha * 0.3
+                        });
+                    }
+                }
+
+                let sigIdx = Math.floor(arc.progress * (arc.path.length - 1));
+                let p_sig_3d = rotateY(rotateX(arc.path[sigIdx], tiltX), finalRotY);
+                let sigAlpha = getDepthAlpha(p_sig_3d);
+                
+                if (sigAlpha > 0.01) {
+                    let proj_sig = project(p_sig_3d);
+                    if (proj_sig) {
+                        let normalizedZ = (p_sig_3d.z + sphereRadius) / (sphereRadius * 2);
+                        let layerIdx = Math.floor(normalizedZ * 3.99);
+                        layerIdx = Math.max(0, Math.min(3, layerIdx));
+                        
+                        depthLayers[layerIdx].items.push({
+                            type: 'signal', p: proj_sig, alpha: sigAlpha
+                        });
+                    }
+                }
+            });
+
+            // Точки (Узлы)
+            dots.forEach(dot => {
+                let p_base = latLonTo3D(dot.lat, dot.lon, sphereRadius);
+                let p_3d = rotateY(rotateX(p_base, tiltX), finalRotY);
+                let dotAlpha = getDepthAlpha(p_3d);
+                
+                if (dotAlpha > 0.01) {
+                    let proj = project(p_3d);
+                    if (proj) {
+                        let normalizedZ = (p_3d.z + sphereRadius) / (sphereRadius * 2);
+                        let layerIdx = Math.floor(normalizedZ * 3.99);
+                        layerIdx = Math.max(0, Math.min(3, layerIdx));
+
+                        depthLayers[layerIdx].items.push({
+                            type: 'dot', 
+                            p: proj, 
+                            pulse: (Math.sin(timeNow * dot.pulseSpeed + dot.offset) + 1) / 2,
+                            alpha: dotAlpha
+                        });
+                    }
+                }
+            });
+
+            // 4. ОТРИСОВКА СЛОЕВ
+            depthLayers.forEach(layer => {
+                if (layer.items.length === 0) return;
+
+                // Применяем блюр для всего слоя
+                ctx.filter = `blur(${layer.blur}px)`;
+
+                layer.items.forEach(item => {
+                    if (item.type === 'line') {
+                        ctx.beginPath();
+                        ctx.moveTo(item.p1.x, item.p1.y);
+                        ctx.lineTo(item.p2.x, item.p2.y);
+                        ctx.strokeStyle = `rgba(100, 180, 255, ${item.alpha})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    } 
+                    else if (item.type === 'signal') {
+                        let size = 2 * item.p.scale;
+                        ctx.beginPath();
+                        ctx.arc(item.p.x, item.p.y, size, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${item.alpha})`;
+                        ctx.fill();
+                        
+                        ctx.beginPath();
+                        ctx.arc(item.p.x, item.p.y, size * 3, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(200, 220, 255, ${item.alpha * 0.6})`;
+                        ctx.fill();
+                    }
+                    else if (item.type === 'dot') {
+                        let { p, pulse, alpha } = item;
+                        let size = 2 * p.scale;
+
+                        // Ядро точки
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(255, 255, 255, ${alpha * (0.7 + pulse*0.3)})`;
+                        ctx.fill();
+
+                        // BLUR OVERLAY ГЛОУ ВОКРУГ ТОЧКИ (Радиальный градиент)
+                        let glowRadius = size * (4 + pulse * 3);
+                        let glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowRadius);
+                        glow.addColorStop(0, `rgba(100, 180, 255, ${alpha * 0.6 * pulse})`);
+                        glow.addColorStop(1, `rgba(100, 180, 255, 0)`);
+                        
+                        ctx.fillStyle = glow;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, glowRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                });
+            });
+
+            ctx.filter = 'none';
+            requestAnimationFrame(render);
+        }
+
+        render();
+    </script>
+</body>
+</html>

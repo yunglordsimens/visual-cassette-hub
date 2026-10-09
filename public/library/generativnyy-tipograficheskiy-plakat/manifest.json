@@ -1,0 +1,21 @@
+{
+  "id": "generativnyy-tipograficheskiy-plakat",
+  "title": "Генеративный Типографический Плакат",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "Типографика",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-28",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/generativnyy-tipograficheskiy-plakat/code.html",
+  "previewUrl": "library/generativnyy-tipograficheskiy-plakat/code.html"
+}

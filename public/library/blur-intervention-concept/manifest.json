@@ -1,0 +1,19 @@
+{
+  "id": "blur-intervention-concept",
+  "title": "Blur Intervention Concept",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/blur-intervention-concept/code.html",
+  "previewUrl": "library/blur-intervention-concept/code.html"
+}

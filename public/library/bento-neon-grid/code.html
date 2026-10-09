@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Bento Grid</title>
+    <style>
+        /* Базовые настройки страницы */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Очень темный, почти черный фон, чтобы неон выделялся */
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        /* Контейнер Бенто-сетки */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px; /* Базовая высота ячейки */
+            gap: 40px; /* Большие отступы, чтобы свечение не перекрывало друг друга слишком сильно */
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* * ОБЕРТКА БЛОКА 
+         * Именно на обертку мы вешаем свечение (drop-shadow).
+         * Мы используем несколько теней подряд для создания эффекта 
+         * яркого ядра и мягкого рассеянного света.
+         */
+        .bento-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            /* Переменная --glow задается в HTML для каждого блока индивидуально */
+            filter: 
+                drop-shadow(0 0 5px var(--glow)) 
+                drop-shadow(0 0 20px var(--glow)) 
+                drop-shadow(0 0 45px var(--glow));
+            transition: filter 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Эффект при наведении (немного увеличиваем свечение) */
+        .bento-wrapper:hover {
+            filter: 
+                drop-shadow(0 0 8px var(--glow)) 
+                drop-shadow(0 0 30px var(--glow)) 
+                drop-shadow(0 0 60px var(--glow));
+            transform: scale(1.02);
+            z-index: 10;
+        }
+
+        /* * САМ БЛОК 
+         * Он абсолютно черный, как на референсе.
+         */
+        .bento-item {
+            background-color: #000000;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.3); /* Тусклый текст внутри, чтобы не отвлекать от формы */
+            /* Плавное появление контента */
+            transition: color 0.3s ease;
+        }
+
+        .bento-wrapper:hover .bento-item {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* =========================================
+           ФОРМЫ (CLIP-PATH)
+           ========================================= */
+
+        /* 1. Точная копия формы с твоей картинки (цифра 4 со срезами) */
+        .shape-reference .bento-item {
+            clip-path: polygon(
+                30% 0%, 85% 0%, 
+                85% 35%, 100% 35%, 
+                100% 85%, 85% 85%, 
+                85% 100%, 30% 100%, 
+                30% 85%, 0% 85%, 
+                0% 45%
+            );
+        }
+
+        /* 2. Блок со срезанными углами (Chamfer) */
+        .shape-chamfer .bento-item {
+            clip-path: polygon(
+                25px 0, calc(100% - 25px) 0, 
+                100% 25px, 100% calc(100% - 25px), 
+                calc(100% - 25px) 100%, 25px 100%, 
+                0 calc(100% - 25px), 0 25px
+            );
+        }
+
+        /* 3. Блок с вырезом в углу в стиле Sci-Fi */
+        .shape-tech .bento-item {
+            clip-path: polygon(
+                0 0, 100% 0, 
+                100% calc(100% - 40px), calc(100% - 40px) 100%, 
+                0 100%
+            );
+        }
+
+        /* 4. Обычный скругленный прямоугольник (как стандартный Bento) */
+        .shape-rounded .bento-item {
+            border-radius: 30px;
+        }
+
+        /* =========================================
+           РАЗМЕРЫ В СЕТКЕ (GRID SPANS)
+           ========================================= */
+        
+        /* Делаем блок с формой "4" большим */
+        .span-2x2 {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .span-2x1 {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .span-1x2 {
+            grid-column: span 1;
+            grid-row: span 2;
+        }
+
+        /* =========================================
+           АДАПТИВНОСТЬ
+           ========================================= */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            /* На планшетах сбрасываем сложные растягивания, кроме самых больших */
+            .span-2x1 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            /* На мобильных всё в одну колонку */
+            .span-2x2, .span-2x1, .span-1x2 {
+                grid-column: span 1;
+                grid-row: span 1;
+            }
+            .bento-wrapper {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bento-grid">
+        
+        <!-- БЛОК 1: Главная форма с картинки (Фиолетовый) -->
+        <div class="bento-wrapper span-2x2 shape-reference" style="--glow: #7b2cbf;">
+            <div class="bento-item">MAIN SHAPE</div>
+        </div>
+
+        <!-- БЛОК 2: Срезанные углы (Неоновый голубой) -->
+        <div class="bento-wrapper span-2x1 shape-chamfer" style="--glow: #00f0ff;">
+            <div class="bento-item">CYAN</div>
+        </div>
+
+        <!-- БЛОК 3: Стандартный Бенто скругленный (Розовый) -->
+        <div class="bento-wrapper shape-rounded" style="--glow: #ff007f;">
+            <div class="bento-item">PINK</div>
+        </div>
+
+        <!-- БЛОК 4: Техно-вырез (Лаймовый) -->
+        <div class="bento-wrapper shape-tech" style="--glow: #39ff14;">
+            <div class="bento-item">LIME</div>
+        </div>
+
+        <!-- БЛОК 5: Техно-вырез высокий (Оранжевый) -->
+        <div class="bento-wrapper span-1x2 shape-tech" style="--glow: #ff5e00;">
+            <div class="bento-item">ORANGE</div>
+        </div>
+
+        <!-- БЛОК 6: Срезанные углы (Красный) -->
+        <div class="bento-wrapper span-2x1 shape-chamfer" style="--glow: #ff003c;">
+            <div class="bento-item">RED</div>
+        </div>
+
+        <!-- БЛОК 7: Стандартный Бенто скругленный (Желтый) -->
+        <div class="bento-wrapper shape-rounded" style="--glow: #ffe600;">
+            <div class="bento-item">YELLOW</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

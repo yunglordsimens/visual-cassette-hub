@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jacob McKee - Colorist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Using a standard sans-serif that closely matches the clean Swiss style in the image */
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #fcfcfc; /* Slightly off-white background as seen in the mockup frame */
+            color: #111; /* Near black text for high contrast */
+            /* Ensure the body takes full height and hides horizontal overflow */
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem; /* Padding to simulate the browser window frame in the image */
+        }
+
+        /* Container to act as the "browser window" from the mockup */
+        .mockup-container {
+            width: 100%;
+            max-width: 1400px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e5e5;
+            border-radius: 8px; /* Slightly rounded corners for the mockup frame */
+            overflow: hidden;
+        }
+
+        /* The actual content area */
+        .portfolio-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom border utility for the strict grid lines */
+        .border-grid {
+            border-color: #000;
+        }
+        
+        /* Thin borders are a key feature of this design */
+        .border-t-thin { border-top: 1px solid #000; }
+        .border-b-thin { border-bottom: 1px solid #000; }
+        .border-l-thin { border-left: 1px solid #000; }
+        .border-r-thin { border-right: 1px solid #000; }
+
+        /* Typography tweaks for that specific brutalist look */
+        .tracking-tightest { letter-spacing: -0.05em; }
+        .leading-none-custom { line-height: 0.9; }
+        
+        /* Adjusting text sizes for the grid items to match the small fine print */
+        .text-xxs { font-size: 0.65rem; line-height: 1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="mockup-container flex flex-col h-[90vh]">
+        
+        <!-- Mockup Browser Header (Optional detail from image) -->
+        <div class="h-6 bg-[#e5e5e5] border-b border-[#d4d4d4] flex items-center px-4 space-x-1.5 shrink-0">
+            <div class="w-2.5 h-2.5 rounded-full bg-[#c9c9c9]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#c9c9c9]"></div>
+            <div class="w-2.5 h-2.5 rounded-full bg-[#c9c9c9]"></div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="portfolio-content flex-grow flex flex-col h-full bg-white relative">
+            
+            <!-- Header Section -->
+            <header class="flex justify-between items-start pt-6 pb-4 px-6 shrink-0 relative">
+                <!-- Large Title -->
+                <div class="flex flex-col">
+                    <h1 class="text-6xl md:text-8xl font-normal tracking-tightest leading-none-custom m-0">Jacob McKee</h1>
+                    <h1 class="text-6xl md:text-8xl font-normal tracking-tightest leading-none-custom m-0">Colorist</h1>
+                </div>
+                <!-- Navigation/Info Links -->
+                <nav class="text-right pt-2 md:pt-4">
+                    <p class="text-sm md:text-base font-medium">Index, Colors, Information</p>
+                </nav>
+            </header>
+
+            <!-- Main Grid Section -->
+            <main class="flex-grow border-t border-b border-black grid grid-cols-1 md:grid-cols-3 relative h-full">
+                
+                <!-- 
+                     The grid is composed of 6 main blocks (2 rows, 3 columns).
+                     We use flex column within each block to push the footer details to the bottom.
+                -->
+
+                <!-- Block 1 -->
+                <article class="flex flex-col border-b md:border-b border-black md:border-r p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">Demons</h2>
+                            <p class="text-sm leading-tight">Joji</p>
+                        </div>
+                        <span class="text-xs">00:03:06</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>Jared Hogan</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+                <!-- Block 2 -->
+                <article class="flex flex-col border-b md:border-b border-black md:border-r p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">James Little for The Colorist</h2>
+                            <p class="text-sm leading-tight">KITH & New Balance</p>
+                        </div>
+                        <span class="text-xs">00:01:00</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>ONLUNCHBREAK</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+                <!-- Block 3 -->
+                <article class="flex flex-col border-b md:border-b-0 border-black p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">Kona - Split</h2>
+                            <p class="text-sm leading-tight">Hyundai</p>
+                        </div>
+                        <span class="text-xs">00:00:30</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>Jonny Mass</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+                <!-- Block 4 -->
+                <article class="flex flex-col border-b md:border-b-0 border-black md:border-r p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start border-t border-black pt-4 -mx-4 px-4">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">Bichiyal feat. Yavia<br>Bad Bunny</h2>
+                        </div>
+                        <span class="text-xs">00:04:16</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>CLIQUA x Stillz</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+                <!-- Block 5 -->
+                <article class="flex flex-col border-b md:border-b-0 border-black md:border-r p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start border-t border-black pt-4 -mx-4 px-4">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">Slow Dancing in the Dark</h2>
+                            <h2 class="text-sm font-semibold leading-tight">[Director's Cut]</h2>
+                            <p class="text-sm leading-tight">Joji</p>
+                        </div>
+                        <span class="text-xs">00:03:43</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>Jared Hogan</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+                <!-- Block 6 -->
+                <article class="flex flex-col p-4 justify-between h-full min-h-[40vh] md:min-h-0">
+                    <div class="flex justify-between items-start border-t border-black pt-4 -mx-4 px-4">
+                        <div>
+                            <h2 class="text-sm font-semibold leading-tight">Waning Moon</h2>
+                            <p class="text-sm leading-tight">Chad Lawson</p>
+                        </div>
+                        <span class="text-xs">00:02:56</span>
+                    </div>
+                    <div class="flex justify-between items-end mt-auto pt-8">
+                        <div class="text-xxs text-gray-800">
+                            <p>Directed by</p>
+                            <p>Bernardo Marentes</p>
+                        </div>
+                        <a href="#" class="text-xs hover:underline">Details</a>
+                    </div>
+                </article>
+
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

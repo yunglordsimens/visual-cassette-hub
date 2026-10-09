@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Симуляция чернил в воде</title>
+    <style>
+        /* Сброс базовых стилей */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #ffffff; /* Чисто белый фон, как на референсе */
+        }
+
+        /* Настройка холста на весь экран */
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Элегантный типографический оверлей */
+        .ui-overlay {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            pointer-events: none; /* Чтобы клики проходили сквозь текст на холст */
+            color: #1a1a1a;
+            font-family: "Playfair Display", "Georgia", serif; /* Классический шрифт с засечками */
+        }
+
+        .ui-overlay h1 {
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+            letter-spacing: 0.05em;
+        }
+
+        .ui-overlay p {
+            font-family: "Helvetica Neue", "Arial", sans-serif;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: #666;
+            margin: 0;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 768px) {
+            .ui-overlay {
+                top: 20px;
+                left: 20px;
+            }
+            .ui-overlay h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ui-overlay">
+        <h1>Симуляция чернил</h1>
+        <p>Двигайте курсором, чтобы добавить пигмент</p>
+    </div>
+
+    <canvas id="inkCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('inkCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let mouse = { x: -1000, y: -1000, isMoving: false };
+        let time = 0;
+
+        // Палитра цветов, основанная на вашем изображении (красный, темно-красный, почти черный)
+        const colors = [
+            'rgba(220, 10, 20, 0.06)',   // Ярко-красный
+            'rgba(150, 0, 10, 0.08)',    // Темно-красный
+            'rgba(80, 0, 0, 0.07)',      // Бордовый
+            'rgba(15, 10, 10, 0.09)'     // Почти черный
+        ];
+
+        // Инициализация размеров холста
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            // Заливаем фон белым при изменении размера
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Отслеживание мыши/тапов
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.isMoving = true;
+            addParticles(mouse.x, mouse.y, 5); // Добавляем чернила за курсором
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+            addParticles(mouse.x, mouse.y, 5);
+        }, { passive: true });
+
+        // Класс частицы (капли чернил)
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.prevX = x;
+                this.prevY = y;
+                
+                // Начальное разлетание
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 1) * 3 - 1; // Общая тенденция двигаться вверх
+                
+                this.baseSize = Math.random() * 2 + 1;
+                this.size = this.baseSize;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                this.life = 0;
+                this.maxLife = Math.random() * 200 + 150; // Продолжительность жизни
+                this.dead = false;
+            }
+
+            update() {
+                this.prevX = this.x;
+                this.prevY = this.y;
+
+                // Псевдо-шум (Noise) для создания завихрений (турбулентность жидкости)
+                const noiseX = Math.sin(this.x * 0.005 + time * 0.002) * Math.cos(this.y * 0.007 - time * 0.001);
+                const noiseY = Math.sin(this.y * 0.006 - time * 0.001) * Math.cos(this.x * 0.004 + time * 0.002);
+
+                // Применяем силы турбулентности
+                this.vx += noiseX * 0.15;
+                this.vy += noiseY * 0.15;
+
+                // Легкое всплытие (гравитация наоборот)
+                this.vy -= 0.01;
+
+                // Трение (сопротивление воды)
+                this.vx *= 0.95;
+                this.vy *= 0.95;
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Диффузия (расплывание чернил со временем)
+                this.size += 0.08;
+                this.life++;
+
+                if (this.life >= this.maxLife) {
+                    this.dead = true;
+                }
+            }
+
+            draw() {
+                // Используем режим наложения multiply для эффекта смешивания чернил на бумаге/в воде
+                ctx.globalCompositeOperation = 'multiply';
+                
+                ctx.beginPath();
+                ctx.moveTo(this.prevX, this.prevY);
+                ctx.lineTo(this.x, this.y);
+                
+                // Рисуем ленту (след), которая утолщается по мере расплывания
+                ctx.lineWidth = this.size;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = this.color;
+                ctx.stroke();
+
+                // Возвращаем стандартный режим наложения
+                ctx.globalCompositeOperation = 'source-over';
+            }
+        }
+
+        function addParticles(x, y, amount) {
+            for (let i = 0; i < amount; i++) {
+                // Добавляем небольшой разброс вокруг точки
+                const offsetX = (Math.random() - 0.5) * 20;
+                const offsetY = (Math.random() - 0.5) * 20;
+                particles.push(new Particle(x + offsetX, y + offsetY));
+            }
+        }
+
+        // Автоматический источник чернил внизу по центру (как на фото)
+        function autoEmitter() {
+            // Эмиттер немного плавает влево-вправо
+            const emitterX = width / 2 + Math.sin(time * 0.01) * 100;
+            const emitterY = height - height * 0.1; // 10% от низа экрана
+            
+            // Выпускаем чернила
+            addParticles(emitterX, emitterY, 3);
+        }
+
+        // Главный цикл анимации
+        function animate() {
+            time++;
+
+            // Медленное затухание (растворение чернил в чистой воде)
+            // Использование белого цвета с низкой непрозрачностью создает эффект шлейфа
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.fillRect(0, 0, width, height);
+
+            autoEmitter();
+
+            // Обновляем и рисуем частицы
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+
+                // Удаляем "мертвые" частицы для оптимизации памяти
+                if (p.dead) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Ограничение количества частиц, чтобы не перегружать браузер
+            if (particles.length > 2000) {
+                particles.splice(0, particles.length - 2000);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Запуск
+        animate();
+    </script>
+</body>
+</html>

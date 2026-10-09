@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интервенция | Наслоения Блюра</title>
+    <style>
+        :root {
+            --color-blue: #1400FF;
+            --color-purple: #4A00E0;
+            --color-light-blue: #00D4FF;
+            --color-magenta: #8E2DE2;
+            --bg-color: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #050505;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Запрещаем скролл для эффекта полноэкранного холста */
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- КОНТЕЙНЕР БЛЮРА --- */
+        .blur-environment {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+            /* Общий сильный блюр для слияния слоев */
+            filter: blur(80px) saturate(120%);
+            transform: translate3d(0, 0, 0); /* Аппаратное ускорение */
+        }
+
+        /* Формы, создающие наслоение */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            mix-blend-mode: multiply;
+            transition: transform 1.5s cubic-bezier(0.1, 0, 0.1, 1);
+            will-change: transform;
+        }
+
+        .blob-1 {
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--color-blue) 0%, rgba(20,0,255,0) 70%);
+            top: 10%;
+            left: 20%;
+            animation: float 12s infinite alternate ease-in-out;
+        }
+
+        .blob-2 {
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--color-purple) 0%, rgba(74,0,224,0) 70%);
+            top: 30%;
+            left: 40%;
+            animation: float 15s infinite alternate-reverse ease-in-out;
+        }
+
+        .blob-3 {
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, var(--color-light-blue) 0%, rgba(0,212,255,0) 70%);
+            top: 40%;
+            left: 10%;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .blob-4 {
+            width: 40vw;
+            height: 40vw;
+            background: radial-gradient(circle, var(--color-magenta) 0%, rgba(142,45,226,0) 70%);
+            top: 15%;
+            left: 50%;
+            animation: float 18s infinite alternate-reverse ease-in-out;
+        }
+
+        /* Анимация органичного дыхания пятен */
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(5%, 8%) scale(1.05); }
+            66% { transform: translate(-5%, 4%) scale(0.95); }
+            100% { transform: translate(2%, -5%) scale(1.02); }
+        }
+
+        /* --- ШУМ --- */
+        /* Придает градиентам благородную текстуру, скрывает бандинг */
+        .noise-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            opacity: 0.08;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* --- ИНТЕРВЕНЦИЯ (ТИПОГРАФИКА) --- */
+        .intervention-layer {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto 1fr auto;
+            padding: 2rem;
+            pointer-events: none; /* Чтобы мышь проходила сквозь текст к блюру */
+        }
+
+        .header-meta {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 500;
+        }
+
+        .main-title {
+            grid-column: 1 / -1;
+            align-self: center;
+            font-size: clamp(3rem, 12vw, 15rem);
+            font-weight: 800;
+            line-height: 0.85;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            mix-blend-mode: overlay; /* Позволяет цвету просвечивать сквозь черный текст */
+            color: rgba(0, 0, 0, 0.9);
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .footer-meta {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .footer-meta .column {
+            max-width: 300px;
+        }
+
+        .accent-text {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        /* Адаптив под мобильные устройства */
+        @media (max-width: 768px) {
+            .intervention-layer {
+                padding: 1.5rem;
+            }
+            .header-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .footer-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2rem;
+            }
+            .main-title {
+                margin-top: -10vh;
+            }
+            .blob {
+                width: 120vw;
+                height: 120vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Размытые слои (Фон) -->
+    <div class="blur-environment" id="blurEnv">
+        <div class="blob blob-1" id="b1"></div>
+        <div class="blob blob-2" id="b2"></div>
+        <div class="blob blob-3" id="b3"></div>
+        <div class="blob blob-4" id="b4"></div>
+    </div>
+
+    <!-- Текстура шума -->
+    <div class="noise-overlay"></div>
+
+    <!-- Типографическая интервенция -->
+    <main class="intervention-layer">
+        <header class="header-meta">
+            <div>Визуальные коммуникации</div>
+            <div>[ Umprum • 2026 ]</div>
+        </header>
+
+        <h1 class="main-title">Интер<br>венция</h1>
+
+        <footer class="footer-meta">
+            <div class="column">
+                <span>Исследование формы</span>
+                <span class="accent-text">Контраст между строгой модульной сеткой и аморфным пространством цвета.</span>
+            </div>
+            <div class="column" style="text-align: right;">
+                <span>Взаимодействие</span>
+                <span class="accent-text">Двигайте курсором для смещения слоев.</span>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Интерактивное взаимодействие формы и мыши
+        const blurEnv = document.getElementById('blurEnv');
+        const b1 = document.getElementById('b1');
+        const b2 = document.getElementById('b2');
+        const b3 = document.getElementById('b3');
+        const b4 = document.getElementById('b4');
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        // Отслеживаем координаты мыши / касания
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            requestAnimationFrame(updateBlobs);
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            mouseX = e.touches[0].clientX;
+            mouseY = e.touches[0].clientY;
+            requestAnimationFrame(updateBlobs);
+        });
+
+        // Плавное смещение пятен относительно курсора (параллакс эффект)
+        function updateBlobs() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            // Вычисляем смещение от центра (-1 до 1)
+            const moveX = (mouseX - centerX) / centerX;
+            const moveY = (mouseY - centerY) / centerY;
+
+            // Применяем разные коэффициенты для создания глубины
+            b1.style.transform = `translate(${moveX * -5}%, ${moveY * -5}%)`;
+            b2.style.transform = `translate(${moveX * 8}%, ${moveY * 8}%)`;
+            b3.style.transform = `translate(${moveX * -12}%, ${moveY * -12}%)`;
+            b4.style.transform = `translate(${moveX * 4}%, ${moveY * 4}%)`;
+        }
+    </script>
+</body>
+</html>

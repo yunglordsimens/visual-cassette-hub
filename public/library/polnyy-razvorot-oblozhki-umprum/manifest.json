@@ -1,0 +1,20 @@
+{
+  "id": "polnyy-razvorot-oblozhki-umprum",
+  "title": "Полный разворот обложки UMPRUM",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-02-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/polnyy-razvorot-oblozhki-umprum/code.html",
+  "previewUrl": "library/polnyy-razvorot-oblozhki-umprum/code.html"
+}

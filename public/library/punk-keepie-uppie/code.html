@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Punk Football Game</title>
+    <style>
+        /* SCROLLABLE PAGE SETUP */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            /* Убрали шум, сделали фон черным под видео */
+            background-color: #000; 
+            font-family: 'Arial Black', Impact, sans-serif;
+            color: #111;
+        }
+
+        /* VIDEO BACKGROUND */
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.5; /* Немного затемняем видео, чтобы мяч и счет были контрастнее */
+            pointer-events: none;
+        }
+
+        /* Fake site content to demonstrate scrolling */
+        .site-background {
+            width: 100%;
+            /* Making the page super long to test scrolling */
+            min-height: 200vh; 
+        }
+
+        /* GAME LAYER: Fixed, transparent, non-blocking */
+        #game-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            pointer-events: none; /* Let all clicks pass through by default! */
+        }
+
+        #gameCanvas {
+            width: 100%;
+            height: 100%;
+            /* NO pointer-events here. We handle it in JS globally. */
+        }
+
+        /* BOTTOM BADGE UI (B&W) */
+        #bottom-ui {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-1deg);
+            background: #111;
+            color: #f2f2f2;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            border: 2px solid #111;
+            box-shadow: 4px 4px 0 #999;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+        }
+
+        #score-display {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .divider {
+            width: 2px;
+            height: 1.5rem;
+            background: #666;
+        }
+
+        #message {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: #fff;
+            color: #111;
+            display: inline-block;
+            padding: 5px 15px;
+            border: 3px solid #111;
+            box-shadow: 4px 4px 0 #111;
+            transform: translateX(-50%) rotate(2deg);
+            opacity: 0;
+            transition: opacity 0.1s;
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фоновое видео (замени src на ссылку со своим футболом) -->
+    <video id="bg-video" autoplay loop muted playsinline>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" type="video/mp4">
+    </video>
+
+    <!-- Scrollable Site Content (Empty for now) -->
+    <div class="site-background"></div>
+
+    <!-- Transparent Game Overlay -->
+    <div id="game-container">
+        <div id="bottom-ui">
+            <span id="score-display">0</span>
+            <span class="divider"></span>
+            <span>DON'T LET IT FALL</span>
+        </div>
+        <div id="message">WASTED!</div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const scoreDisplay = document.getElementById('score-display');
+    const msgDisplay = document.getElementById('message');
+
+    let width, height;
+    let score = 0;
+    let isGameOver = false;
+
+    // Physics
+    const gravity = 0.5;
+    const friction = 0.98;
+    const wallBounciness = 0.8;
+    const floorBounciness = 0.5;
+
+    let ball = {
+        x: 0,
+        y: 0,
+        vx: 0,
+        vy: 0,
+        radius: 45,
+        rotation: 0,
+        angularVelocity: 0
+    };
+
+    let particles = [];
+    let dirtParticles = []; // For continuous grunge drops
+
+    function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        
+        ball.radius = Math.min(width, height) * 0.08;
+        if (ball.radius < 35) ball.radius = 35;
+        if (ball.radius > 70) ball.radius = 70;
+    }
+
+    function initBall() {
+        ball.x = width / 2;
+        ball.y = height * 0.3;
+        ball.vx = (Math.random() - 0.5) * 6;
+        ball.vy = -5;
+        ball.angularVelocity = (Math.random() - 0.5) * 0.3;
+    }
+
+    function spawnParticles(x, y) {
+        // Explode with more & bigger grungy shards
+        for (let i = 0; i < 16; i++) {
+            particles.push({
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 25,
+                vy: (Math.random() - 0.5) * 25,
+                life: 1,
+                size: Math.random() * 10 + 3,
+                color: Math.random() > 0.5 ? '#999' : '#111' // B&W particles
+            });
+        }
+    }
+
+    // Jagged, aggressive circle drawing
+    function punkCircle(x, y, r, jitter = 8) {
+        ctx.beginPath();
+        for (let i = 0; i <= Math.PI * 2; i += 0.4) {
+            let jx = x + Math.cos(i) * r + (Math.random() - 0.5) * jitter;
+            let jy = y + Math.sin(i) * r + (Math.random() - 0.5) * jitter;
+            if (i === 0) ctx.moveTo(jx, jy);
+            else ctx.lineTo(jx, jy);
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+    function update() {
+        ball.vy += gravity;
+        ball.vx *= friction;
+        ball.vy *= friction;
+
+        ball.x += ball.vx;
+        ball.y += ball.vy;
+        ball.rotation += ball.angularVelocity;
+
+        // Wall bounces
+        if (ball.x - ball.radius < 0) {
+            ball.x = ball.radius;
+            ball.vx *= -wallBounciness;
+            ball.angularVelocity += ball.vy * 0.02;
+        } else if (ball.x + ball.radius > width) {
+            ball.x = width - ball.radius;
+            ball.vx *= -wallBounciness;
+            ball.angularVelocity -= ball.vy * 0.02;
+        }
+
+        // Ceiling bounce
+        if (ball.y - ball.radius < 0) {
+            ball.y = ball.radius;
+            ball.vy *= -wallBounciness;
+        }
+
+        // Floor impact
+        if (ball.y + ball.radius > height) {
+            ball.y = height - ball.radius;
+            ball.vy *= -floorBounciness;
+            ball.vx *= 0.8; 
+            ball.angularVelocity *= 0.8;
+
+            if (!isGameOver && score > 0) {
+                isGameOver = true;
+                msgDisplay.style.opacity = 1;
+                
+                // Shake screen effect
+                document.body.style.transform = `translate(${(Math.random()-0.5)*20}px, ${(Math.random()-0.5)*20}px)`;
+                setTimeout(() => document.body.style.transform = 'none', 50);
+
+                setTimeout(() => {
+                    msgDisplay.style.opacity = 0;
+                    score = 0;
+                    scoreDisplay.innerText = score;
+                    isGameOver = false;
+                }, 1500);
+            }
+        }
+
+        for (let i = particles.length - 1; i >= 0; i--) {
+            let p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.04;
+            if (p.life <= 0) particles.splice(i, 1);
+        }
+
+        // Spawn grunge dirt randomly
+        if (Math.random() < 0.4) {
+            dirtParticles.push({
+                x: ball.x + (Math.random() - 0.5) * ball.radius,
+                y: ball.y + (Math.random() - 0.5) * ball.radius,
+                vy: Math.random() * 3 + 1,
+                life: 1,
+                size: Math.random() * 4 + 1
+            });
+        }
+        
+        // Update dirt
+        for (let i = dirtParticles.length - 1; i >= 0; i--) {
+            let p = dirtParticles[i];
+            p.y += p.vy;
+            p.life -= 0.02;
+            if (p.life <= 0) dirtParticles.splice(i, 1);
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.lineCap = 'square';
+        ctx.lineJoin = 'miter';
+
+        // Draw Ball
+        ctx.save();
+        ctx.translate(ball.x, ball.y);
+        ctx.rotate(ball.rotation);
+        
+        // Offset glitch layer (Light Gray)
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 3;
+        punkCircle(4, 4, ball.radius, 4); // Значительно уменьшили дребезг (было 14)
+
+        // Main black layer
+        ctx.strokeStyle = '#111';
+        ctx.lineWidth = 6; 
+        punkCircle(0, 0, ball.radius, 3); // Значительно уменьшили дребезг (было 12)
+
+        // Euro symbol inside (Rough sketch style)
+        ctx.beginPath();
+        // The 'C' curve
+        for (let i = Math.PI * 0.25; i <= Math.PI * 1.75; i += 0.4) {
+            let jx = Math.cos(i) * (ball.radius * 0.5) + (Math.random() - 0.5) * 3; // Было 8
+            let jy = Math.sin(i) * (ball.radius * 0.5) + (Math.random() - 0.5) * 3; // Было 8
+            if (i === Math.PI * 0.25) ctx.moveTo(jx + ball.radius * 0.1, jy);
+            else ctx.lineTo(jx + ball.radius * 0.1, jy);
+        }
+        ctx.stroke();
+
+        // The two horizontal bars
+        ctx.beginPath();
+        ctx.moveTo(-ball.radius * 0.6, -ball.radius * 0.1 + (Math.random()-0.5)*2); // Было 5
+        ctx.lineTo(ball.radius * 0.2, -ball.radius * 0.1 + (Math.random()-0.5)*2);
+        ctx.moveTo(-ball.radius * 0.6, ball.radius * 0.15 + (Math.random()-0.5)*2);
+        ctx.lineTo(ball.radius * 0.1, ball.radius * 0.15 + (Math.random()-0.5)*2);
+        ctx.stroke();
+        
+        ctx.restore();
+
+        // Draw Grunge Dirt
+        ctx.fillStyle = '#111';
+        dirtParticles.forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+        ctx.globalAlpha = 1;
+
+        // Draw Particles (Sharp Xs)
+        ctx.lineWidth = 3;
+        particles.forEach(p => {
+            ctx.strokeStyle = p.color;
+            ctx.globalAlpha = p.life;
+            ctx.beginPath();
+            ctx.moveTo(p.x - p.size, p.y - p.size);
+            ctx.lineTo(p.x + p.size, p.y + p.size);
+            ctx.moveTo(p.x + p.size, p.y - p.size);
+            ctx.lineTo(p.x - p.size, p.y + p.size);
+            ctx.stroke();
+        });
+        ctx.globalAlpha = 1; // reset
+    }
+
+    function loop() {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    }
+
+    // Process Kick
+    function attemptKick(clientX, clientY, eventToCancel = null) {
+        const dx = clientX - ball.x;
+        const dy = clientY - ball.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // If click is on the ball
+        if (dist < ball.radius * 2.5) {
+            
+            // WE HIT THE BALL! Prevent scrolling/default click behavior
+            if (eventToCancel && eventToCancel.cancelable) {
+                eventToCancel.preventDefault();
+            }
+
+            if (isGameOver) {
+                isGameOver = false;
+                score = 0;
+                msgDisplay.style.opacity = 0;
+            }
+
+            score++;
+            scoreDisplay.innerText = score;
+            
+            const normalizedDx = dx / ball.radius; 
+            
+            ball.vy = -14 - Math.random() * 4; 
+            ball.vx = -normalizedDx * 10 + (Math.random() - 0.5) * 4;
+            ball.angularVelocity = normalizedDx * 0.8; 
+
+            spawnParticles(clientX, clientY);
+            
+            // Shake the bottom badge instead of huge typography
+            const uiLayer = document.getElementById('bottom-ui');
+            uiLayer.style.transform = `translateX(-50%) rotate(${(Math.random()-0.5)*6}deg) scale(1.1)`;
+            setTimeout(() => {
+                uiLayer.style.transform = `translateX(-50%) rotate(-1deg) scale(1)`;
+            }, 80);
+
+            return true; // Indicates we kicked it
+        }
+        return false; // Did not hit the ball
+    }
+
+    /* GLOBAL EVENT LISTENERS
+       Because canvas is pointer-events:none, we listen on the window.
+       If the user taps/clicks the ball, we kick it and prevent scrolling.
+       If they tap elsewhere, the event passes through and scrolls the page natively.
+    */
+    window.addEventListener('mousedown', (e) => {
+        attemptKick(e.clientX, e.clientY, e);
+    });
+
+    window.addEventListener('touchstart', (e) => {
+        let kickedAny = false;
+        // Check all touches
+        for (let i = 0; i < e.changedTouches.length; i++) {
+            if (attemptKick(e.changedTouches[i].clientX, e.changedTouches[i].clientY, e)) {
+                kickedAny = true;
+            }
+        }
+    }, {passive: false});
+
+    window.addEventListener('resize', resize);
+
+    // Start
+    resize();
+    initBall();
+    loop();
+
+</script>
+</body>
+</html>

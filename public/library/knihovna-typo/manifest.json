@@ -1,0 +1,20 @@
+{
+  "id": "knihovna-typo",
+  "title": "Knihovna Typo",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/knihovna-typo/code.tsx",
+  "previewUrl": "library/knihovna-typo/preview.html"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "angeltear-landing",
+  "title": "Angeltear Landing",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-08-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/angeltear-landing/code.tsx",
+  "previewUrl": "library/angeltear-landing/preview.html"
+}

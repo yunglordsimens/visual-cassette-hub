@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MASO.CORP // PART 2 (09-16)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <style>
+        /* (Styles same as Part 1 for consistency) */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        :root { --bg: #0a0a0a; --ink: #ffffff; --accent: #ff2a00; }
+        body { background-color: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .page-wrapper { padding: 4rem 0; border-bottom: 1px solid #333; display: flex; justify-content: center; position: relative; }
+        .page-wrapper::before { content: attr(data-page); position: absolute; left: 2rem; top: 50%; font-size: 10rem; font-weight: 900; color: #1a1a1a; z-index: -1; transform: translateY(-50%); }
+        .page-container { width: 100%; max-width: 600px; aspect-ratio: 1 / 1.414; position: relative; background-color: #111; border: 1px solid #333; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); transition: transform 0.3s; }
+        .page-container:hover { transform: scale(1.02); z-index: 10; border-color: var(--accent); }
+        .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 50; }
+        .uploaded-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: 1; opacity: 0.5; transition: opacity 0.5s; }
+        .page-container.has-image .uploaded-image { opacity: 1; }
+        .page-container.has-image .upload-label { display: none; }
+        .upload-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 1px dashed #444; padding: 2rem; pointer-events: none; z-index: 2; text-align: center; color: #666; }
+        .print-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; padding: 1.5rem; display: flex; flex-direction: column; justify-content: space-between; mix-blend-mode: difference; color: white; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.15; }
+        
+        /* Bar Chart Animation */
+        @keyframes grow { from { height: 0; } }
+        .chart-bar { animation: grow 1s ease-out forwards; }
+    </style>
+</head>
+<body>
+
+    <div id="p5-canvas"></div>
+
+    <header class="py-24 text-center border-b border-[#333]">
+        <h1 class="text-[8vw] font-black leading-[0.8] uppercase">MASO<br><span style="color: var(--accent)">PART II</span></h1>
+        <div class="flex justify-center gap-12 mt-8 mono text-xs text-gray-500">
+            <span>PAGES 09-16</span>
+            <span>TECHNICAL</span>
+            <span class="text-accent">● LIVE</span>
+        </div>
+    </header>
+
+    <!-- PAGE 09: TOOLS -->
+    <div class="page-wrapper" data-page="09">
+        <div class="page-container bg-gray-200">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image mix-blend-multiply"></div>
+            <div class="upload-label mono text-xs">DROP TOOLS</div>
+            
+            <div class="print-layer !text-black !mix-blend-normal">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <h2 class="text-[10rem] font-black uppercase text-white mix-blend-difference opacity-80 rotate-90">Tools</h2>
+                </div>
+                <div class="mt-auto w-full border-t-4 border-black pt-4">
+                    <p class="mono text-xs font-bold uppercase">Stainless Steel<br>Professional Grade</p>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">09</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 10: ROI (Charts) -->
+    <div class="page-wrapper" data-page="10">
+        <div class="page-container" style="background-color: #f4f4f5;">
+            <div class="print-layer !text-black !mix-blend-normal p-8">
+                <h2 class="text-6xl font-black uppercase mb-12">Profit<br>Ability</h2>
+                
+                <div class="flex items-end gap-4 h-[300px] border-b-2 border-black pb-1">
+                    <div class="w-full bg-gray-300 chart-bar h-[40%] relative group"><span class="absolute -top-6 left-0 mono text-xs opacity-0 group-hover:opacity-100">Q1</span></div>
+                    <div class="w-full bg-gray-400 chart-bar h-[55%] relative group"><span class="absolute -top-6 left-0 mono text-xs opacity-0 group-hover:opacity-100">Q2</span></div>
+                    <div class="w-full bg-black chart-bar h-[70%] relative group"><span class="absolute -top-6 left-0 mono text-xs opacity-0 group-hover:opacity-100">Q3</span></div>
+                    <div class="w-full bg-[var(--accent)] chart-bar h-[95%] relative group shadow-[0_0_20px_rgba(255,42,0,0.5)]"><span class="absolute -top-6 left-0 mono text-xs font-bold text-[var(--accent)]">Q4</span></div>
+                </div>
+                
+                <div class="mt-8 mono text-xs font-bold">
+                    > MARGIN GROWTH: +32%<br>
+                    > WASTE REDUCTION: -15%
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">10</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 11: PATTERN -->
+    <div class="page-wrapper" data-page="11">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP PATTERN</div>
+            
+            <div class="print-layer">
+                <!-- Generating a fake grid pattern overlay -->
+                <div class="absolute inset-0 grid grid-cols-4 grid-rows-6 gap-2 p-4 opacity-50">
+                    <!-- Just repeated elements -->
+                    <div class="border border-white rounded-full"></div><div class="border border-white rounded-full"></div><div class="border border-white rounded-full"></div><div class="border border-white rounded-full"></div>
+                    <div class="border border-white rounded-full"></div><div class="bg-[var(--accent)] rounded-full"></div><div class="border border-white rounded-full"></div><div class="border border-white rounded-full"></div>
+                    <!-- ... visual filler ... -->
+                </div>
+                <h2 class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-4xl font-black bg-black px-4 text-[var(--accent)]">CERTIFIED</h2>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">11</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 12: DRY AGED (Texture) -->
+    <div class="page-wrapper" data-page="12">
+        <div class="page-container">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image"></div>
+            <div class="upload-label mono text-xs">DROP MOLD TEXTURE</div>
+            
+            <div class="print-layer">
+                <div class="absolute top-10 left-0 w-full h-[2px] bg-white"></div>
+                <div class="absolute top-8 left-[20%] w-2 h-6 bg-white"></div>
+                <div class="absolute top-8 left-[50%] w-2 h-6 bg-white"></div>
+                <div class="absolute top-8 left-[80%] w-2 h-6 bg-[var(--accent)]"></div>
+                
+                <h2 class="text-8xl font-black text-transparent mt-20" style="-webkit-text-stroke: 2px white;">60<br>DAYS</h2>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">12</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 13: WAGYU (Inverted) -->
+    <div class="page-wrapper" data-page="13">
+        <div class="page-container bg-black">
+            <input type="file" class="file-input" accept="image/*" onchange="previewImage(this)">
+            <div class="uploaded-image opacity-80 mix-blend-screen"></div>
+            <div class="upload-label mono text-xs text-gray-600">DROP MARBLING (DARK)</div>
+            
+            <div class="print-layer flex-col items-center justify-center">
+                <div class="text-[12rem] font-black text-black leading-none absolute opacity-50" style="-webkit-text-stroke: 3px white;">A5</div>
+                <h2 class="text-7xl font-black text-white relative z-20 mix-blend-overlay">WAGYU</h2>
+                <div class="w-full h-1 bg-[var(--accent)] mt-8"></div>
+                <div class="mono text-[0.6rem] text-[var(--accent)] mt-2 tracking-[0.5em]">JAPANESE IMPORT</div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl text-white">13</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 14: CLIENTS -->
+    <div class="page-wrapper" data-page="14">
+        <div class="page-container bg-[var(--accent)]">
+            <div class="print-layer !text-black !mix-blend-normal p-8">
+                <h2 class="text-5xl font-black mb-8 border-b-4 border-black pb-2">PARTNERS</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="aspect-square bg-black hover:invert transition-all"></div>
+                    <div class="aspect-square bg-white border-2 border-black hover:invert transition-all"></div>
+                    <div class="aspect-square bg-white border-2 border-black hover:invert transition-all"></div>
+                    <div class="aspect-square bg-black hover:invert transition-all"></div>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">14</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 15: FORM -->
+    <div class="page-wrapper" data-page="15">
+        <div class="page-container bg-white">
+            <div class="print-layer !text-black !mix-blend-normal p-6">
+                <div class="border-2 border-black h-full w-full p-4 relative">
+                    <div class="mono text-xs text-right mb-12">ORDER #492-B</div>
+                    
+                    <div class="space-y-10">
+                        <div class="border-b-2 border-dashed border-black h-8 flex items-end pb-1 mono text-xs font-bold">CLIENT NAME:</div>
+                        <div class="border-b-2 border-dashed border-black h-8 flex items-end pb-1 mono text-xs font-bold">VAT ID:</div>
+                        <div class="border-b-2 border-dashed border-black h-8 flex items-end pb-1 mono text-xs font-bold">DATE:</div>
+                        <div class="border-b-2 border-dashed border-black h-8 flex items-end pb-1 mono text-xs font-bold">SIGNATURE:</div>
+                    </div>
+
+                    <div class="absolute bottom-8 right-8 border-4 border-[var(--accent)] text-[var(--accent)] px-4 py-2 font-black text-2xl -rotate-12 opacity-80 mix-blend-multiply">
+                        APPROVED
+                    </div>
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">15</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 16: BACK -->
+    <div class="page-wrapper" data-page="16">
+        <div class="page-container bg-[#f4f4f5]">
+            <div class="print-layer !text-black !mix-blend-normal flex-col justify-center items-center text-center">
+                <div class="w-48 h-48 bg-black mb-8 p-2 group cursor-pointer hover:bg-[var(--accent)] transition-colors">
+                    <div class="w-full h-full bg-white flex items-center justify-center mono text-sm font-bold">
+                        SCAN QR<br>FOR PORTAL
+                    </div>
+                </div>
+                <div class="font-black text-5xl uppercase">Maso.Corp</div>
+                <p class="mono text-xs mt-4 text-gray-500">
+                    Dělnická 42, Prague 7<br>
+                    order@maso.corp
+                </p>
+                <div class="absolute bottom-4 w-full text-center mono text-[0.6rem] border-t border-black pt-2 mx-8">
+                    PRINTED IN EU // 2026
+                </div>
+                <span class="absolute bottom-4 right-4 font-black text-4xl">16</span>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-24 text-center border-t border-[#333]">
+        <h2 class="text-4xl font-bold uppercase text-white hover:text-[var(--accent)] cursor-pointer transition-colors">
+            <a href="Maso_Corp_Part1.html">← Back to Part I</a>
+        </h2>
+    </footer>
+
+    <script>
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = input.parentElement;
+                    const imgDiv = container.querySelector('.uploaded-image');
+                    imgDiv.style.backgroundImage = `url(${e.target.result})`;
+                    container.classList.add('has-image');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function setup() {
+            let canvas = createCanvas(windowWidth, windowHeight);
+            canvas.parent('p5-canvas');
+            frameRate(24);
+        }
+
+        function draw() {
+            clear();
+            fill(255, 10); noStroke();
+            for (let i = 0; i < 30; i++) {
+                let x = random(width); let y = random(height); let s = random(1, 2);
+                ellipse(x, y, s);
+            }
+        }
+        function windowResized() { resizeCanvas(windowWidth, windowHeight); }
+    </script>
+</body>
+</html>

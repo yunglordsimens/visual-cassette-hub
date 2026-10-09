@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scroll Interaction Concept</title>
+    <style>
+        /* Сброс стилей и базовые настройки */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            /* Выбираем нейтральный гротеск, подходящий для современного дизайна */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            /* Создаем высоту для скролла */
+            height: 400vh; 
+        }
+
+        /* Контейнер, который прилипает к экрану */
+        .sticky-container {
+            position: sticky;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* Общие стили для слоев с картинкой */
+        .image-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('image_744fad.jpg');
+            background-size: contain; /* Сохраняем пропорции картинки */
+            background-position: center;
+            background-repeat: no-repeat;
+            will-change: transform, filter; /* Оптимизация для анимации */
+            transform-origin: center center;
+        }
+
+        /* Задний фоновый слой для атмосферы (сильно размыт) */
+        .layer-bg {
+            filter: blur(40px) brightness(0.5);
+            transform: scale(1.1);
+            z-index: 1;
+        }
+
+        /* Верхняя половина картинки */
+        .layer-top {
+            /* Обрезаем нижнюю половину ровно по центру (где соприкасаются сферы) */
+            clip-path: inset(0 0 50% 0);
+            z-index: 3;
+        }
+
+        /* Нижняя половина картинки */
+        .layer-bottom {
+            /* Обрезаем верхнюю половину */
+            clip-path: inset(50% 0 0 0);
+            z-index: 3;
+        }
+
+        /* Текст, который появляется между слоями */
+        .typography-content {
+            position: absolute;
+            z-index: 2;
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            will-change: transform, opacity, filter;
+            filter: blur(10px);
+        }
+
+        .typography-content h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 300;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .typography-content p {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            color: #888;
+        }
+
+        /* Индикатор скролла внизу экрана */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-container">
+        <!-- Атмосферный фон -->
+        <div class="image-layer layer-bg" id="layerBg"></div>
+
+        <!-- Центральная типографика -->
+        <div class="typography-content" id="textContent">
+            <h1>Глубина<br>Формы</h1>
+            <p>Визуальные коммуникации</p>
+        </div>
+
+        <!-- Разрезанные слои картинки -->
+        <div class="image-layer layer-top" id="layerTop"></div>
+        <div class="image-layer layer-bottom" id="layerBottom"></div>
+
+        <div class="scroll-indicator">Скролльте вниз</div>
+    </div>
+
+    <script>
+        // Получаем элементы DOM
+        const layerTop = document.getElementById('layerTop');
+        const layerBottom = document.getElementById('layerBottom');
+        const layerBg = document.getElementById('layerBg');
+        const textContent = document.getElementById('textContent');
+
+        // Переменные для хранения текущего и целевого прогресса (для плавности)
+        let currentProgress = 0;
+        let targetProgress = 0;
+
+        // Функция обновления анимации
+        function updateAnimation() {
+            // Плавная интерполяция (lerp) для эффекта "инерции" скролла
+            currentProgress += (targetProgress - currentProgress) * 0.08;
+
+            // Вычисляем значения на основе прогресса (от 0 до 1)
+            
+            // Верхний слой уходит вверх и размывается
+            const topY = currentProgress * -25; // Смещение в % (vh)
+            const topBlur = currentProgress * 30; // Размытие в px
+            layerTop.style.transform = `translateY(${topY}vh) scale(${1 + currentProgress * 0.1})`;
+            layerTop.style.filter = `blur(${topBlur}px)`;
+
+            // Нижний слой уходит вниз и размывается
+            const bottomY = currentProgress * 25; // Смещение в % (vh)
+            const bottomBlur = currentProgress * 30; // Размытие в px
+            layerBottom.style.transform = `translateY(${bottomY}vh) scale(${1 + currentProgress * 0.1})`;
+            layerBottom.style.filter = `blur(${bottomBlur}px)`;
+
+            // Текст появляется и становится резким
+            const textOpacity = Math.min(1, currentProgress * 2); // Появляется быстрее
+            const textScale = 0.8 + (currentProgress * 0.2); // Увеличивается до 1
+            const textBlur = 10 - (currentProgress * 10); // Размытие падает до 0
+            
+            textContent.style.opacity = textOpacity;
+            textContent.style.transform = `scale(${textScale})`;
+            // Убеждаемся, что blur не уходит в минус
+            textContent.style.filter = `blur(${Math.max(0, textBlur)}px)`;
+
+            // Фон немного меняет масштаб
+            layerBg.style.transform = `scale(${1.1 + currentProgress * 0.2})`;
+
+            // Запрашиваем следующий кадр анимации
+            requestAnimationFrame(updateAnimation);
+        }
+
+        // Слушатель события скролла
+        window.addEventListener('scroll', () => {
+            // Вычисляем, насколько проскроллена страница (от 0 до 1)
+            const scrollY = window.scrollY;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            targetProgress = Math.min(1, Math.max(0, scrollY / maxScroll));
+        });
+
+        // Запускаем цикл анимации
+        updateAnimation();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "id": "kineticheskaya-tipografika",
+  "title": "Кинетическая Типографика",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "Типографика",
+    "Анимация",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-06-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kineticheskaya-tipografika/code.html",
+  "previewUrl": "library/kineticheskaya-tipografika/code.html"
+}

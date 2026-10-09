@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMPRUM TYPE — ARCHIVE & EDITIONS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --bg: #f0f0f0;
+  --fg: #000000;
+  --accent: #000000; 
+  --accent-text: #f0f0f0;
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --border-size: 2px;
+  --header-h: 60px;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --accent: #ffffff;
+  --accent-text: #000000;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { 
+  height: 100vh; 
+  overflow: hidden; /* No main scroll, independent halves */
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+}
+::selection { background: var(--fg); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; text-transform: uppercase;}
+
+/* HEADER */
+header {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--header-h); display: flex;
+  background: var(--bg); border-bottom: var(--border-size) solid var(--fg);
+  z-index: 2000; font-family: var(--font-mono);
+  font-size: clamp(14px, 2vw, 24px); font-weight: 700; letter-spacing: -0.05em;
+}
+.h-col { display: flex; align-items: center; padding: 0 2vw; border-right: var(--border-size) solid var(--fg); white-space: nowrap; }
+.h-col:last-child { border-right: none; }
+.h-logo { flex-shrink: 0; cursor: pointer; background: var(--fg); color: var(--bg); }
+.h-nav { flex: 1; display: flex; justify-content: space-between; overflow: hidden; }
+
+/* SPLIT SCREEN LAYOUT */
+.split-container {
+  display: flex;
+  height: calc(100vh - var(--header-h));
+  margin-top: var(--header-h);
+  width: 100%;
+}
+
+.half {
+  flex: 1;
+  overflow-y: scroll;
+  /* Hide scrollbar for brutalist clean look */
+  -ms-overflow-style: none; scrollbar-width: none;
+  position: relative;
+}
+.half::-webkit-scrollbar { display: none; }
+
+.left-half { border-right: var(--border-size) solid var(--fg); }
+
+/* STICKY COLUMN HEADERS */
+.col-header {
+  position: sticky;
+  top: 0;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 1vw 2vw;
+  font-size: clamp(24px, 4vw, 60px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  z-index: 100;
+  border-bottom: var(--border-size) solid var(--fg);
+  line-height: 1;
+}
+
+/* LIST ITEMS */
+.post-item {
+  border-bottom: var(--border-size) solid var(--fg);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  transition: background 0.1s, color 0.1s;
+}
+
+.post-item:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.post-img-wrap {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-bottom: var(--border-size) solid var(--fg);
+  overflow: hidden;
+}
+
+.post-img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: grayscale(100%) contrast(150%);
+  transition: transform 0.4s ease;
+}
+[data-theme="dark"] .post-img { filter: grayscale(100%) contrast(150%) invert(1); }
+.post-item:hover .post-img { transform: scale(1.05); }
+
+.post-content {
+  padding: 2vw;
+}
+
+.post-meta {
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 1.5vw, 24px);
+  font-weight: 700;
+  display: flex; justify-content: space-between;
+  margin-bottom: 2vw;
+}
+
+.post-title {
+  font-size: clamp(32px, 6vw, 100px);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.buy-btn {
+  display: inline-block;
+  margin-top: 2vw;
+  padding: 1.5vw 3vw;
+  border: var(--border-size) solid var(--fg);
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 2vw, 32px);
+  font-weight: 700;
+  background: transparent;
+  color: inherit;
+  transition: all 0.1s;
+}
+.post-item:hover .buy-btn {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+@media (max-width: 900px) {
+  .split-container { flex-direction: column; overflow-y: auto; }
+  .half { overflow-y: visible; flex: none; height: auto; }
+  .left-half { border-right: none; border-bottom: var(--border-size) solid var(--fg); }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-col h-logo">UMPRUM TYPE</div>
+  <div class="h-col h-nav">
+    <span>INDEX & ARCHIVE</span>
+    <a href="umprum-brutal-matrix.html">← BACK HOME</a>
+  </div>
+  <button class="h-col h-btn" onclick="document.documentElement.setAttribute('data-theme', document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark')">☼</button>
+</header>
+
+<div class="split-container">
+  
+  <!-- LEFT HALF: DIGITAL / WORK -->
+  <div class="half left-half">
+    <div class="col-header">DIGITAL / ARCHIVE</div>
+    
+    <div class="post-item">
+      <div class="post-img-wrap">
+        <img src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=1200" class="post-img" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>PROJECT</span><span>2025</span></div>
+        <div class="post-title">ANATOMY OF ANANAS</div>
+      </div>
+    </div>
+
+    <div class="post-item">
+      <div class="post-img-wrap">
+        <img src="https://images.unsplash.com/photo-1600172454132-057053e18a99?q=80&w=1200" class="post-img" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>BLOG</span><span>2024</span></div>
+        <div class="post-title">CYRILLIC DESIGN CHALLENGES</div>
+      </div>
+    </div>
+
+    <div class="post-item">
+      <div class="post-img-wrap">
+        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200" class="post-img" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>RESEARCH</span><span>2023</span></div>
+        <div class="post-title">SPACING AND RHYTHM IN TEXT FACES</div>
+      </div>
+    </div>
+    
+    <div class="post-item">
+      <div class="post-img-wrap">
+        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=1200" class="post-img" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>BLOG</span><span>2024</span></div>
+        <div class="post-title">THE CZECH GROTESK TRADITION</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT HALF: PHYSICAL / STORE -->
+  <div class="half">
+    <div class="col-header" style="background: var(--bg); color: var(--fg); border-bottom: var(--border-size) solid var(--fg);">PHYSICAL / EDITIONS</div>
+    
+    <!-- Using inverted colors for physical goods to separate them conceptually -->
+    <div class="post-item" style="background: var(--fg); color: var(--bg);">
+      <div class="post-img-wrap" style="border-bottom-color: var(--bg);">
+        <img src="https://images.unsplash.com/photo-1520616110034-73891461f008?q=80&w=1200" class="post-img" style="mix-blend-mode: screen;" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>STORE</span><span>€15</span></div>
+        <div class="post-title" style="color: var(--bg);">MÄRZ POSTER A2</div>
+        <button class="buy-btn" style="border-color: var(--bg); color: var(--bg);">INQUIRE / BUY →</button>
+      </div>
+    </div>
+
+    <div class="post-item" style="background: var(--fg); color: var(--bg);">
+      <div class="post-img-wrap" style="border-bottom-color: var(--bg);">
+        <img src="https://images.unsplash.com/photo-1590459529328-3e4b85d92828?q=80&w=1200" class="post-img" style="mix-blend-mode: screen;" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>STORE</span><span>€25</span></div>
+        <div class="post-title" style="color: var(--bg);">UMPRUM TOTE BAG</div>
+        <button class="buy-btn" style="border-color: var(--bg); color: var(--bg);">INQUIRE / BUY →</button>
+      </div>
+    </div>
+
+    <div class="post-item" style="background: var(--fg); color: var(--bg);">
+      <div class="post-img-wrap" style="border-bottom-color: var(--bg);">
+        <img src="https://images.unsplash.com/photo-1506501139174-099022df5260?q=80&w=1200" class="post-img" style="mix-blend-mode: screen;" alt="">
+      </div>
+      <div class="post-content">
+        <div class="post-meta"><span>STORE</span><span>€10</span></div>
+        <div class="post-title" style="color: var(--bg);">CHLEBICZECH ZINE</div>
+        <button class="buy-btn" style="border-color: var(--bg); color: var(--bg);">INQUIRE / BUY →</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

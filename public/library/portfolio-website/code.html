@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Portfolio</title>
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --bg-light: #ffffff;
+            --text-light: #ffffff;
+            --text-dark: #000000;
+            --muted-light: rgba(255, 255, 255, 0.5);
+            --muted-dark: rgba(0, 0, 0, 0.4);
+            /* Идеальный стек шрифтов для швейцарского/бруталистского стиля */
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        a:hover {
+            opacity: 0.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .hero {
+            position: relative;
+            height: 90vh;
+            min-height: 600px;
+            /* Используем указанное фото как фон */
+            background: linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.8) 100%), url('image_b82103.jpg') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            margin: 20px 20px 100px 20px; /* Отступы по краям, как на референсе */
+            border-radius: 10px; /* Слегка скругленные края, если нужно, или убрать для строгой геометрии */
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            text-transform: lowercase;
+            letter-spacing: 0.05em;
+            z-index: 2;
+        }
+
+        .logo {
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            position: relative;
+            z-index: 2;
+        }
+
+        .leave-app-wrapper {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: -2vw;
+            padding-left: 15vw; /* Смещение текста над заголовком */
+        }
+
+        .leave-app {
+            font-size: 12px;
+            max-width: 250px;
+            font-style: italic;
+            color: var(--muted-light);
+            line-height: 1.4;
+        }
+
+        .leave-app-title {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .hero-title {
+            font-size: 17vw;
+            font-weight: 400;
+            line-height: 0.75;
+            letter-spacing: -0.06em; /* Жесткий трекинг для эффекта слипания */
+            margin-left: -1vw; /* Компенсация левого отступа из-за трекинга */
+        }
+
+        .socials-hero {
+            position: absolute;
+            right: 0;
+            bottom: 2vw;
+            display: flex;
+            gap: 20px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: underline;
+        }
+
+        .services-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 120px;
+            margin-bottom: 150px;
+        }
+
+        .service-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .service-title {
+            font-size: 6vw;
+            font-weight: 400;
+            letter-spacing: -0.04em;
+            line-height: 1;
+            margin-bottom: 30px;
+        }
+
+        .service-desc {
+            font-size: 11px;
+            color: var(--muted-light);
+            line-height: 1.8;
+            max-width: 280px;
+        }
+
+        .service-price {
+            font-size: 3.5vw;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            text-align: right;
+            margin-bottom: 30px;
+        }
+
+        .price-left {
+            text-align: left;
+        }
+
+        .service-image-container {
+            width: 100%;
+            padding-top: 45%; /* Соотношение сторон фото */
+            position: relative;
+            background-color: #1a1a1a;
+            overflow: hidden;
+        }
+
+        .service-image-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2); /* Стилизация под ч/б как на референсе */
+        }
+
+        .stylist-note {
+            margin-top: 40px;
+            font-size: 10px;
+            font-style: italic;
+            color: var(--muted-light);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stylist-note::before, .stylist-note::after {
+            content: '';
+            display: block;
+            width: 1px;
+            height: 30px;
+            background-color: var(--muted-light);
+            transform: rotate(20deg);
+        }
+
+        .white-section {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding: 100px 0;
+        }
+
+        .form-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 50px;
+        }
+
+        .contact-form {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 100px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-bottom-color: var(--text-dark);
+        }
+
+        .form-group input::placeholder {
+            color: var(--muted-dark);
+        }
+
+        .typography-art {
+            display: flex;
+            flex-direction: column;
+            line-height: 0.8;
+            letter-spacing: -0.05em;
+        }
+
+        .text-huge {
+            font-size: 13.5vw;
+            font-weight: 400;
+        }
+
+        .text-indent {
+            padding-left: 5vw;
+            display: flex;
+            align-items: center;
+            gap: 3vw;
+        }
+
+        .text-italic {
+            font-size: 6vw;
+            font-style: italic;
+            font-weight: 300;
+            color: var(--muted-dark);
+            letter-spacing: -0.02em;
+        }
+
+        .text-right {
+            align-self: flex-end;
+        }
+
+        footer {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 60px 40px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end;
+            font-size: 12px;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 80px;
+            color: var(--muted-light);
+        }
+
+        .footer-email {
+            color: var(--muted-light);
+        }
+
+        .footer-center {
+            text-align: center;
+        }
+
+        .contact-huge {
+            font-size: 4vw;
+            font-style: italic;
+            font-weight: 300;
+            text-decoration: underline;
+            text-underline-offset: 8px;
+            text-decoration-thickness: 1px;
+        }
+
+        .footer-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--muted-light);
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            
+            .hero {
+                margin: 0;
+                border-radius: 0;
+                padding: 20px;
+                height: 85vh;
+            }
+
+            .nav-links { display: none; }
+            
+            .leave-app-wrapper {
+                padding-left: 0;
+                margin-bottom: 20px;
+            }
+
+            .hero-title { 
+                font-size: 22vw; 
+                margin-left: -2vw;
+            }
+
+            .socials-hero { display: none; }
+
+            .services-wrapper { gap: 80px; margin-bottom: 80px; margin-top: 40px; }
+
+            .service-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            /* Меняем порядок на мобильном: Название -> Цена -> Картинка -> Текст */
+            .service-row > div:first-child { order: 1; }
+            .service-row > div:last-child { order: 2; }
+
+            .service-title { font-size: 14vw; margin-bottom: 10px; }
+            
+            .mobile-flex-title {
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+            }
+
+            .service-price { font-size: 6vw; margin-bottom: 0; text-align: right; }
+            .price-left { text-align: right; } /* На мобильном все цены справа */
+
+            .service-image-container { padding-top: 60%; margin: 15px 0; }
+
+            .white-section { padding: 60px 0; }
+
+            .contact-form { flex-direction: column; gap: 30px; margin-bottom: 60px; }
+
+            .text-huge { font-size: 16vw; }
+            .text-indent { padding-left: 0; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .text-italic { font-size: 8vw; }
+            .text-right { align-self: flex-start; } /* На мобильном убираем выравнивание вправо */
+
+            footer {
+                grid-template-columns: 1fr;
+                gap: 50px;
+                padding: 40px 20px;
+                text-align: left;
+            }
+
+            .footer-center { text-align: left; order: -1; } /* Contact me наверх */
+            .contact-huge { font-size: 12vw; }
+            
+            .footer-right { text-align: left; flex-direction: row; flex-wrap: wrap; gap: 15px; }
+            .footer-nav { margin-bottom: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <header>
+            <div class="logo">[rt]</div>
+            <ul class="nav-links">
+                <li><a href="#">portfolio</a></li>
+                <li><a href="#">contact</a></li>
+                <li><a href="#">services</a></li>
+            </ul>
+        </header>
+
+        <div class="hero-content">
+            <div class="leave-app-wrapper">
+                <div class="leave-app">
+                    <div class="leave-app-title">leave<br>application</div>
+                    <p>I open for collaborations and art projects on tfp/commercial base.<br>I also have photography book publishing of my own.</p>
+                </div>
+            </div>
+            
+            <h1 class="hero-title">services</h1>
+            
+            <div class="socials-hero">
+                <a href="#">behance</a>
+                <a href="#">linkedin</a>
+                <a href="#">facebook</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container services-wrapper">
+        
+        <!-- Studio Section -->
+        <div class="service-row">
+            <div>
+                <div class="mobile-flex-title">
+                    <h2 class="service-title">studio</h2>
+                    <div class="service-price" style="display: none;">5 700€</div> <!-- Для мобильной версии -->
+                </div>
+                <div class="service-desc">
+                    <p>photoshooting with assistance for 2 hours</p>
+                    <p>studio rental for 2 hours</p>
+                    <p>help with posing</p>
+                    <p>30 photos with retouching</p>
+                </div>
+                
+                <div class="stylist-note">
+                    stylist, make up artist and<br>hairstyle are paid separately
+                </div>
+            </div>
+            
+            <div>
+                <div class="service-price desktop-price">5 700€</div>
+                <div class="service-image-container">
+                    <img src="image_b82103.jpg" alt="Studio Photoshoot">
+                </div>
+            </div>
+        </div>
+
+        <!-- Streetstyle Section -->
+        <div class="service-row">
+            <div>
+                <div class="service-price price-left desktop-price">4 000€</div>
+                <div class="service-image-container">
+                    <img src="image_b82103.jpg" alt="Streetstyle Photoshoot">
+                </div>
+            </div>
+
+            <div>
+                <div class="mobile-flex-title">
+                    <h2 class="service-title">streetstyle</h2>
+                    <div class="service-price price-left" style="display: none;">4 000€</div>
+                </div>
+                <div class="service-desc" style="text-align: right; margin-left: auto;">
+                    <p>photoshooting with assistance for 2 hours</p>
+                    <p>search for locations</p>
+                    <p>help with posing</p>
+                    <p>30 photos with retouching</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="white-section">
+        <div class="container">
+            <div class="form-title">leave an application for photoshooting:</div>
+            
+            <form class="contact-form" action="#" onsubmit="event.preventDefault();">
+                <div class="form-group">
+                    <input type="text" placeholder="name">
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="e-mail">
+                </div>
+                <div class="form-group">
+                    <input type="tel" placeholder="+49 (000) 000 00-00">
+                </div>
+            </form>
+
+            <div class="typography-art">
+                <div class="text-huge">work with</div>
+                <div class="text-indent">
+                    <span class="text-italic">(uniq conditions)</span>
+                    <span class="text-huge">companies</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-left">
+            <div class="footer-nav">
+                <a href="#">portfolio</a>
+                <a href="#">contact</a>
+                <a href="#">services</a>
+            </div>
+            <div class="footer-email">martiich@photo.com</div>
+            <div class="footer-email" style="margin-top: 40px; opacity: 0.5;">© martiich photo 2023</div>
+        </div>
+
+        <div class="footer-center">
+            <a href="#" class="contact-huge">contact me</a>
+        </div>
+
+        <div class="footer-right">
+            <div style="margin-bottom: 20px; font-weight: bold; color: white;">[rt]</div>
+            <a href="#">whatsapp</a>
+            <a href="#">behance</a>
+            <a href="#">instagram</a>
+            <a href="#">facebook</a>
+            <a href="#">linkedin</a>
+        </div>
+    </footer>
+
+</body>
+</html>

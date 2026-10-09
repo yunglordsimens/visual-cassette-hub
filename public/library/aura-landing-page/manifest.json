@@ -1,0 +1,22 @@
+{
+  "id": "aura-landing-page",
+  "title": "Aura Landing Page",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги",
+    "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-landing-page/code.tsx",
+  "previewUrl": "library/aura-landing-page/preview.html"
+}

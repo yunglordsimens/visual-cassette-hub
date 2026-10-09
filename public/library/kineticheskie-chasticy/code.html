@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный Кинетический Тайп</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000; /* Идеально черный фон */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            touch-action: none; /* Предотвращаем скролл на тач-устройствах */
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        let width, height;
+        let particles = [];
+        let mouse = { x: -1000, y: -1000, radius: 100 };
+        
+        // Настройки текста (оставляем только один)
+        const textArray = ['T', 'Y', 'P', 'E'];
+
+        function resize() {
+            // Гарантируем, что ширина и высота всегда будут больше 0 (мин 1px)
+            width = canvas.width = Math.max(1, window.innerWidth);
+            height = canvas.height = Math.max(1, window.innerHeight);
+            initParticles(); // Пересоздаем частицы при изменении размера
+        }
+
+        window.addEventListener('resize', resize);
+
+        function updateMousePosition(e) {
+            let clientX, clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            mouse.x = clientX;
+            mouse.y = clientY;
+        }
+
+        window.addEventListener('mousemove', updateMousePosition);
+        window.addEventListener('touchmove', updateMousePosition, { passive: false });
+
+        window.addEventListener('mouseleave', () => {
+            mouse.x = -1000;
+            mouse.y = -1000;
+        });
+        window.addEventListener('touchend', () => {
+             mouse.x = -1000;
+             mouse.y = -1000;
+        });
+
+        class Particle {
+            constructor(x, y) {
+                // Системное появление из центра при создании, никакой случайности
+                this.x = width / 2;
+                this.y = height / 2;
+                this.baseX = x; 
+                this.baseY = y; 
+                // Строгий и одинаковый размер для четкой сетки
+                this.size = window.innerWidth < 600 ? 1.5 : 2; 
+            }
+
+            draw() {
+                ctx.fillStyle = '#ffffff'; // Строго белый цвет
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius) {
+                    // Системное, математически точное отталкивание и закручивание по орбите
+                    let force = (mouse.radius - distance) / mouse.radius;
+                    let angle = Math.atan2(dy, dx);
+                    
+                    let pushX = Math.cos(angle) * force * 5;
+                    let pushY = Math.sin(angle) * force * 5;
+                    
+                    // Перпендикулярный вектор для закручивания
+                    let swirlX = Math.cos(angle + Math.PI / 2) * force * 15;
+                    let swirlY = Math.sin(angle + Math.PI / 2) * force * 15;
+                    
+                    this.x -= (pushX - swirlX);
+                    this.y -= (pushY - swirlY);
+                } else {
+                    // Прямой математический возврат в исходную точку сетки (никаких случайных колебаний)
+                    // Коэффициент уменьшен до 0.008 для очень медленного и плавного возвращения
+                    this.x += (this.baseX - this.x) * 0.008;
+                    this.y += (this.baseY - this.y) * 0.008;
+                }
+            }
+        }
+
+        function getTextData(textArray) {
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+            
+            // Защита от нулевых значений (IndexSizeError) путем установки минимального размера в 1 пиксель
+            let drawWidth = Math.max(1, Math.floor(Math.min(width * 0.8, 600)));
+            let drawHeight = Math.max(1, Math.floor(Math.min(height * 0.8, 600)));
+            
+            tempCanvas.width = drawWidth;
+            tempCanvas.height = drawHeight;
+
+            // Шрифт крупнее, используем массивный шрифт для большей площади пикселей
+            let fontSize = Math.max(10, Math.min(drawWidth, drawHeight) / 1.6);
+            tempCtx.font = `900 ${fontSize}px 'Arial Black', Impact, sans-serif`;
+            tempCtx.fillStyle = 'white';
+            tempCtx.textAlign = 'center';
+            tempCtx.textBaseline = 'middle';
+
+            let centerX = drawWidth / 2;
+            let centerY = drawHeight / 2;
+            
+            // Отступы уменьшены (делитель больше), чтобы буквы стояли вплотную
+            let offsetX = drawWidth / 5.5; 
+            let offsetY = drawHeight / 5.5;
+
+            tempCtx.fillText(textArray[0], centerX - offsetX, centerY - offsetY);
+            tempCtx.fillText(textArray[1], centerX + offsetX, centerY - offsetY);
+            tempCtx.fillText(textArray[2], centerX - offsetX, centerY + offsetY);
+            tempCtx.fillText(textArray[3], centerX + offsetX, centerY + offsetY);
+
+            const textCoordinates = [];
+            
+            // Безопасное чтение пикселей
+            const imageData = tempCtx.getImageData(0, 0, drawWidth, drawHeight);
+            
+            let startX = (width - drawWidth) / 2;
+            let startY = (height - drawHeight) / 2;
+
+            // Строгий шаг для создания ровной матрицы
+            let step = window.innerWidth < 600 ? 5 : 4;
+
+            for (let y = 0; y < drawHeight; y += step) {
+                for (let x = 0; x < drawWidth; x += step) {
+                    let index = (y * drawWidth + x) * 4;
+                    let alpha = imageData.data[index + 3];
+
+                    // Высокий порог прозрачности (>200) отсекает сглаживание шрифта
+                    // оставляя только ровную и структурированную сетку пикселей
+                    if (alpha > 200) {
+                        textCoordinates.push({
+                            x: x + startX,
+                            y: y + startY
+                        });
+                    }
+                }
+            }
+            return textCoordinates;
+        }
+
+        function initParticles() {
+            particles = [];
+            let coords = getTextData(textArray);
+
+            for (let i = 0; i < coords.length; i++) {
+                particles.push(new Particle(coords[i].x, coords[i].y));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+
+            // Рисуем курсор-указатель
+            if(mouse.x > 0 && mouse.y > 0) {
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, mouse.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+                ctx.stroke();
+                ctx.closePath();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // Инициализация при загрузке
+        window.onload = () => {
+            resize();
+            animate();
+        };
+
+    </script>
+</body>
+</html>

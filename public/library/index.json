@@ -1,0 +1,2428 @@
+[
+ {
+  "id": "animaciya-vektora-anime-js",
+  "title": "Анимация вектора Anime.js",
+  "tags": [
+   "gemini",
+   "html",
+   "animejs",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · animejs",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/animaciya-vektora-anime-js/code.html",
+  "previewUrl": "library/animaciya-vektora-anime-js/code.html"
+ },
+ {
+  "id": "anime-js-visual-builder",
+  "title": "Anime.js Visual Builder",
+  "tags": [
+   "gemini",
+   "html",
+   "animejs",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Анимация",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · animejs",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/anime-js-visual-builder/code.html",
+  "previewUrl": "library/anime-js-visual-builder/code.html"
+ },
+ {
+  "id": "lottie-vector-animator-exporter",
+  "title": "Lottie Vector Animator & Exporter",
+  "tags": [
+   "gemini",
+   "html",
+   "lottie",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Анимация",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · lottie",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lottie-vector-animator-exporter/code.html",
+  "previewUrl": "library/lottie-vector-animator-exporter/code.html"
+ },
+ {
+  "id": "angeltear-landing",
+  "title": "Angeltear Landing",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-08-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/angeltear-landing/code.tsx",
+  "previewUrl": "library/angeltear-landing/preview.html"
+ },
+ {
+  "id": "animaciya-pogloscheniya-kapel",
+  "title": "Анимация Поглощения Капель",
+  "tags": [
+   "gemini",
+   "html",
+   "svg"
+  ],
+  "groups": [
+   "3D / WebGL",
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/animaciya-pogloscheniya-kapel/code.html",
+  "previewUrl": "library/animaciya-pogloscheniya-kapel/code.html"
+ },
+ {
+  "id": "hangry-landing-page",
+  "title": "Hangry Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hangry-landing-page/code.html",
+  "previewUrl": "library/hangry-landing-page/code.html"
+ },
+ {
+  "id": "bake-today-landing-page",
+  "title": "Bake Today Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bake-today-landing-page/code.html",
+  "previewUrl": "library/bake-today-landing-page/code.html"
+ },
+ {
+  "id": "coffee-go",
+  "title": "Coffee & Go",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/coffee-go/code.html",
+  "previewUrl": "library/coffee-go/code.html"
+ },
+ {
+  "id": "portfolio-website",
+  "title": "Portfolio Website",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/portfolio-website/code.html",
+  "previewUrl": "library/portfolio-website/code.html"
+ },
+ {
+  "id": "portfolio-website-2",
+  "title": "Portfolio Website",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/portfolio-website-2/code.html",
+  "previewUrl": "library/portfolio-website-2/code.html"
+ },
+ {
+  "id": "timeline-landing-page",
+  "title": "Timeline Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/timeline-landing-page/code.html",
+  "previewUrl": "library/timeline-landing-page/code.html"
+ },
+ {
+  "id": "servicesunited-portfolio",
+  "title": "SERVICESUNITED Portfolio",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/servicesunited-portfolio/code.html",
+  "previewUrl": "library/servicesunited-portfolio/code.html"
+ },
+ {
+  "id": "jacob-mckee-portfolio",
+  "title": "Jacob McKee Portfolio",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/jacob-mckee-portfolio/code.html",
+  "previewUrl": "library/jacob-mckee-portfolio/code.html"
+ },
+ {
+  "id": "nothing-quick-start-guide",
+  "title": "Nothing Quick Start Guide",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/nothing-quick-start-guide/code.html",
+  "previewUrl": "library/nothing-quick-start-guide/code.html"
+ },
+ {
+  "id": "roast-magazine-layout",
+  "title": "Roast Magazine Layout",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/roast-magazine-layout/code.html",
+  "previewUrl": "library/roast-magazine-layout/code.html"
+ },
+ {
+  "id": "hello-klean-landing-page",
+  "title": "Hello Klean Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hello-klean-landing-page/code.html",
+  "previewUrl": "library/hello-klean-landing-page/code.html"
+ },
+ {
+  "id": "fashion-brands-typographic-poster",
+  "title": "Fashion Brands Typographic Poster",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/fashion-brands-typographic-poster/code.html",
+  "previewUrl": "library/fashion-brands-typographic-poster/code.html"
+ },
+ {
+  "id": "aura-app-clone",
+  "title": "Aura App Clone",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/aura-app-clone/code.html",
+  "previewUrl": "library/aura-app-clone/code.html"
+ },
+ {
+  "id": "odnostranichnik-forgo",
+  "title": "Одностраничник FORGO",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/odnostranichnik-forgo/code.html",
+  "previewUrl": "library/odnostranichnik-forgo/code.html"
+ },
+ {
+  "id": "s-dynamic-music-radio",
+  "title": "S-Dynamic Music Radio",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/s-dynamic-music-radio/code.html",
+  "previewUrl": "library/s-dynamic-music-radio/code.html"
+ },
+ {
+  "id": "trenirovka-pesochnye-chasy",
+  "title": "Тренировка \"Песочные часы\"",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-07-31",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/trenirovka-pesochnye-chasy/code.html",
+  "previewUrl": "library/trenirovka-pesochnye-chasy/code.html"
+ },
+ {
+  "id": "oryza-premium-trend",
+  "title": "Oryza Premium Trend",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg",
+   "scroll"
+  ],
+  "groups": [
+   "Клиенты"
+  ],
+  "type": "html",
+  "description": "Specialty coffee, Vietnamese phin, banh mi, poke, pastries, ice cream and beer. A premium neighbourhood café in Smíchov, Prague.",
+  "created": "2026-06-06",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/oryza-premium-trend/code.html",
+  "previewUrl": "library/oryza-premium-trend/code.html"
+ },
+ {
+  "id": "kineticheskaya-tipografika",
+  "title": "Кинетическая Типографика",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Типографика",
+   "Анимация",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-06-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kineticheskaya-tipografika/code.html",
+  "previewUrl": "library/kineticheskaya-tipografika/code.html"
+ },
+ {
+  "id": "kinetic-typography",
+  "title": "Kinetic Typography",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Типографика",
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-06-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kinetic-typography/code.html",
+  "previewUrl": "library/kinetic-typography/code.html"
+ },
+ {
+  "id": "topographic-text-effect",
+  "title": "Topographic Text Effect",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-06-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/topographic-text-effect/code.html",
+  "previewUrl": "library/topographic-text-effect/code.html"
+ },
+ {
+  "id": "kineticheskie-chasticy",
+  "title": "Кинетические Частицы",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kineticheskie-chasticy/code.html",
+  "previewUrl": "library/kineticheskie-chasticy/code.html"
+ },
+ {
+  "id": "interaktivnaya-tipografika",
+  "title": "Интерактивная Типографика",
+  "tags": [
+   "gemini",
+   "react",
+   "p5js",
+   "canvas",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · p5js, canvas",
+  "created": "2026-05-28",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/interaktivnaya-tipografika/code.tsx",
+  "previewUrl": "library/interaktivnaya-tipografika/preview.html"
+ },
+ {
+  "id": "generativnyy-tipograficheskiy-plakat",
+  "title": "Генеративный Типографический Плакат",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Типографика",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-28",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/generativnyy-tipograficheskiy-plakat/code.html",
+  "previewUrl": "library/generativnyy-tipograficheskiy-plakat/code.html"
+ },
+ {
+  "id": "generativnaya-tipografika",
+  "title": "Генеративная типографика",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/generativnaya-tipografika/code.html",
+  "previewUrl": "library/generativnaya-tipografika/code.html"
+ },
+ {
+  "id": "kinetic-variable-typography",
+  "title": "Kinetic Variable Typography",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Типографика",
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kinetic-variable-typography/code.html",
+  "previewUrl": "library/kinetic-variable-typography/code.html"
+ },
+ {
+  "id": "post-details-wheel-gallery",
+  "title": "Post Details Wheel Gallery",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/post-details-wheel-gallery/code.tsx",
+  "previewUrl": "library/post-details-wheel-gallery/preview.html"
+ },
+ {
+  "id": "bookarchive",
+  "title": "BookArchive",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/bookarchive/code.tsx",
+  "previewUrl": "library/bookarchive/preview.html"
+ },
+ {
+  "id": "library-mockup",
+  "title": "Library Mockup",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/library-mockup/code.html",
+  "previewUrl": "library/library-mockup/code.html"
+ },
+ {
+  "id": "arhiv-knig-graf",
+  "title": "Архив Книг (Граф)",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/arhiv-knig-graf/code.html",
+  "previewUrl": "library/arhiv-knig-graf/code.html"
+ },
+ {
+  "id": "biblioteka",
+  "title": "Библиотека",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/biblioteka/code.tsx",
+  "previewUrl": "library/biblioteka/preview.html"
+ },
+ {
+  "id": "arhiv-tipografiki-umprum",
+  "title": "Архив Типографики UMPRUM",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/arhiv-tipografiki-umprum/code.tsx",
+  "previewUrl": "library/arhiv-tipografiki-umprum/preview.html"
+ },
+ {
+  "id": "vizualizaciya-arhiva",
+  "title": "Визуализация Архива",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/vizualizaciya-arhiva/code.html",
+  "previewUrl": "library/vizualizaciya-arhiva/code.html"
+ },
+ {
+  "id": "vizualizaciya-arhiva-knig",
+  "title": "Визуализация Архива Книг",
+  "tags": [
+   "gemini",
+   "react",
+   "d3",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · d3",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/vizualizaciya-arhiva-knig/code.tsx",
+  "previewUrl": "library/vizualizaciya-arhiva-knig/preview.html"
+ },
+ {
+  "id": "knihovna-typo",
+  "title": "Knihovna Typo",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/knihovna-typo/code.tsx",
+  "previewUrl": "library/knihovna-typo/preview.html"
+ },
+ {
+  "id": "pank-pleer",
+  "title": "Панк Плеер",
+  "tags": [
+   "gemini",
+   "html",
+   "svg",
+   "audio"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/pank-pleer/code.html",
+  "previewUrl": "library/pank-pleer/code.html"
+ },
+ {
+  "id": "fundraiser-poster-block",
+  "title": "Fundraiser Poster Block",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-03",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/fundraiser-poster-block/code.tsx",
+  "previewUrl": "library/fundraiser-poster-block/preview.html"
+ },
+ {
+  "id": "barn-doors-landing-page",
+  "title": "Barn Doors - Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "threejs",
+   "webgl",
+   "canvas",
+   "svg",
+   "audio"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-03",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/barn-doors-landing-page/code.html",
+  "previewUrl": "library/barn-doors-landing-page/code.html"
+ },
+ {
+  "id": "lineup-poster",
+  "title": "Lineup Poster",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/lineup-poster/code.tsx",
+  "previewUrl": "library/lineup-poster/preview.html"
+ },
+ {
+  "id": "punk-keepie-uppie",
+  "title": "Punk Keepie-Uppie",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/punk-keepie-uppie/code.html",
+  "previewUrl": "library/punk-keepie-uppie/code.html"
+ },
+ {
+  "id": "lineupfest",
+  "title": "LineupFest",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги",
+   "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/lineupfest/code.tsx",
+  "previewUrl": "library/lineupfest/preview.html"
+ },
+ {
+  "id": "cinematic-landing-page",
+  "title": "Cinematic Landing Page",
+  "tags": [
+   "gemini",
+   "html",
+   "threejs",
+   "webgl",
+   "canvas",
+   "audio"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/cinematic-landing-page/code.html",
+  "previewUrl": "library/cinematic-landing-page/code.html"
+ },
+ {
+  "id": "dveri-saraya",
+  "title": "Двери Сарая",
+  "tags": [
+   "gemini",
+   "html",
+   "threejs",
+   "webgl",
+   "canvas",
+   "audio"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, webgl, canvas, audio",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/dveri-saraya/code.html",
+  "previewUrl": "library/dveri-saraya/code.html"
+ },
+ {
+  "id": "portfolio-website-3",
+  "title": "Portfolio Website",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-01",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/portfolio-website-3/code.tsx",
+  "previewUrl": "library/portfolio-website-3/preview.html"
+ },
+ {
+  "id": "may-prg-event",
+  "title": "May PRG Event",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll",
+   "audio"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · audio",
+  "created": "2026-04-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/may-prg-event/code.tsx",
+  "previewUrl": "library/may-prg-event/preview.html"
+ },
+ {
+  "id": "solidarity-rave",
+  "title": "Solidarity Rave",
+  "tags": [
+   "gemini",
+   "html",
+   "svg",
+   "audio"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · audio",
+  "created": "2026-04-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/solidarity-rave/code.html",
+  "previewUrl": "library/solidarity-rave/code.html"
+ },
+ {
+  "id": "charity-event-site",
+  "title": "Charity Event Site",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll",
+   "audio"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · audio",
+  "created": "2026-04-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/charity-event-site/code.tsx",
+  "previewUrl": "library/charity-event-site/preview.html"
+ },
+ {
+  "id": "leather-parfum-b2b-home-page-english",
+  "title": "Leather Parfum B2B - Home Page (English)",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Клиенты",
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/leather-parfum-b2b-home-page-english/code.tsx",
+  "previewUrl": "library/leather-parfum-b2b-home-page-english/preview.html"
+ },
+ {
+  "id": "glavnaya-stranica-bento-grid",
+  "title": "Главная страница — Bento Grid",
+  "tags": [
+   "gemini",
+   "html",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/glavnaya-stranica-bento-grid/code.html",
+  "previewUrl": "library/glavnaya-stranica-bento-grid/code.html"
+ },
+ {
+  "id": "optovaya-b2b-platforma",
+  "title": "Оптовая B2B Платформа",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "svg",
+   "scroll"
+  ],
+  "groups": [
+   "Клиенты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/optovaya-b2b-platforma/code.tsx",
+  "previewUrl": "library/optovaya-b2b-platforma/preview.html"
+ },
+ {
+  "id": "leather-parfum-wholesale",
+  "title": "Leather Parfum Wholesale",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Клиенты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/leather-parfum-wholesale/code.tsx",
+  "previewUrl": "library/leather-parfum-wholesale/preview.html"
+ },
+ {
+  "id": "modern-e-commerce",
+  "title": "Modern E-commerce",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "svg",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/modern-e-commerce/code.tsx",
+  "previewUrl": "library/modern-e-commerce/preview.html"
+ },
+ {
+  "id": "apple-style-product-page",
+  "title": "Apple-Style Product Page",
+  "tags": [
+   "gemini",
+   "html",
+   "gsap",
+   "tailwind",
+   "svg",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · gsap",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/apple-style-product-page/code.html",
+  "previewUrl": "library/apple-style-product-page/code.html"
+ },
+ {
+  "id": "glavnaya-stranica",
+  "title": "Главная страница",
+  "tags": [
+   "gemini",
+   "html",
+   "svg"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/glavnaya-stranica/code.html",
+  "previewUrl": "library/glavnaya-stranica/code.html"
+ },
+ {
+  "id": "arhiv-i-vnutrennie-stranicy",
+  "title": "Архив и Внутренние страницы",
+  "tags": [
+   "gemini",
+   "html",
+   "scroll"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-04-16",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/arhiv-i-vnutrennie-stranicy/code.html",
+  "previewUrl": "library/arhiv-i-vnutrennie-stranicy/code.html"
+ },
+ {
+  "id": "archive-3d-cross-preview",
+  "title": "Archive & 3D Cross Preview",
+  "tags": [
+   "gemini",
+   "react"
+  ],
+  "groups": [
+   "3D / WebGL",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/archive-3d-cross-preview/code.tsx",
+  "previewUrl": "library/archive-3d-cross-preview/preview.html"
+ },
+ {
+  "id": "project-hub",
+  "title": "Project Hub",
+  "tags": [
+   "gemini",
+   "react"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/project-hub/code.tsx",
+  "previewUrl": "library/project-hub/preview.html"
+ },
+ {
+  "id": "materials-archive",
+  "title": "Materials Archive",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-04-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/materials-archive/code.html",
+  "previewUrl": "library/materials-archive/code.html"
+ },
+ {
+  "id": "wall-crust-cross-massive-scale",
+  "title": "Wall Crust Cross (Massive Scale)",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-04-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/wall-crust-cross-massive-scale/code.tsx",
+  "previewUrl": "library/wall-crust-cross-massive-scale/preview.html"
+ },
+ {
+  "id": "thermal-blur-hero",
+  "title": "Thermal Blur Hero",
+  "tags": [
+   "gemini",
+   "react",
+   "svg"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-30",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/thermal-blur-hero/code.tsx",
+  "previewUrl": "library/thermal-blur-hero/preview.html"
+ },
+ {
+  "id": "bento-grid-typography-concept",
+  "title": "Bento Grid Typography Concept",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/bento-grid-typography-concept/code.tsx",
+  "previewUrl": "library/bento-grid-typography-concept/preview.html"
+ },
+ {
+  "id": "frosted-typography-grid",
+  "title": "Frosted Typography Grid",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg",
+   "scroll"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/frosted-typography-grid/code.html",
+  "previewUrl": "library/frosted-typography-grid/code.html"
+ },
+ {
+  "id": "bento-glow-grid",
+  "title": "Bento Glow Grid",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-glow-grid/code.html",
+  "previewUrl": "library/bento-glow-grid/code.html"
+ },
+ {
+  "id": "bento-grid",
+  "title": "Bento Grid",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-grid/code.html",
+  "previewUrl": "library/bento-grid/code.html"
+ },
+ {
+  "id": "bento-neon-grid",
+  "title": "Bento Neon Grid",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-29",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-neon-grid/code.html",
+  "previewUrl": "library/bento-neon-grid/code.html"
+ },
+ {
+  "id": "css-imitaciya-3d-galki",
+  "title": "CSS Имитация 3D Гальки",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/css-imitaciya-3d-galki/code.html",
+  "previewUrl": "library/css-imitaciya-3d-galki/code.html"
+ },
+ {
+  "id": "bento-motion-layout",
+  "title": "Bento Motion Layout",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/bento-motion-layout/code.html",
+  "previewUrl": "library/bento-motion-layout/code.html"
+ },
+ {
+  "id": "zheleynye-sfery-fokus",
+  "title": "Желейные сферы (Фокус)",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/zheleynye-sfery-fokus/code.html",
+  "previewUrl": "library/zheleynye-sfery-fokus/code.html"
+ },
+ {
+  "id": "refraction-sss-illustration",
+  "title": "Refraction & SSS Illustration",
+  "tags": [
+   "gemini",
+   "html",
+   "webgl",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · webgl",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/refraction-sss-illustration/code.html",
+  "previewUrl": "library/refraction-sss-illustration/code.html"
+ },
+ {
+  "id": "mnogosloynye-sfery",
+  "title": "Многослойные Сферы",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/mnogosloynye-sfery/code.html",
+  "previewUrl": "library/mnogosloynye-sfery/code.html"
+ },
+ {
+  "id": "glass-parallax-light",
+  "title": "Glass Parallax & Light",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "3D / WebGL",
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/glass-parallax-light/code.html",
+  "previewUrl": "library/glass-parallax-light/code.html"
+ },
+ {
+  "id": "vietnamese-seal-typography-grid",
+  "title": "Vietnamese Seal Typography Grid",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/vietnamese-seal-typography-grid/code.html",
+  "previewUrl": "library/vietnamese-seal-typography-grid/code.html"
+ },
+ {
+  "id": "organic-tissue-webgl",
+  "title": "Organic Tissue WebGL",
+  "tags": [
+   "gemini",
+   "html",
+   "webgl"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · webgl",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/organic-tissue-webgl/code.html",
+  "previewUrl": "library/organic-tissue-webgl/code.html"
+ },
+ {
+  "id": "maket-telefona-s-video",
+  "title": "Макет Телефона с Видео",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maket-telefona-s-video/code.html",
+  "previewUrl": "library/maket-telefona-s-video/code.html"
+ },
+ {
+  "id": "simulyaciya-chernil",
+  "title": "Симуляция чернил",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/simulyaciya-chernil/code.html",
+  "previewUrl": "library/simulyaciya-chernil/code.html"
+ },
+ {
+  "id": "tiktok-3d-glass-animation",
+  "title": "TikTok 3D Glass Animation",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "3D / WebGL",
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/tiktok-3d-glass-animation/code.html",
+  "previewUrl": "library/tiktok-3d-glass-animation/code.html"
+ },
+ {
+  "id": "realistichnye-3d-formy",
+  "title": "Реалистичные 3D Формы",
+  "tags": [
+   "gemini",
+   "html",
+   "threejs"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/realistichnye-3d-formy/code.html",
+  "previewUrl": "library/realistichnye-3d-formy/code.html"
+ },
+ {
+  "id": "css-art-i-skroll",
+  "title": "CSS Арт и Скролл",
+  "tags": [
+   "gemini",
+   "html",
+   "scroll"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/css-art-i-skroll/code.html",
+  "previewUrl": "library/css-art-i-skroll/code.html"
+ },
+ {
+  "id": "aura-agency-concept",
+  "title": "Aura Agency Concept",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги",
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-agency-concept/code.tsx",
+  "previewUrl": "library/aura-agency-concept/preview.html"
+ },
+ {
+  "id": "interaktivnaya-animaciya-sloev",
+  "title": "Интерактивная анимация слоев",
+  "tags": [
+   "gemini",
+   "html",
+   "scroll"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/interaktivnaya-animaciya-sloev/code.html",
+  "previewUrl": "library/interaktivnaya-animaciya-sloev/code.html"
+ },
+ {
+  "id": "zhivaya-rastrovaya-sfera-glubokie-izgiby",
+  "title": "Живая растровая сфера (Глубокие изгибы)",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/zhivaya-rastrovaya-sfera-glubokie-izgiby/code.html",
+  "previewUrl": "library/zhivaya-rastrovaya-sfera-glubokie-izgiby/code.html"
+ },
+ {
+  "id": "zhivaya-rastrovaya-sfera",
+  "title": "Живая растровая сфера",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/zhivaya-rastrovaya-sfera/code.html",
+  "previewUrl": "library/zhivaya-rastrovaya-sfera/code.html"
+ },
+ {
+  "id": "parallaxsequence",
+  "title": "ParallaxSequence",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/parallaxsequence/code.tsx",
+  "previewUrl": "library/parallaxsequence/preview.html"
+ },
+ {
+  "id": "interaktivnaya-rastrovaya-sfera",
+  "title": "Интерактивная растровая сфера",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/interaktivnaya-rastrovaya-sfera/code.html",
+  "previewUrl": "library/interaktivnaya-rastrovaya-sfera/code.html"
+ },
+ {
+  "id": "blur-intervention-concept",
+  "title": "Blur Intervention Concept",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/blur-intervention-concept/code.html",
+  "previewUrl": "library/blur-intervention-concept/code.html"
+ },
+ {
+  "id": "chrome-layers-3d",
+  "title": "Chrome Layers 3D",
+  "tags": [
+   "gemini",
+   "html",
+   "threejs",
+   "canvas"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · threejs, canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/chrome-layers-3d/code.html",
+  "previewUrl": "library/chrome-layers-3d/code.html"
+ },
+ {
+  "id": "hqvipsos",
+  "title": "HQVIPSOS",
+  "tags": [
+   "gemini",
+   "html",
+   "canvas",
+   "scroll"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hqvipsos/code.html",
+  "previewUrl": "library/hqvipsos/code.html"
+ },
+ {
+  "id": "aura-landing-page",
+  "title": "Aura Landing Page",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги",
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-landing-page/code.tsx",
+  "previewUrl": "library/aura-landing-page/preview.html"
+ },
+ {
+  "id": "visual-communications",
+  "title": "Visual Communications",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind",
+   "svg"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/visual-communications/code.html",
+  "previewUrl": "library/visual-communications/code.html"
+ },
+ {
+  "id": "spektralnaya-illyuziya",
+  "title": "Спектральная Иллюзия",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/spektralnaya-illyuziya/code.html",
+  "previewUrl": "library/spektralnaya-illyuziya/code.html"
+ },
+ {
+  "id": "svetyaschiysya-3d-shar",
+  "title": "Светящийся 3D Шар",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/svetyaschiysya-3d-shar/code.html",
+  "previewUrl": "library/svetyaschiysya-3d-shar/code.html"
+ },
+ {
+  "id": "aura-effect",
+  "title": "Aura Effect",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-effect/code.tsx",
+  "previewUrl": "library/aura-effect/preview.html"
+ },
+ {
+  "id": "deep-blue-sequence",
+  "title": "Deep Blue Sequence",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/deep-blue-sequence/code.tsx",
+  "previewUrl": "library/deep-blue-sequence/preview.html"
+ },
+ {
+  "id": "hqvipsos-2",
+  "title": "HQVIPSOS",
+  "tags": [
+   "gemini",
+   "react",
+   "canvas",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · canvas",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/hqvipsos-2/code.tsx",
+  "previewUrl": "library/hqvipsos-2/preview.html"
+ },
+ {
+  "id": "global-hq-command-center",
+  "title": "Global HQ Command Center",
+  "tags": [
+   "gemini",
+   "react",
+   "canvas",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · canvas",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/global-hq-command-center/code.tsx",
+  "previewUrl": "library/global-hq-command-center/preview.html"
+ },
+ {
+  "id": "ofst-studio",
+  "title": "OFST Studio",
+  "tags": [
+   "gemini",
+   "html",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Мы проектируем, разрабатываем и развиваем цифровое присутствие. Прага.",
+  "created": "2026-03-23",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/ofst-studio/code.html",
+  "previewUrl": "library/ofst-studio/code.html"
+ },
+ {
+  "id": "premium-agency-landing",
+  "title": "Premium Agency Landing",
+  "tags": [
+   "gemini",
+   "react",
+   "gsap",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · gsap",
+  "created": "2026-03-22",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/premium-agency-landing/code.tsx",
+  "previewUrl": "library/premium-agency-landing/preview.html"
+ },
+ {
+  "id": "mariia-spa-portfolio",
+  "title": "Mariia_SPA_Portfolio",
+  "tags": [
+   "gemini",
+   "html",
+   "p5js"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-03-18",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/mariia-spa-portfolio/code.html",
+  "previewUrl": "library/mariia-spa-portfolio/code.html"
+ },
+ {
+  "id": "split-stranica-work-store",
+  "title": "Сплит-страница Work & Store",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-17",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/split-stranica-work-store/code.html",
+  "previewUrl": "library/split-stranica-work-store/code.html"
+ },
+ {
+  "id": "umprum-type-sliding-grid-variant",
+  "title": "UMPRUM Type (Sliding Grid Variant)",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Типографика"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-17",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/umprum-type-sliding-grid-variant/code.html",
+  "previewUrl": "library/umprum-type-sliding-grid-variant/code.html"
+ },
+ {
+  "id": "lee-s-tea-proposal",
+  "title": "Lee's Tea - Proposal",
+  "tags": [
+   "gemini",
+   "html",
+   "scroll"
+  ],
+  "groups": [
+   "Клиенты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-09",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lee-s-tea-proposal/code.html",
+  "previewUrl": "library/lee-s-tea-proposal/code.html"
+ },
+ {
+  "id": "lee-s-tea-design-builder",
+  "title": "Lee's Tea - Design Builder",
+  "tags": [
+   "gemini",
+   "html"
+  ],
+  "groups": [
+   "Клиенты",
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lee-s-tea-design-builder/code.html",
+  "previewUrl": "library/lee-s-tea-design-builder/code.html"
+ },
+ {
+  "id": "polnyy-razvorot-oblozhki-umprum",
+  "title": "Полный разворот обложки UMPRUM",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-02-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/polnyy-razvorot-oblozhki-umprum/code.html",
+  "previewUrl": "library/polnyy-razvorot-oblozhki-umprum/code.html"
+ },
+ {
+  "id": "maket-oblozhki-umprum",
+  "title": "Макет обложки UMPRUM",
+  "tags": [
+   "gemini",
+   "html",
+   "tailwind"
+  ],
+  "groups": [
+   "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-02-22",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maket-oblozhki-umprum/code.html",
+  "previewUrl": "library/maket-oblozhki-umprum/code.html"
+ },
+ {
+  "id": "morph-studio-v9",
+  "title": "Morph Studio v9",
+  "tags": [
+   "gemini",
+   "react",
+   "webgl",
+   "canvas"
+  ],
+  "groups": [
+   "Лендинги",
+   "3D / WebGL",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · webgl, canvas",
+  "created": "2026-01-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/morph-studio-v9/code.tsx",
+  "previewUrl": "library/morph-studio-v9/preview.html"
+ },
+ {
+  "id": "morph-studio-v7",
+  "title": "Morph Studio v7",
+  "tags": [
+   "gemini",
+   "react",
+   "webgl",
+   "canvas"
+  ],
+  "groups": [
+   "Лендинги",
+   "3D / WebGL",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · webgl, canvas",
+  "created": "2026-01-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/morph-studio-v7/code.tsx",
+  "previewUrl": "library/morph-studio-v7/preview.html"
+ },
+ {
+  "id": "morph-studio-v6",
+  "title": "Morph Studio v6",
+  "tags": [
+   "gemini",
+   "react",
+   "webgl",
+   "canvas"
+  ],
+  "groups": [
+   "Лендинги",
+   "3D / WebGL",
+   "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · webgl, canvas",
+  "created": "2026-01-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/morph-studio-v6/code.tsx",
+  "previewUrl": "library/morph-studio-v6/preview.html"
+ },
+ {
+  "id": "maso-corp-live-part1",
+  "title": "Maso_Corp_Live_Part1",
+  "tags": [
+   "gemini",
+   "html",
+   "p5js",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-01-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maso-corp-live-part1/code.html",
+  "previewUrl": "library/maso-corp-live-part1/code.html"
+ },
+ {
+  "id": "maso-corp-part2",
+  "title": "Maso_Corp_Part2",
+  "tags": [
+   "gemini",
+   "html",
+   "p5js",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-01-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maso-corp-part2/code.html",
+  "previewUrl": "library/maso-corp-part2/code.html"
+ },
+ {
+  "id": "maso-corp-part1",
+  "title": "Maso_Corp_Part1",
+  "tags": [
+   "gemini",
+   "html",
+   "p5js",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-01-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maso-corp-part1/code.html",
+  "previewUrl": "library/maso-corp-part1/code.html"
+ },
+ {
+  "id": "maso-corp-portfolio-live",
+  "title": "Maso_Corp_Portfolio_Live",
+  "tags": [
+   "gemini",
+   "html",
+   "p5js",
+   "tailwind"
+  ],
+  "groups": [
+   "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · p5js",
+  "created": "2026-01-21",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/maso-corp-portfolio-live/code.html",
+  "previewUrl": "library/maso-corp-portfolio-live/code.html"
+ },
+ {
+  "id": "kinetic-scroll",
+  "title": "Kinetic Scroll",
+  "tags": [
+   "gemini",
+   "html",
+   "gsap",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · gsap",
+  "created": "2026-01-19",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kinetic-scroll/code.html",
+  "previewUrl": "library/kinetic-scroll/code.html"
+ },
+ {
+  "id": "master-cuts",
+  "title": "Master Cuts",
+  "tags": [
+   "gemini",
+   "react",
+   "tailwind",
+   "scroll"
+  ],
+  "groups": [
+   "Эксперименты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-01-09",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/master-cuts/code.tsx",
+  "previewUrl": "library/master-cuts/preview.html"
+ }
+]

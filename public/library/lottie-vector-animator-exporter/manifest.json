@@ -1,0 +1,23 @@
+{
+  "id": "lottie-vector-animator-exporter",
+  "title": "Lottie Vector Animator & Exporter",
+  "tags": [
+    "gemini",
+    "html",
+    "lottie",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Анимация",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · lottie",
+  "created": "2026-09-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/lottie-vector-animator-exporter/code.html",
+  "previewUrl": "library/lottie-vector-animator-exporter/code.html"
+}

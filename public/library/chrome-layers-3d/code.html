@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Глубина и Отражения | 3D Слои</title>
+    <style>
+        /* Базовые стили для сайта */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000; /* Глубокий черный фон, как на фото */
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #fff;
+        }
+
+        /* Контейнер для 3D сцены */
+        #webgl-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Интерфейс поверх 3D, добавляет дополнительный слой глубины (UI слой) */
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none; /* Чтобы мышь взаимодействовала с 3D сценой под текстом */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .title {
+            font-size: 8vw;
+            font-weight: 200;
+            letter-spacing: -0.02em;
+            margin: 0;
+            line-height: 1;
+            mix-blend-mode: difference; /* Красивый эффект наложения текста на блики */
+        }
+
+        .footer {
+            max-width: 300px;
+            font-size: 14px;
+            line-height: 1.5;
+            opacity: 0.5;
+        }
+
+        /* Загрузочный экран */
+        #loader {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            transition: opacity 1s ease;
+        }
+    </style>
+    <!-- Подключаем Three.js через CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <!-- Загрузчик -->
+    <div id="loader">Генерация отражений...</div>
+
+    <!-- UI Слой -->
+    <div class="ui-layer">
+        <div class="header">
+            <span>Слой 01 // Интерфейс</span>
+            <span>Параллакс Активен</span>
+        </div>
+        <h1 class="title">DEPTH<br>& CHROME</h1>
+        <div class="footer">
+            Исследование глубины и фотореалистичных отражений. Подвигайте мышью, чтобы увидеть разделение по слоям в Z-пространстве.
+        </div>
+    </div>
+
+    <!-- Контейнер для Canvas Three.js -->
+    <div id="webgl-container"></div>
+
+    <script>
+        // --- 1. ИНИЦИАЛИЗАЦИЯ СЦЕНЫ ---
+        const container = document.getElementById('webgl-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x020202); // Почти черный фон
+
+        // Добавляем эффект тумана для усиления ощущения глубины
+        scene.fog = new THREE.FogExp2(0x020202, 0.015);
+
+        // Камера
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30; // Начальная позиция камеры
+
+        // Рендерер
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Оптимизация для ретина-дисплеев
+        // Настройки для фотореализма
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
+        container.appendChild(renderer.domElement);
+
+        // --- 2. ГЕНЕРАЦИЯ ОКРУЖЕНИЯ (ОТРАЖЕНИЙ) ---
+        // Создаем процедурную карту окружения, чтобы имитировать цвета с фото
+        // (холодный верх, черный низ, теплый закат справа, силуэты деревьев)
+        function createEnvironmentMap() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 2048;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            // Небо (верхняя полусфера)
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, 512);
+            skyGrad.addColorStop(0, '#ffffff'); // Зенит - очень яркий белый
+            skyGrad.addColorStop(0.5, '#66aaff'); // Голубое небо
+            skyGrad.addColorStop(1, '#000000'); // Резкий переход в темноту на горизонте
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, 2048, 512);
+
+            // Земля (нижняя полусфера) - темная, чтобы создать глубокий черный в нижней части таблетки
+            ctx.fillStyle = '#010101';
+            ctx.fillRect(0, 512, 2048, 512);
+
+            // Теплый "закатный" свет справа (янтарные блики)
+            const sunGrad = ctx.createRadialGradient(1600, 512, 0, 1600, 512, 600);
+            sunGrad.addColorStop(0, 'rgba(255, 120, 20, 1)');
+            sunGrad.addColorStop(0.5, 'rgba(255, 60, 0, 0.5)');
+            sunGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = sunGrad;
+            ctx.fillRect(1000, 0, 1048, 1024);
+
+            // Холодный "лунный" свет слева для контраста
+            const moonGrad = ctx.createRadialGradient(400, 512, 0, 400, 512, 400);
+            moonGrad.addColorStop(0, 'rgba(100, 150, 255, 0.4)');
+            moonGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = moonGrad;
+            ctx.fillRect(0, 0, 1000, 1024);
+
+            // Рисуем "силуэты деревьев" на горизонте для ломаных, реалистичных отражений
+            ctx.fillStyle = '#000000';
+            for (let i = 0; i < 80; i++) {
+                const x = Math.random() * 2048;
+                const width = 10 + Math.random() * 40;
+                const height = 20 + Math.random() * 150;
+                ctx.fillRect(x, 512 - height + 10, width, height); // Чуть выше экватора
+            }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            return texture;
+        }
+
+        const envMap = createEnvironmentMap();
+        scene.environment = envMap; // Устанавливаем карту для физичных отражений
+
+        // Добавим немного реального света для красивых бликов (specular highlights)
+        const lightRight = new THREE.PointLight(0xff7711, 2, 50);
+        lightRight.position.set(15, 5, 10);
+        scene.add(lightRight);
+
+        const lightTop = new THREE.PointLight(0xffffff, 1.5, 50);
+        lightTop.position.set(-10, 20, 10);
+        scene.add(lightTop);
+
+        // --- 3. СОЗДАНИЕ МАТЕРИАЛА ---
+        // Идеальный хромированный материал (как на фото)
+        const chromeMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff,
+            metalness: 1.0,      // Полностью металлический
+            roughness: 0.02,     // Почти нулевая шероховатость (идеальное зеркало)
+            envMapIntensity: 2.0 // Усиливаем яркость отражений окружения
+        });
+
+        // Материал для объектов заднего плана (чуть более матовый, чтобы увести фокус)
+        const bgMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x888888,
+            metalness: 0.8,
+            roughness: 0.4,
+            envMapIntensity: 0.5
+        });
+
+        // --- 4. РАЗДЕЛЕНИЕ ПО СЛОЯМ (ГЛУБИНА) ---
+        // Создаем группы для разных слоев по оси Z
+
+        // СЛОЙ 1: Задний план (Background)
+        const layerBG = new THREE.Group();
+        layerBG.position.z = -25;
+        scene.add(layerBG);
+
+        // СЛОЙ 2: Средний план (Главный объект - разделенная таблетка)
+        const layerMid = new THREE.Group();
+        layerMid.position.z = 0;
+        scene.add(layerMid);
+
+        // СЛОЙ 3: Передний план (Foreground - близко к камере)
+        const layerFG = new THREE.Group();
+        layerFG.position.z = 15;
+        scene.add(layerFG);
+
+        // --- 5. СОЗДАНИЕ ГЕОМЕТРИИ ---
+
+        // Создаем центральный объект (используем вытянутые сферы для совместимости)
+        const capGeo = new THREE.SphereGeometry(3, 64, 64);
+        
+        // Левая половина
+        const pillLeft = new THREE.Mesh(capGeo, chromeMaterial);
+        pillLeft.scale.set(1.2, 1, 1); // Вытягиваем форму по горизонтали
+        pillLeft.position.x = -3.7; // Сдвигаем влево для образования щели
+        
+        // Правая половина
+        const pillRight = new THREE.Mesh(capGeo, chromeMaterial);
+        pillRight.scale.set(1.2, 1, 1);
+        pillRight.position.x = 3.7; // Сдвигаем вправо
+
+        // За счет сдвига между ними образуется идеальная черная щель
+        const pillGroup = new THREE.Group();
+        pillGroup.add(pillLeft);
+        pillGroup.add(pillRight);
+        layerMid.add(pillGroup);
+
+
+        // Наполняем Задний слой (layerBG) плавающими частицами
+        const sphereGeo = new THREE.SphereGeometry(1, 32, 32);
+        for(let i=0; i<15; i++) {
+            const mesh = new THREE.Mesh(sphereGeo, bgMaterial);
+            // Случайные позиции далеко позади
+            mesh.position.set(
+                (Math.random() - 0.5) * 60,
+                (Math.random() - 0.5) * 40,
+                (Math.random() - 0.5) * 10
+            );
+            const scale = Math.random() * 2 + 0.5;
+            mesh.scale.set(scale, scale, scale);
+            layerBG.add(mesh);
+        }
+
+        // Наполняем Передний слой (layerFG) объектами, которые пролетают перед глазами
+        for(let i=0; i<5; i++) {
+            const mesh = new THREE.Mesh(sphereGeo, chromeMaterial);
+            mesh.position.set(
+                (Math.random() - 0.5) * 30,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 5
+            );
+            const scale = Math.random() * 1.5 + 0.5;
+            mesh.scale.set(scale, scale, scale);
+            layerFG.add(mesh);
+        }
+
+        // Убираем экран загрузки
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+
+        // --- 6. ИНТЕРАКТИВ И АНИМАЦИЯ (ПАРАЛЛАКС) ---
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX);
+            mouseY = (event.clientY - windowHalfY);
+        });
+
+        // Обработка изменения размера окна
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const elapsedTime = clock.getElapsedTime();
+
+            // Плавное следование камеры за курсором
+            // Коэффициенты определяют силу сдвига камеры
+            targetX = mouseX * 0.015;
+            targetY = mouseY * 0.015;
+
+            camera.position.x += (targetX - camera.position.x) * 0.05;
+            camera.position.y += (-targetY - camera.position.y) * 0.05;
+            
+            // Камера всегда смотрит в центр. 
+            // Именно из-за того, что камера смещается, а слои находятся на разной оси Z (-25, 0, 15),
+            // возникает идеальный оптический эффект глубины и параллакса.
+            camera.lookAt(scene.position);
+
+            // Добавляем медленное, "дышащее" вращение объектам
+            pillGroup.rotation.y = Math.sin(elapsedTime * 0.5) * 0.1;
+            pillGroup.rotation.x = Math.cos(elapsedTime * 0.3) * 0.05;
+
+            // Вращаем слои с частицами с разной скоростью
+            layerBG.rotation.y = elapsedTime * 0.05;
+            layerFG.rotation.y = elapsedTime * -0.08;
+
+            // Анимация левитации (движение вверх-вниз)
+            layerMid.position.y = Math.sin(elapsedTime) * 0.5;
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function () {
+            // Безопасный запуск после загрузки окна
+            animate();
+        };
+    </script>
+</body>
+</html>

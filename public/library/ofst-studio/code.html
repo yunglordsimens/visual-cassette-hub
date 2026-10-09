@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFST — Студия веб-дизайна и разработки</title>
+<meta name="description" content="Мы проектируем, разрабатываем и развиваем цифровое присутствие. Прага.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Используем стандартные шрифты, но стилизуем их под High-End -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── БАЗОВЫЕ НАСТРОЙКИ ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #f8f8f8;
+  --black: #050505;
+  --white: #ffffff;
+  --grey: #8a8a8a;
+  --light-grey: #e5e5e5;
+  
+  --display: 'Inter', sans-serif;
+  --body: 'Inter', sans-serif;
+  --mono: 'Space Mono', monospace;
+  
+  --gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--black);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--black); color: var(--bg); }
+
+/* Огромный контейнер без жестких рамок */
+.c { max-width: 1600px; margin: 0 auto; padding: 0 var(--gap); }
+
+/* ── НАВИГАЦИЯ ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(248, 248, 248, 0.9);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+nav .c { display: flex; align-items: center; justify-content: space-between; height: 80px; }
+.logo { font-family: var(--display); font-weight: 900; font-size: 1.75rem; letter-spacing: -0.05em; text-transform: uppercase; }
+.nav-r { display: flex; gap: 3rem; align-items: center; }
+.nav-r a { font-size: 0.875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; transition: opacity 0.2s; }
+.nav-r a:hover { opacity: 0.5; }
+.nav-cta {
+  background: var(--black); color: var(--white) !important;
+  padding: 0.75rem 1.5rem; border-radius: 100px;
+  font-weight: 700; transition: transform 0.2s;
+}
+.nav-cta:hover { transform: scale(1.05); opacity: 1; }
+
+/* ── HERO СЕКЦИЯ (ОГРОМНАЯ) ── */
+.hero { padding: 12rem 0 8rem; min-height: 90vh; display: flex; align-items: center; }
+.hero-tag {
+  font-family: var(--mono); font-size: 0.875rem; color: var(--grey);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2rem;
+}
+/* Макро-типографика */
+.hero h1 {
+  font-family: var(--display);
+  font-size: clamp(3rem, 9vw, 9rem);
+  font-weight: 900; line-height: 0.9;
+  letter-spacing: -0.05em; text-transform: uppercase;
+  margin-bottom: 3rem; max-width: 1400px;
+}
+.hero-sub {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  color: var(--grey); max-width: 700px;
+  line-height: 1.4; font-weight: 400; margin-bottom: 4rem;
+}
+
+/* Кнопки без рамок, массивная типографика */
+.btn-p {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--black); color: var(--white);
+  padding: 1.5rem 3rem; font-size: 1.125rem; font-weight: 700;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: 0.05em;
+  transition: transform 0.2s ease;
+}
+.btn-p:hover { transform: translateY(-4px); }
+
+/* ── ОБЩИЕ ЭЛЕМЕНТЫ СЕКЦИЙ ── */
+section { padding: 8rem 0; }
+.s-label {
+  font-family: var(--mono); font-size: 0.875rem; color: var(--grey);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 2rem;
+}
+.s-title {
+  font-family: var(--display); font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 900; letter-spacing: -0.04em; line-height: 1;
+  margin-bottom: 5rem; max-width: 1000px; text-transform: uppercase;
+}
+
+/* ── УСЛУГИ (БЕЗ КАРТОЧЕК, КРУПНЫЙ СПИСОК) ── */
+.srv-list { display: flex; flex-direction: column; }
+.srv-row {
+  display: grid; grid-template-columns: 100px 1fr 1fr; gap: 2rem;
+  padding: 4rem 0; border-top: 1px solid var(--light-grey);
+  transition: opacity 0.3s;
+}
+.srv-row:last-child { border-bottom: 1px solid var(--light-grey); }
+.srv-row:hover { opacity: 0.7; cursor: default; }
+
+.srv-num { font-family: var(--mono); font-size: 1.5rem; color: var(--grey); }
+.srv-row h3 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800;
+  letter-spacing: -0.03em; text-transform: uppercase;
+}
+.srv-desc { font-size: 1.125rem; color: var(--grey); line-height: 1.6; }
+.srv-price {
+  font-family: var(--mono); font-size: 0.875rem; color: var(--black);
+  margin-top: 1.5rem; text-transform: uppercase;
+}
+
+/* ── РАБОТЫ (ОГРОМНЫЕ ИЗОБРАЖЕНИЯ БЕЗ ОТСТУПОВ) ── */
+.work { background: var(--black); color: var(--white); padding: 10rem 0; }
+.work .s-label { color: #555; }
+.work .s-title { color: var(--white); border-bottom: none; }
+
+.w-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4rem; }
+.w-item { position: relative; display: block; group; }
+.w-img {
+  width: 100%; height: 600px; background: #1a1a1a;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); color: #333; overflow: hidden;
+  transition: transform 0.5s ease;
+}
+.w-item:hover .w-img { transform: scale(0.98); }
+.w-info { padding: 2rem 0; }
+.w-info h3 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; text-transform: uppercase; }
+.w-info p { font-size: 1.125rem; color: #888; }
+.w-tags { display: flex; gap: 1rem; margin-top: 1.5rem; font-family: var(--mono); font-size: 0.75rem; color: #aaa; text-transform: uppercase; }
+
+/* ── ПРИЗЫВ К АУДИТУ (BIG STATEMENT) ── */
+.audit-cta { padding: 12rem 0; text-align: center; background: var(--light-grey); }
+.audit-cta h2 {
+  font-size: clamp(2.5rem, 6vw, 6rem); font-weight: 900;
+  letter-spacing: -0.05em; line-height: 0.9; text-transform: uppercase;
+  max-width: 1200px; margin: 0 auto 3rem;
+}
+.audit-cta .btn-p { background: var(--black); color: var(--white); }
+
+/* ── ПРОЦЕСС ── */
+.process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2rem; }
+.pr-step { padding: 2rem 0; border-top: 2px solid var(--black); }
+.pr-num { font-family: var(--display); font-size: 3rem; font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.05em; }
+.pr-step h4 { font-size: 1.25rem; font-weight: 800; margin-bottom: 1rem; text-transform: uppercase; }
+.pr-step p { font-size: 0.875rem; color: var(--grey); line-height: 1.6; }
+
+/* ── СТУДИЯ / ABOUT ── */
+.ab-text p {
+  font-size: clamp(1.25rem, 2vw, 2rem); line-height: 1.4;
+  font-weight: 500; color: var(--grey); margin-bottom: 2rem;
+  max-width: 1000px;
+}
+.ab-text strong { color: var(--black); font-weight: 800; }
+
+/* ── ФУТЕР ── */
+footer { background: var(--black); color: var(--white); padding: 8rem 0 2rem; }
+.ft-huge {
+  font-size: clamp(3rem, 12vw, 15rem); font-weight: 900;
+  letter-spacing: -0.06em; line-height: 0.8; margin-bottom: 4rem;
+}
+.ft-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4rem; padding-bottom: 4rem; border-bottom: 1px solid #222; }
+.ft-col h4 { font-family: var(--mono); font-size: 0.75rem; color: #666; text-transform: uppercase; margin-bottom: 1.5rem; }
+.ft-col a, .ft-col p { display: block; font-size: 1.125rem; color: #ccc; margin-bottom: 0.75rem; transition: color 0.2s; }
+.ft-col a:hover { color: var(--white); }
+.ft-bottom { padding-top: 2rem; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 0.875rem; color: #666; text-transform: uppercase; }
+
+/* ── АНИМАЦИИ ── */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── АДАПТИВ ── */
+@media(max-width: 1024px) {
+  .srv-row { grid-template-columns: 1fr; padding: 3rem 0; gap: 1rem; }
+  .srv-num { margin-bottom: 1rem; }
+  .w-grid { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr; }
+  .ft-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .nav-r a:not(.nav-cta) { display: none; }
+  .w-img { height: 400px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="c">
+    <a href="#" class="logo">OFST</a>
+    <div class="nav-r">
+      <a href="#work">Работы</a>
+      <a href="#services">Услуги</a>
+      <a href="#about">Студия</a>
+      <a href="#contact" class="nav-cta">Аудит проекта</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="c">
+    <div class="hero-tag">Прага / Веб-студия</div>
+    <h1 class="reveal">Мы создаем<br>цифровой опыт.</h1>
+    <p class="hero-sub reveal" style="transition-delay: 0.1s">
+      Уникальный дизайн, инженерия и масштабирование для бизнеса. 
+      Без рамок, без шаблонов. Решения, которые работают мощнее вашей визитки.
+    </p>
+    <a href="#contact" class="btn-p reveal" style="transition-delay: 0.2s">Начать проект</a>
+  </div>
+</section>
+
+<section id="services">
+  <div class="c">
+    <div class="s-label">Наши компетенции</div>
+    <h2 class="s-title reveal">Как мы превращаем сайт в инструмент роста</h2>
+    <div class="srv-list">
+      
+      <div class="srv-row reveal">
+        <div class="srv-num">01</div>
+        <div>
+          <h3>Цифровое присутствие</h3>
+          <div class="srv-price">От 25,000 CZK</div>
+        </div>
+        <div class="srv-desc">Быстрый, премиальный сайт с CMS, которой вы действительно сможете управлять. SEO-оптимизация с первого дня. Идеально для кафе, салонов и сферы услуг.</div>
+      </div>
+
+      <div class="srv-row reveal">
+        <div class="srv-num">02</div>
+        <div>
+          <h3>Бренд-платформа</h3>
+          <div class="srv-price">От 60,000 CZK</div>
+        </div>
+        <div class="srv-desc">Все преимущества цифрового присутствия плюс кастомная типографика, визуальная айдентика и дизайн-система. Ваш бренд станет безошибочно узнаваемым.</div>
+      </div>
+
+      <div class="srv-row reveal">
+        <div class="srv-num">03</div>
+        <div>
+          <h3>E-Commerce</h3>
+          <div class="srv-price">От 80,000 CZK</div>
+        </div>
+        <div class="srv-desc">Полноценный интернет-магазин с каталогом товаров, мультиязычностью и интеграцией платежей. Построен на Shopify или Headless — на ваш выбор.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="work" id="work">
+  <div class="c">
+    <div class="s-label">Избранные работы</div>
+    <h2 class="s-title reveal">Проекты с реальным влиянием</h2>
+    
+    <div class="w-grid">
+      <a href="#" class="w-item reveal">
+        <div class="w-img">[Изображение проекта: Lee's Tea]</div>
+        <div class="w-info">
+          <h3>Lee's Tea</h3>
+          <p>Киоск Bubble Tea в Quadrio. От нуля до полного запуска за 2 недели.</p>
+          <div class="w-tags"><span>Astro</span><span>Decap CMS</span><span>ChoiceQR</span></div>
+        </div>
+      </a>
+      
+      <a href="#" class="w-item reveal">
+        <div class="w-img">[Изображение проекта: Cannafest]</div>
+        <div class="w-info">
+          <h3>Cannafest</h3>
+          <p>Редизайн крупнейшей в Европе выставки каннабиса. 300+ спонсоров.</p>
+          <div class="w-tags"><span>PWA</span><span>Билетная система</span></div>
+        </div>
+      </a>
+
+      <a href="#" class="w-item reveal">
+        <div class="w-img">[Изображение проекта: NURE]</div>
+        <div class="w-info">
+          <h3>KhNURE</h3>
+          <p>Глобальный редизайн технического университета. 20+ шаблонов, мега-меню.</p>
+          <div class="w-tags"><span>Astro</span><span>WP API</span><span>WCAG</span></div>
+        </div>
+      </a>
+
+      <a href="#" class="w-item reveal">
+        <div class="w-img">[Изображение проекта: FitInn]</div>
+        <div class="w-info">
+          <h3>FitInn</h3>
+          <p>Mobile-first лендинг для фитнес-студии с интеграцией расписания.</p>
+          <div class="w-tags"><span>Lighthouse 99</span><span>Бронирование</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="audit-cta" id="contact">
+  <div class="c reveal">
+    <h2>Ваш сайт теряет деньги. Мы покажем где.</h2>
+    <a href="mailto:hello@ofst.studio" class="btn-p">Запросить бесплатный аудит</a>
+  </div>
+</section>
+
+<section id="process">
+  <div class="c">
+    <div class="s-label">Как мы работаем</div>
+    <h2 class="s-title reveal">От аудита до запуска</h2>
+    
+    <div class="process-grid">
+      <div class="pr-step reveal">
+        <div class="pr-num">01</div>
+        <h4>Аудит</h4>
+        <p>Анализируем текущую ситуацию и показываем точки потери конверсии.</p>
+      </div>
+      <div class="pr-step reveal" style="transition-delay: 0.1s">
+        <div class="pr-num">02</div>
+        <h4>Стратегия</h4>
+        <p>Определяем стек, архитектуру и цели. Полная прозрачность до старта.</p>
+      </div>
+      <div class="pr-step reveal" style="transition-delay: 0.2s">
+        <div class="pr-num">03</div>
+        <h4>Дизайн</h4>
+        <p>Создаем интерактивные прототипы высочайшей точности.</p>
+      </div>
+      <div class="pr-step reveal" style="transition-delay: 0.3s">
+        <div class="pr-num">04</div>
+        <h4>Разработка</h4>
+        <p>Пишем чистый код, настраиваем Headless CMS. Вы не привязаны к шаблонам.</p>
+      </div>
+      <div class="pr-step reveal" style="transition-delay: 0.4s">
+        <div class="pr-num">05</div>
+        <h4>Запуск</h4>
+        <p>Деплой, аналитика, SEO. 30 дней технической поддержки после релиза.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="c">
+    <div class="s-label">Студия</div>
+    <div class="ab-text reveal">
+      <p><strong>OFST — это пражская студия веб-дизайна и разработки.</strong> Мы создаем цифровые продукты, независимые от платформенных ограничений.</p>
+      <p>Основана <strong>Марией Чернобай</strong>. Синтез глубокого понимания компьютерных наук (KhNURE) и академической типографики (UMPRUM) формирует бескомпромиссный подход к каждому пикселю и строке кода.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="c">
+    <div class="ft-huge">OFST</div>
+    <div class="ft-grid">
+      <div class="ft-col">
+        <h4>Навигация</h4>
+        <a href="#work">Работы</a>
+        <a href="#services">Услуги</a>
+        <a href="#about">Студия</a>
+      </div>
+      <div class="ft-col">
+        <h4>Контакты</h4>
+        <a href="mailto:hello@ofst.studio">hello@ofst.studio</a>
+        <a href="tel:+420728128098">+420 728 128 098</a>
+        <p>Прага, Чехия</p>
+      </div>
+      <div class="ft-col">
+        <h4>Соцсети</h4>
+        <a href="https://instagram.com/4rnbay" target="_blank">Instagram</a>
+        <a href="https://github.com/yunglordsimens" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span>&copy; 2026 OFST</span>
+      <span>Astro + Decap CMS / Vercel</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  })
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+reveals.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>

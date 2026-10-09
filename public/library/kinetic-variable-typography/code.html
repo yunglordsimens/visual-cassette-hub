@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kinetic Variable Typography</title>
+    <style>
+        /* Подключаем настоящий вариативный шрифт с осями wdth (ширина) и wght (жирность) */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            color: #fff;
+            /* Используем вариативный шрифт */
+            font-family: 'Roboto Flex', sans-serif;
+            overflow: hidden;
+            touch-action: none; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .name-item {
+            /* Уменьшенный, более аккуратный размер */
+            font-size: clamp(16px, 3.5vh, 48px);
+            line-height: 1.1;
+            text-transform: uppercase;
+            white-space: nowrap;
+            /* Базовые настройки вариативного шрифта: жирный и узкий */
+            font-variation-settings: "wght" 900, "wdth" 25;
+            /* Подготовка для плавной анимации браузером */
+            will-change: font-variation-settings;
+            cursor: pointer; /* Добавим курсор для понятности */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="text-container"></div>
+
+    <script>
+        const container = document.getElementById('text-container');
+        
+        const namesList = [
+            "КИРИЛЛ", "АЛЕКСАНДР", "СОФИЯ", "МАРИЯ", 
+            "ДМИТРИЙ", "ИВАН", "АННА", "МАКСИМ", "ДАРЬЯ"
+        ];
+
+        const elements = [];
+        
+        // Создаем DOM-элементы
+        const itemsCount = 35; 
+
+        for (let i = 0; i < itemsCount; i++) {
+            const div = document.createElement('div');
+            div.className = 'name-item';
+            div.textContent = namesList[i % namesList.length];
+            
+            // Запоминаем текущую ширину для плавной анимации
+            div.currentWdth = 50; 
+
+            container.appendChild(div);
+            elements.push(div);
+        }
+
+        // Отслеживаем позицию курсора глобально для эффекта волны
+        let mouse = { y: -1000, isActive: false };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.y = e.clientY;
+            mouse.isActive = true;
+        });
+
+        window.addEventListener('touchstart', (e) => {
+            mouse.y = e.touches[0].clientY;
+            mouse.isActive = true;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            mouse.y = e.touches[0].clientY;
+            mouse.isActive = true;
+        });
+
+        window.addEventListener('mouseleave', () => mouse.isActive = false);
+        window.addEventListener('touchend', () => mouse.isActive = false);
+
+        let time = 0;
+
+        function animate() {
+            time += 0.04; // Скорость автономного "дыхания"
+
+            // Читаем координаты всех элементов до изменения стилей (защита от просадки FPS и layout thrashing)
+            const centersY = elements.map(el => {
+                const rect = el.getBoundingClientRect();
+                return rect.top + rect.height / 2;
+            });
+
+            elements.forEach((el, index) => {
+                // 1. Автономная анимация (Имена дышат)
+                const idleWdth = 50 + Math.sin(time + index * 0.4) * 25; 
+                let targetWdth = idleWdth;
+
+                // 2. Интерактив: мягкая волна вокруг курсора
+                if (mouse.isActive) {
+                    const centerY = centersY[index];
+                    const dist = Math.abs(centerY - mouse.y);
+                    
+                    // Зона захвата: 150px (как раз зацепит пару имен сверху и пару снизу от курсора)
+                    const stretchRadius = 150; 
+                    
+                    if (dist < stretchRadius) {
+                        // Формула плавной волны через косинус
+                        const factor = Math.cos((dist / stretchRadius) * (Math.PI / 2));
+                        // Базовая ширина 25 + плавно добавляем до максимума (125)
+                        const hoverWdth = 25 + (125 * factor); 
+                        
+                        targetWdth = Math.max(targetWdth, hoverWdth);
+                    }
+                }
+
+                // 3. Плавный переход (Lerp) от текущего состояния к целевому
+                // 0.15 — это скорость сглаживания анимации (ближе к 1 = резче)
+                el.currentWdth += (targetWdth - el.currentWdth) * 0.15; 
+
+                // Применяем ширину к оси wdth
+                el.style.fontVariationSettings = `"wdth" ${el.currentWdth.toFixed(1)}, "wght" 900`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

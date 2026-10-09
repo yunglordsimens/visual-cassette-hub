@@ -1,0 +1,20 @@
+{
+  "id": "css-imitaciya-3d-galki",
+  "title": "CSS Имитация 3D Гальки",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-03-25",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/css-imitaciya-3d-galki/code.html",
+  "previewUrl": "library/css-imitaciya-3d-galki/code.html"
+}

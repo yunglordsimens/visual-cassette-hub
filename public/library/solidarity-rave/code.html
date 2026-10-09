@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1">
+<title>6k ovecek & evro661 — solidarity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+<style>
+/* ── BASE & VARIABLES ── */
+:root {
+  --bg: #030303;
+  --text: #e0e0e0;
+  --accent: #ff2a2a;
+  --mono: 'JetBrains Mono', monospace;
+  --serif: 'Playfair Display', serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--mono); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { min-height: 100vh; position: relative; }
+
+::selection { background: var(--text); color: var(--bg); }
+
+/* ── FILM GRAIN & NOISE ── */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/></svg>");
+  mix-blend-mode: overlay; opacity: 0.8;
+}
+.scanlines {
+  position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0 1px, transparent 1px 3px);
+}
+
+/* ── HEADER & LIVE ODOMETER COUNTER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: flex-start; justify-content: space-between;
+  padding: 15px 20px; pointer-events: none;
+}
+.h-left { display: flex; align-items: center; gap: 15px; pointer-events: auto; }
+.lang-btn { background: none; border: none; color: #666; cursor: pointer; font-family: inherit; font-size: 11px; transition: 0.3s; }
+.lang-btn:hover, .lang-btn.active { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+
+/* Odometer Container */
+.top-fund-container {
+  position: absolute; left: 50%; transform: translateX(-50%); top: 15px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  pointer-events: auto; cursor: pointer;
+}
+.live-indicator {
+  display: flex; align-items: center; gap: 8px; font-size: 10px; letter-spacing: 0.2em; color: #aaa;
+}
+.live-indicator .dot { 
+  width: 8px; height: 8px; background: var(--accent); border-radius: 50%; 
+  animation: pulse 1.5s infinite; 
+}
+@keyframes pulse { 0%,100%{opacity:1; box-shadow:0 0 10px var(--accent);} 50%{opacity:0.3; box-shadow:none;} }
+
+.ticker-wrapper {
+  display: flex; align-items: baseline; gap: 8px;
+  background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.15);
+  padding: 8px 15px; backdrop-filter: blur(5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transition: transform 0.2s, border-color 0.2s;
+}
+.ticker-wrapper:hover { transform: scale(1.02); border-color: rgba(255,255,255,0.4); }
+
+.ticker {
+  display: flex; font-size: 2.5rem; font-weight: bold; color: #fff;
+  height: 1em; line-height: 1em; overflow: hidden;
+}
+.ticker-col {
+  display: inline-block; width: 0.6em; text-align: center; position: relative; height: 1em;
+}
+.ticker-digits {
+  position: absolute; left: 0; top: 0; display: flex; flex-direction: column;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.ticker-digit { height: 1em; display: flex; align-items: center; justify-content: center; }
+.currency { font-size: 1rem; color: #777; font-weight: normal; margin-left: 5px; }
+
+/* ── GATES SCENE (The Descent) ── */
+.gates-scene { height: 200vh; position: relative; background: #000; }
+.gates-sticky { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; display: flex; }
+
+.gate {
+  width: 50%; height: 100%; background-size: cover; background-position: center;
+  position: relative; z-index: 10; filter: grayscale(1) contrast(1.2);
+  will-change: transform; transition: transform 0.1s linear;
+}
+.gate-left { 
+  background-image: url('ChatGPT Image Mar 26, 2026 at 08_33_34 PM.jpg'); 
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  border-right: 1px solid rgba(255,255,255,0.1);
+}
+.gate-right { 
+  background-image: url('ChatGPT Image Mar 26, 2026 at 08_33_34 PM.jpg'); 
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  background-position: right center;
+  border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.gates-interior {
+  position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: radial-gradient(circle at center, #111 0%, #000 80%);
+}
+.gates-interior img { width: 40%; max-width: 300px; filter: invert(1) opacity(0.8); animation: float 6s infinite ease-in-out; }
+
+.gate-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 15; font-family: var(--serif); font-size: 6vw; font-style: italic;
+  white-space: nowrap; color: white; mix-blend-mode: difference; pointer-events: none;
+}
+.scroll-hint {
+  position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+  z-index: 15; font-size: 10px; letter-spacing: 0.3em; opacity: 0.5;
+}
+
+/* ── MAIN CONTENT ── */
+.content-wrapper { position: relative; z-index: 20; background: var(--bg); padding-bottom: 100px; border-top: 1px solid #222;}
+
+/* Section: Arrival */
+.arrival { padding: 100px 20px; max-width: 600px; margin: 0 auto; text-align: center; }
+.logo-img { width: 100%; filter: invert(1); opacity: 0.9; margin-bottom: 40px; }
+.date-title { font-family: var(--serif); font-size: 42px; font-style: italic; margin-bottom: 20px; }
+.venue-box {
+  border: 1px solid #333; padding: 20px; text-align: left; margin-top: 30px;
+  background: rgba(255,255,255,0.02);
+}
+.venue-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #333; font-size: 12px; }
+.venue-row:last-child { border-bottom: none; }
+.venue-row span { color: #666; }
+
+/* ── INTERACTIVE ZONE: SILENT HILL FLASHLIGHT ── */
+.dark-zone-container {
+  width: 100%; height: 80vh; background: #000; position: relative;
+  overflow: hidden; cursor: crosshair; margin: 60px 0; border-y: 1px solid #222;
+}
+.dark-zone-bg {
+  position: absolute; inset: 0; background: #050505; display: flex; align-items: center; justify-content: center;
+}
+.dark-zone-bg img.creepy-1 { position: absolute; left: 10%; top: 20%; width: 250px; filter: invert(1) opacity(0.5); }
+.dark-zone-bg img.creepy-2 { position: absolute; right: 10%; bottom: 20%; width: 200px; filter: invert(1) opacity(0.6); }
+.dark-zone-bg img.creepy-3 { position: absolute; left: 40%; top: 40%; width: 300px; mix-blend-mode: screen; opacity: 0.3; }
+
+.flashlight-mask {
+  position: absolute; inset: 0; background: #000; pointer-events: none;
+  mask-image: radial-gradient(circle 150px at 50% 50%, transparent 0%, rgba(0,0,0,0.8) 40%, black 100%);
+  -webkit-mask-image: radial-gradient(circle 150px at 50% 50%, transparent 0%, rgba(0,0,0,0.8) 40%, black 100%);
+}
+.dark-hint {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; font-size: 10px; letter-spacing: 0.5em; color: #555; mix-blend-mode: difference;
+}
+
+/* ── LINEUP ── */
+.lineup { padding: 60px 20px; max-width: 600px; margin: 0 auto; }
+.section-title { font-family: var(--serif); font-size: 24px; font-style: italic; text-align: center; margin-bottom: 40px; color: #aaa; }
+.artist-strip {
+  padding: 15px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between;
+  cursor: pointer; transition: 0.3s; color: #999;
+}
+.artist-strip:hover { color: #fff; padding-left: 10px; border-color: #555; }
+.artist-info {
+  max-height: 0; overflow: hidden; transition: max-height 0.3s ease; color: #666; font-size: 12px;
+}
+.artist-info.open { max-height: 100px; padding: 15px 0; }
+
+/* ── FOOTER & CTA ── */
+.cta { text-align: center; padding: 80px 20px; }
+.btn-primary {
+  display: inline-block; padding: 15px 40px; border: 1px solid var(--text); color: var(--text);
+  text-decoration: none; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+  transition: 0.3s; background: transparent;
+}
+.btn-primary:hover { background: var(--text); color: var(--bg); }
+footer { text-align: center; padding: 40px; font-size: 10px; color: #444; border-top: 1px solid #111; }
+footer a { color: #666; text-decoration: none; margin: 0 10px; }
+footer a:hover { color: #fff; }
+
+/* ── AUDIO PLAYER (Walkman style) ── */
+.player {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(5,5,5,0.85); border-top: 1px solid #222; backdrop-filter: blur(10px);
+  transform: translateY(calc(100% - 60px)); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.player.open { transform: translateY(0); }
+.player-top {
+  height: 60px; display: flex; align-items: center; padding: 0 20px; cursor: pointer; gap: 15px;
+}
+.play-btn {
+  width: 36px; height: 36px; border: 1px solid #555; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; background: none; color: #fff;
+  cursor: pointer; transition: 0.3s; flex-shrink: 0;
+}
+.play-btn:hover { border-color: #fff; }
+.track-info { flex: 1; overflow: hidden; white-space: nowrap; font-size: 12px; }
+.track-marquee { display: inline-block; animation: marquee 10s linear infinite; }
+.player-list { padding: 0 20px 20px; max-height: 40vh; overflow-y: auto; }
+.track-item {
+  padding: 10px 0; border-bottom: 1px solid #222; font-size: 11px; color: #666; cursor: pointer;
+  display: flex; justify-content: space-between; transition: 0.2s;
+}
+.track-item:hover, .track-item.active { color: #fff; border-color: #555; }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<header>
+  <div class="h-left">
+    <button class="lang-btn active">UA</button>
+    <button class="lang-btn">EN</button>
+    <button class="lang-btn">CZ</button>
+  </div>
+
+  <!-- ВЕЛИКИЙ ЖИВИЙ ОДОМЕТР ПО ЦЕНТРУ -->
+  <div class="top-fund-container" onclick="alert('Усі зібрані кошти йдуть на FPV дрони! Банка: 5375 0000 0000 0000')">
+    <div class="live-indicator"><span class="dot"></span> LIVE FUNDING</div>
+    <div class="ticker-wrapper">
+      <div class="ticker" id="ticker">
+        <!-- JS згенерує колонки з цифрами -->
+      </div>
+      <div class="currency">CZK</div>
+    </div>
+  </div>
+</header>
+
+<section class="gates-scene" id="scene">
+  <div class="gates-sticky">
+    <div class="gates-interior">
+      <img src="front.png" alt="Rabbit Entity">
+    </div>
+    
+    <div class="gate gate-left" id="gate-l"></div>
+    <div class="gate gate-right" id="gate-r"></div>
+    
+    <div class="gate-text" id="gate-txt">MAY 8—9</div>
+    <div class="scroll-hint">SCROLL TO DESCEND</div>
+  </div>
+</section>
+
+<div class="content-wrapper">
+  
+  <section class="arrival">
+    <img src="front texxt.png" alt="6k ovecek" class="logo-img">
+    <h1 class="date-title">Solidarity Rave</h1>
+    <p style="color:#888; font-size: 12px; line-height: 1.6;">
+      A two-day benefit gathering. Underground music, solidarity, no corporate bullshit.<br>
+      All gathered funds directly support FPV drone production for Ukraine.
+    </p>
+    
+    <div class="venue-box">
+      <div class="venue-row"><span>VENUE</span><b>Strahov Stadium</b></div>
+      <div class="venue-row"><span>CITY</span><b>Prague, CZ</b></div>
+      <div class="venue-row"><span>DOORS</span><b>18:00</b></div>
+    </div>
+  </section>
+
+  <!-- ІНТЕРАКТИВНА ЗОНА З ЛІХТАРИКОМ -->
+  <section class="dark-zone-container" id="flashlight-zone">
+    <div class="dark-zone-bg">
+      <img src="characters.jpg" class="creepy-1" alt="creepy art">
+      <img src="fjksdhf;sd.png" class="creepy-2" alt="creepy art">
+      <img src="dgjhgf.jpg" class="creepy-3" alt="creepy art">
+    </div>
+    <div class="flashlight-mask" id="mask"></div>
+    <div class="dark-hint" id="dark-hint">FIND THEM IN THE DARK</div>
+  </section>
+
+  <section class="lineup">
+    <div class="section-title">The Entities</div>
+    <div id="lineup-container">
+      <!-- JS -->
+    </div>
+  </section>
+
+  <section class="cta">
+    <a href="https://goout.net" target="_blank" class="btn-primary">Initialize Ticket</a>
+  </section>
+
+  <footer>
+    <a href="https://www.instagram.com/sest_tisicu_ovecek" target="_blank">@sest_tisicu_ovecek</a>
+    <a href="https://www.instagram.com/evro_661" target="_blank">@evro_661</a>
+    <a href="https://www.instagram.com/resistancesupportclub" target="_blank">@resistancesupportclub</a>
+    <br><br>
+    <span style="opacity: 0.3;">STAY ALIVE</span>
+  </footer>
+</div>
+
+<audio id="main-audio"></audio>
+
+<div class="player" id="player">
+  <div class="player-top" id="player-toggle">
+    <button class="play-btn" id="play-pause-btn">▶</button>
+    <div class="track-info">
+      <span class="track-marquee" id="now-playing-text">NO TAPE INSERTED... OPEN PLAYER TO SELECT</span>
+    </div>
+    <span style="font-size:10px; color:#555;">[ TAPE DECK ]</span>
+  </div>
+  <div class="player-list" id="track-list"></div>
+</div>
+
+<script>
+/* ── ODOMETER (РОЛЛ ЦИФР) ЛОГІКА ── */
+const tickerEl = document.getElementById('ticker');
+
+// Робимо так, щоб сума ніколи не скидалася на 0. Вона залежить від поточного часу!
+const START_DATE = new Date('2026-04-01T00:00:00Z').getTime();
+// Базова сума зростає кожну хвилину реального часу
+let currentFund = 142500 + Math.floor((Date.now() - START_DATE) / 100000); 
+
+function setupTicker(val) {
+  const str = String(val);
+  tickerEl.innerHTML = '';
+  // Створюємо колонки від 0 до 9 для кожної цифри
+  for(let i = 0; i < str.length; i++) {
+    const col = document.createElement('div');
+    col.className = 'ticker-col';
+    
+    const digitsWrap = document.createElement('div');
+    digitsWrap.className = 'ticker-digits';
+    
+    for(let d = 0; d <= 9; d++) {
+      const digitDiv = document.createElement('div');
+      digitDiv.className = 'ticker-digit';
+      digitDiv.innerText = d;
+      digitsWrap.appendChild(digitDiv);
+    }
+    
+    col.appendChild(digitsWrap);
+    tickerEl.appendChild(col);
+  }
+  updateTickerDisplay(str);
+}
+
+function updateTickerDisplay(str) {
+  const cols = tickerEl.querySelectorAll('.ticker-digits');
+  // Якщо кількість цифр виросла (наприклад з 99 999 до 100 000), перебудовуємо
+  if (cols.length !== str.length) {
+    setupTicker(str);
+    return;
+  }
+  // Зсуваємо колонки на потрібну цифру (translateY)
+  for(let i = 0; i < str.length; i++) {
+    const digit = parseInt(str[i], 10);
+    cols[i].style.transform = `translateY(-${digit * 1}em)`;
+  }
+}
+
+// Ініціалізація
+setupTicker(currentFund);
+
+// Симуляція "живих" донатів кожні 3-6 секунд
+setInterval(() => {
+  if(Math.random() > 0.4) {
+    // Додаємо рандомну суму від 10 до 300 крон
+    currentFund += Math.floor(Math.random() * 290) + 10;
+    updateTickerDisplay(String(currentFund));
+  }
+}, 3500);
+
+
+/* ── GATES SCROLL ANIMATION ── */
+const scene = document.getElementById('scene');
+const gateL = document.getElementById('gate-l');
+const gateR = document.getElementById('gate-r');
+const gateTxt = document.getElementById('gate-txt');
+
+window.addEventListener('scroll', () => {
+  const rect = scene.getBoundingClientRect();
+  const totalScroll = scene.offsetHeight - window.innerHeight;
+  let scrolled = Math.max(0, Math.min(totalScroll, -rect.top));
+  let progress = scrolled / totalScroll;
+  
+  const move = progress * 50; 
+  gateL.style.transform = `translateX(-${move}vw)`;
+  gateR.style.transform = `translateX(${move}vw)`;
+  gateTxt.style.opacity = 1 - (progress * 2);
+});
+
+/* ── FLASHLIGHT EFFECT ── */
+const zone = document.getElementById('flashlight-zone');
+const mask = document.getElementById('mask');
+const darkHint = document.getElementById('dark-hint');
+
+zone.addEventListener('mousemove', (e) => {
+  const rect = zone.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  mask.style.maskImage = `radial-gradient(circle 120px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.8) 50%, black 100%)`;
+  mask.style.webkitMaskImage = `radial-gradient(circle 120px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.8) 50%, black 100%)`;
+  darkHint.style.opacity = '0';
+});
+
+zone.addEventListener('touchmove', (e) => {
+  e.preventDefault();
+  const rect = zone.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left;
+  const y = e.touches[0].clientY - rect.top;
+  mask.style.maskImage = `radial-gradient(circle 100px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.8) 50%, black 100%)`;
+  mask.style.webkitMaskImage = `radial-gradient(circle 100px at ${x}px ${y}px, transparent 0%, rgba(0,0,0,0.8) 50%, black 100%)`;
+  darkHint.style.opacity = '0';
+}, {passive: false});
+
+/* ── LINEUP ── */
+const lineupData = [
+  { name: "ANGST", info: "Live · Post-punk / Darkwave" },
+  { name: "CHAOSY", info: "Live · Alternative" },
+  { name: "ARA", info: "Live Band" },
+  { name: "TERROR PHOENIX", info: "Live set · Post-industrial" },
+  { name: "COINMAN", info: "Opening set · DJ" }
+];
+const lineupContainer = document.getElementById('lineup-container');
+lineupData.forEach(artist => {
+  const strip = document.createElement('div');
+  strip.className = 'artist-strip';
+  strip.innerHTML = `<span>${artist.name}</span> <span style="font-size:10px;">+</span>`;
+  const info = document.createElement('div');
+  info.className = 'artist-info';
+  info.innerHTML = `${artist.info}`;
+  strip.onclick = () => info.classList.toggle('open');
+  lineupContainer.appendChild(strip);
+  lineupContainer.appendChild(info);
+});
+
+/* ── AUDIO PLAYER ── */
+const playlist = [
+  { title: "Chaosy - Demo 1", src: "https://actions.google.com/sounds/v1/foley/cassette_tape_button.ogg" },
+  { title: "Ara - Live Session", src: "https://actions.google.com/sounds/v1/foley/cassette_tape_button.ogg" },
+  { title: "Angst - Void", src: "https://actions.google.com/sounds/v1/foley/cassette_tape_button.ogg" }
+];
+const audio = document.getElementById('main-audio');
+const playPauseBtn = document.getElementById('play-pause-btn');
+const nowPlayingTxt = document.getElementById('now-playing-text');
+const trackListEl = document.getElementById('track-list');
+const playerPanel = document.getElementById('player');
+
+let currentTrack = 0;
+let isPlaying = false;
+
+playlist.forEach((track, index) => {
+  const item = document.createElement('div');
+  item.className = 'track-item';
+  item.innerHTML = `<span>0${index + 1}. ${track.title}</span> <span>[ PLAY ]</span>`;
+  item.onclick = (e) => { e.stopPropagation(); playTrack(index); };
+  trackListEl.appendChild(item);
+});
+
+function playTrack(index) {
+  document.querySelectorAll('.track-item').forEach(el => el.classList.remove('active'));
+  trackListEl.children[index].classList.add('active');
+  currentTrack = index;
+  audio.src = playlist[index].src;
+  nowPlayingTxt.innerText = `NOW PLAYING: ${playlist[index].title} *** ENJOY THE DARKNESS *** `;
+  audio.play();
+  isPlaying = true;
+  playPauseBtn.innerText = '❚❚';
+}
+
+playPauseBtn.onclick = (e) => {
+  e.stopPropagation();
+  if (playlist.length === 0) return;
+  if (isPlaying) { audio.pause(); playPauseBtn.innerText = '▶'; } 
+  else { if (!audio.src) playTrack(0); else audio.play(); playPauseBtn.innerText = '❚❚'; }
+  isPlaying = !isPlaying;
+};
+
+document.getElementById('player-toggle').onclick = () => playerPanel.classList.toggle('open');
+audio.addEventListener('ended', () => playTrack((currentTrack + 1) % playlist.length));
+
+</script>
+</body>
+</html>

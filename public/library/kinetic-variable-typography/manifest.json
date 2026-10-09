@@ -1,0 +1,20 @@
+{
+  "id": "kinetic-variable-typography",
+  "title": "Kinetic Variable Typography",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Типографика",
+    "Анимация"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-05-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/kinetic-variable-typography/code.html",
+  "previewUrl": "library/kinetic-variable-typography/code.html"
+}

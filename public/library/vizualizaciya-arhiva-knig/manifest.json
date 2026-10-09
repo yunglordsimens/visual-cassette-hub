@@ -1,0 +1,22 @@
+{
+  "id": "vizualizaciya-arhiva-knig",
+  "title": "Визуализация Архива Книг",
+  "tags": [
+    "gemini",
+    "react",
+    "d3",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React · d3",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/vizualizaciya-arhiva-knig/code.tsx",
+  "previewUrl": "library/vizualizaciya-arhiva-knig/preview.html"
+}

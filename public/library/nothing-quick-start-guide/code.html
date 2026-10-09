@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nothing Quick Start Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using VT323 for the dot-matrix/pixel look of headers and Roboto Mono for small text -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nothing-bg': '#e6e6e6',
+                        'nothing-card': '#f2f2f2',
+                        'nothing-text': '#4a4a4a',
+                        'nothing-red': '#cc3333'
+                    },
+                    fontFamily: {
+                        'dot': ['"VT323"', 'monospace'],
+                        'mono': ['"Roboto Mono"', 'monospace'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #d1d1d1; /* Outer background to match the grey gaps */
+            color: #4a4a4a;
+            padding: 10px; /* Small padding for the outer edge */
+        }
+
+        /* 
+           The image shows a grid where cards have large rounded corners 
+           but they touch each other in a way that looks like a single sheet 
+           with rounded punch-outs. We'll simulate this with a CSS Grid 
+           and specific border-radius application.
+        */
+        
+        .card {
+            background-color: #f0f0f0; /* Slightly off-white/light grey */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            /* Subtly grainy texture could be added here if needed, but solid color is fine for now */
+        }
+
+        /* 
+           Adjusting borders to create the "connected" pill/grid look.
+           This is tricky to do perfectly with just standard grid gap.
+           We apply large border radii to the outer corners of the whole grid,
+           and specific radii to inner corners to mimic the image.
+           For simplicity and robustness across screens, we'll use uniform rounded cards 
+           with a small gap, which gets very close to the visual intent.
+        */
+        .grid-container {
+            gap: 12px; /* The grey lines between cards */
+            background-color: #d1d1d1;
+            padding: 0;
+            border-radius: 2rem;
+            overflow: hidden; /* Ensure cards don't spill out of the main rounded container */
+        }
+
+        /* Typography overrides */
+        .text-xs {
+            font-size: 0.65rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        
+        .header-text {
+            font-size: 1.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .number-text {
+             font-size: 1.5rem;
+             letter-spacing: 0.05em;
+        }
+
+        .sticky-container {
+            position: sticky;
+            top: 20px; /* Отступ сверху при прилипании */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex justify-center font-mono py-10">
+
+    <div class="max-w-6xl w-full flex flex-col gap-12">
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-container bg-transparent sticky-container" style="top: 20px; z-index: 10;">
+            <!-- Top Left Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                <div class="font-dot header-text mb-8">Nothing</div>
+                
+                <div class="mt-auto space-y-4 text-xs">
+                    <div>
+                        <p>NOTHING EAR (1)</p>
+                    </div>
+                    <div>
+                        <p>TRUE WIRELESS EARBUDS</p>
+                        <p>QUICK START GUIDE V1.0.0</p>
+                        <p>LANGUAGE: ENGLISH</p>
+                    </div>
+                    <div>
+                        <p>NOTHING TECHNOLOGY LTD.</p>
+                        <p>LONDON 2021</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Middle Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                 <div class="font-dot header-text mb-8">Quick Start Guide</div>
+                 
+                 <div class="mt-auto space-y-4 text-xs">
+                    <div>
+                        <p>CONNECT</p>
+                        <p>ENABLE BLUETOOTH ON YOUR DEVICE.</p>
+                    </div>
+                    <div>
+                        <p>EAR (1) APP</p>
+                        <p>ACCESS ALL FEATURES, SETTINGS &</p>
+                        <p>CUSTOMISATIONS.</p>
+                    </div>
+                    <div>
+                        <p>ENJOY EAR (1).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Right Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                <div class="font-dot header-text mb-8 invisible">Specs</div> <!-- Invisible to keep spacing if needed, but empty in image -->
+                
+                <div class="mt-auto text-xs space-y-0.5">
+                    <p>INPUT (IN-EAR): 5V = 0.06A</p>
+                    <p>INPUT (CASE): 5V = 1A</p>
+                    <p>OUTPUT (CASE): 5V = 0.12A</p>
+                    <p>CAPACITY (CASE): 570MAH</p>
+                    <p>FCC ID: 2AZEQ-B181, IC: 27102-B181</p>
+                    <p>HVIN: B181L, B181R</p>
+                    <p>NOTHING TECHNOLOGY LTD.</p>
+                    <p>11 STAPLE INN, LONDON, WC1V 7QH, UK</p>
+                </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-container bg-transparent sticky-container" style="top: 40px; z-index: 20;">
+            <!-- Middle Left Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                <div>
+                    <div class="font-dot number-text mb-2">01</div>
+                    <div class="text-xs mb-8">EAR (1) APP</div>
+                </div>
+                
+                <div class="flex-grow flex items-center justify-center mb-4">
+                    <!-- Placeholder for QR Code. Using a simple SVG representation -->
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="100" height="100" fill="#f0f0f0"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 10H40V40H10V10ZM15 15V35H35V15H15Z" fill="#333"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M60 10H90V40H60V10ZM65 15V35H85V15H65Z" fill="#333"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 60H40V90H10V60ZM15 65V85H35V65H15Z" fill="#333"/>
+                        <rect x="20" y="20" width="10" height="10" fill="#333"/>
+                        <rect x="70" y="20" width="10" height="10" fill="#333"/>
+                        <rect x="20" y="70" width="10" height="10" fill="#333"/>
+                        <!-- Random inner blocks to look like QR -->
+                        <rect x="45" y="10" width="10" height="10" fill="#333"/>
+                        <rect x="45" y="25" width="10" height="10" fill="#333"/>
+                        <rect x="60" y="45" width="10" height="10" fill="#333"/>
+                        <rect x="75" y="45" width="15" height="10" fill="#333"/>
+                        <rect x="45" y="60" width="10" height="20" fill="#333"/>
+                        <rect x="60" y="60" width="20" height="10" fill="#333"/>
+                        <rect x="75" y="75" width="15" height="15" fill="#333"/>
+                        <rect x="60" y="80" width="10" height="10" fill="#333"/>
+                        <rect x="45" y="85" width="10" height="5" fill="#333"/>
+                    </svg>
+                </div>
+                
+                <div class="mt-auto text-xs">
+                    <p>SCAN QR CODE TO INSTALL THE</p>
+                    <p>EAR (1) APP. (IOS / ANDROID)</p>
+                </div>
+            </div>
+
+            <!-- Middle Center Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                 <div>
+                    <div class="font-dot number-text mb-2">02</div>
+                    <div class="text-xs mb-8">PAIR</div>
+                </div>
+                
+                <div class="mt-auto space-y-4 text-xs">
+                    <div>
+                        <p>FAST PAIRING</p>
+                        <p>OPEN EAR (1).</p>
+                        <p>HOLD IT NEAR YOUR</p>
+                        <p>DEVICE FOR ON-SCREEN</p>
+                        <p>SETUP. (ANDROID ONLY)</p>
+                    </div>
+                    <div>
+                        <p>OTHER DEVICES</p>
+                        <p>OPEN EAR (1) CASE.</p>
+                        <p>HOLD PAIRING BUTTON</p>
+                        <p>UNTIL LIGHT BLINKS.</p>
+                        <p>PAIR WITH YOUR DEVICE.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Right Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                 <div>
+                    <div class="font-dot number-text mb-2">03</div>
+                    <div class="text-xs mb-8">CONTROL</div>
+                </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-container bg-transparent sticky-container" style="top: 60px; z-index: 30; margin-bottom: 50vh;">
+            <!-- Bottom Left Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                <div>
+                    <div class="font-dot number-text mb-2">04</div>
+                    <div class="text-xs mb-8">ADJUST</div>
+                </div>
+                
+                <div class="mt-auto space-y-4 text-xs">
+                    <div>
+                        <p>SELECT FIT</p>
+                        <p>SMALL, MEDIUM</p>
+                        <p>OR LARGE</p>
+                    </div>
+                    <div>
+                        <p>COMFORT</p>
+                        <p>CHOOSE THE MOST</p>
+                        <p>COMFORTABLE TIP</p>
+                        <p>FOR YOUR EARS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Middle Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 shadow-lg">
+                <div>
+                    <div class="font-dot number-text mb-2">05</div>
+                    <div class="text-xs mb-8">CHARGING</div>
+                </div>
+                
+                <div class="mt-auto space-y-4 text-xs">
+                    <div>
+                        <p>EAR (1)</p>
+                        <p>PLACE EARBUDS INSIDE</p>
+                        <p>EAR (1) CASE TO CHARGE.</p>
+                    </div>
+                    <div>
+                        <p>EAR (1) CASE</p>
+                        <p>CHARGE USING QI</p>
+                        <p>WIRELESS CHARGERS OR</p>
+                        <p>VIA USB-C.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Right Card -->
+            <div class="card rounded-4xl p-6 md:p-8 aspect-square lg:aspect-auto lg:h-96 relative shadow-lg">
+                
+                <!-- The distinctive red dot -->
+                <div class="absolute top-6 right-6 md:top-8 md:right-8 w-4 h-4 bg-nothing-red rounded-full"></div>
+
+                <div>
+                    <div class="font-dot number-text mb-2">06</div>
+                    <div class="text-xs mb-8">SUPPORT</div>
+                </div>
+                
+                <div class="mt-auto space-y-4 text-xs pr-8"> <!-- Added right padding to avoid text under dot -->
+                    <div>
+                        <p>NEED HELP?</p>
+                        <p>IF YOU EXPERIENCE ANY</p>
+                        <p>ISSUES WITH YOUR PRODUCT,</p>
+                        <p>FEEL FREE TO REACH OUT TO</p>
+                        <p>OUR CUSTOMER SUPPORT:</p>
+                    </div>
+                    <div>
+                        <p>HELP@NOTHING.TECH</p>
+                        <p>NOTHING.TECH</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

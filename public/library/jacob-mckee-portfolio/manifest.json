@@ -1,0 +1,20 @@
+{
+  "id": "jacob-mckee-portfolio",
+  "title": "Jacob McKee Portfolio",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-14",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/jacob-mckee-portfolio/code.html",
+  "previewUrl": "library/jacob-mckee-portfolio/code.html"
+}

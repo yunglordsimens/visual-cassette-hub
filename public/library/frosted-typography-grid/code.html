@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMPRUM TYPE — Foundry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for 3 Themes */
+        :root {
+            /* 1. LIGHT THEME (Default) */
+            --bg-base: #e5e5e5;
+            --text-main: #111111;
+            --text-muted: #555555;
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: rgba(0, 0, 0, 0.05);
+            --glass-hover-shadow: rgba(0, 0, 0, 0.15);
+            --shape-1: #ffffff;
+            --shape-2: #888888;
+            --shape-3: #222222;
+            --shape-4: #bbbbbb;
+        }
+
+        body.dark {
+            /* 2. DARK THEME */
+            --bg-base: #080808;
+            --text-main: #eeeeee;
+            --text-muted: #888888;
+            --glass-bg: rgba(25, 25, 25, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: rgba(0, 0, 0, 0.4);
+            --glass-hover-shadow: rgba(0, 0, 0, 0.8);
+            --shape-1: #222222;
+            --shape-2: #555555;
+            --shape-3: #111111;
+            --shape-4: #333333;
+        }
+
+        body.color {
+            /* 3. COLOR THEME (Complementary: Ultramarine Blue & Neon Orange) */
+            --bg-base: #001233;
+            --text-main: #ffffff;
+            --text-muted: #ffb4a2;
+            --glass-bg: rgba(10, 25, 60, 0.45);
+            --glass-border: rgba(255, 100, 50, 0.3);
+            --glass-shadow: rgba(0, 0, 0, 0.3);
+            --glass-hover-shadow: rgba(255, 100, 50, 0.2);
+            --shape-1: #ff5400; /* Neon Orange */
+            --shape-2: #0055ff; /* Ultramarine */
+            --shape-3: #ff0055; /* Magenta touch */
+            --shape-4: #00bfff; /* Cyan touch */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base); 
+            color: var(--text-main);
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.8s ease, color 0.8s ease;
+        }
+
+        /* 1. Heavy Noise Texture */
+        .noise-layer {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.6;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        /* 2. Soft Background Shapes */
+        .blur-shape {
+            position: absolute;
+            border-radius: 20%;
+            filter: blur(80px);
+            opacity: 0.8;
+            transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 1s ease;
+        }
+
+        /* 3. Frosted Glass Base */
+        .glass-card {
+            background: var(--glass-bg); 
+            backdrop-filter: blur(30px) saturate(110%); 
+            -webkit-backdrop-filter: blur(30px) saturate(110%);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px var(--glass-shadow);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        box-shadow 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+                        background 0.5s ease, border-color 0.8s ease;
+            z-index: 10;
+        }
+
+        /* Hover lift logic is now applied via specialized classes below */
+
+        /* 4. Flex Accordion Grid */
+        .accordion-row {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            width: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .accordion-row {
+                flex-direction: row;
+                height: 420px; /* Fixed height for stable resizing */
+            }
+        }
+
+        .accordion-card {
+            flex: 1; /* Default state: 50/50 split */
+            transition: flex 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), 
+                        box-shadow 0.5s ease, background 0.5s ease;
+            min-width: 0; /* Prevents flex items from bursting out due to content */
+        }
+
+        /* Accordion Hover Logic (Desktop Only) */
+        @media (min-width: 768px) {
+            /* When hovering the row, shrink all cards slightly */
+            .accordion-row:hover .accordion-card {
+                flex: 0.5;
+            }
+            /* The specific card hovered expands and lifts up */
+            .accordion-row .accordion-card:hover {
+                flex: 2.2;
+                transform: translateY(-12px) scale(1.01);
+                box-shadow: 0 30px 60px var(--glass-hover-shadow);
+                background: rgba(255, 255, 255, 0.1); /* Slight brighten to stand out */
+                z-index: 20;
+            }
+        }
+
+        /* Preview Content inside accordion cards */
+        .preview-content {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            max-height: 0; /* Collapse when hidden */
+        }
+
+        /* Show content when card expands */
+        @media (min-width: 768px) {
+            .accordion-card:hover .preview-content {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+                max-height: 200px;
+                transition-delay: 0.15s; /* Wait for expansion to start */
+            }
+            
+            /* Hide the short description when expanded */
+            .accordion-card:hover .short-desc {
+                opacity: 0;
+                position: absolute; /* Take out of flow */
+            }
+        }
+        
+        .short-desc {
+            transition: opacity 0.3s ease;
+        }
+
+        /* Nav Menu */
+        .nav-link {
+            position: relative;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+        .nav-link:hover { opacity: 1; }
+        
+        .theme-btn {
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .hairline {
+            height: 1px;
+            background-color: var(--text-main);
+            opacity: 0.15;
+            width: 100%;
+            transition: background-color 0.8s ease;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen w-full box-border light">
+
+    <div class="noise-layer"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 w-full z-40 px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4 backdrop-blur-md bg-white/10 border-b border-white/20">
+        <!-- Logo Area -->
+        <div class="font-medium tracking-[0.15em] uppercase text-sm flex items-center gap-2">
+            <span class="opacity-50">TYPEFACES /</span>
+            <span class="font-semibold">UMPRUMTYPE</span>
+        </div>
+        
+        <!-- Menu -->
+        <div class="flex flex-wrap justify-center items-center gap-6 md:gap-8 text-xs font-medium uppercase tracking-widest">
+            <a href="#" class="nav-link">Index</a>
+            <a href="#" class="nav-link">Typefaces</a>
+            <a href="#" class="nav-link">Blog</a>
+            
+            <!-- Theme Switcher Button -->
+            <button id="themeToggle" class="theme-btn px-4 py-1.5 rounded-full hover:scale-105 transition-transform cursor-pointer ml-4">
+                THEME: LIGHT
+            </button>
+        </div>
+    </nav>
+
+    <!-- BACKGROUND: Parallax Blocks -->
+    <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden flex justify-center items-center">
+        <div class="parallax-layer absolute inset-0" data-speed="0.12">
+            <div class="blur-shape w-[60vw] h-[40vw] top-[10%] left-[-10%]" style="background-color: var(--shape-1);"></div>
+        </div>
+        <div class="parallax-layer absolute inset-0" data-speed="0.28">
+            <div class="blur-shape w-[40vw] h-[50vw] top-[20%] right-[0%]" style="background-color: var(--shape-2);"></div>
+        </div>
+        <div class="parallax-layer absolute inset-0" data-speed="0.18">
+            <div class="blur-shape w-[50vw] h-[50vw] bottom-[-10%] left-[20%]" style="background-color: var(--shape-3);"></div>
+        </div>
+        <div class="parallax-layer absolute inset-0" data-speed="0.35">
+            <div class="blur-shape w-[35vw] h-[35vw] bottom-[20%] right-[15%]" style="background-color: var(--shape-4);"></div>
+        </div>
+    </div>
+
+    <!-- CONTENT: CSS Grid & Flex Accordions -->
+    <main class="relative z-10 w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-40 pb-32 flex flex-col gap-4 md:gap-6">
+        
+        <!-- ROW 1: Narrow Full Width -->
+        <div class="glass-card p-8 md:p-10 min-h-[220px] flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full hover:-translate-y-2 hover:shadow-[0_20px_40px_var(--glass-hover-shadow)] transition-all duration-500 cursor-default">
+            <div class="max-w-xl">
+                <h1 class="text-3xl md:text-5xl font-medium tracking-tight text-balance leading-tight">
+                    Shaping the foundation of visual language.
+                </h1>
+            </div>
+            <div class="max-w-sm text-sm font-light text-[var(--text-muted)] leading-relaxed">
+                From algorithmic generation to meticulous optical kerning, we simplify complex typographic systems for editorial and digital environments.
+            </div>
+        </div>
+
+        <!-- ROW 2: Flex Accordion (Interactive Row) -->
+        <div class="accordion-row">
+            
+            <!-- Card 1 -->
+            <div class="glass-card accordion-card p-8 flex flex-col justify-between cursor-pointer group">
+                <div class="flex justify-between items-start whitespace-nowrap overflow-hidden">
+                    <span class="text-[10px] uppercase tracking-widest opacity-50 truncate">Retail Typefaces</span>
+                    <span class="text-[10px] uppercase tracking-widest opacity-50">01</span>
+                </div>
+                
+                <div class="mt-auto overflow-hidden">
+                    <h2 class="text-4xl font-light tracking-tighter mb-4 truncate">Inter<br>Grotesk</h2>
+                    <div class="hairline mb-4 hidden md:block"></div>
+                    
+                    <!-- Short text visible when collapsed -->
+                    <p class="short-desc text-xs opacity-70 leading-relaxed md:block">Highly legible sans-serif for UI.</p>
+                    
+                    <!-- Full Post Preview visible when expanded -->
+                    <div class="preview-content mt-4">
+                        <p class="text-sm font-light leading-relaxed mb-4 text-[var(--text-muted)] border-l-2 pl-4 border-[var(--text-muted)]">
+                            <strong class="font-medium text-[var(--text-main)] block mb-1">Preview Post: The Architecture of Inter</strong>
+                            Building on a Computer Science background from KhNURE (2024), this project explores the algorithmic logic behind neo-grotesque proportions. We automated spacing tests before refining the kerning pairs optically. 
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="text-[10px] uppercase tracking-widest border border-current rounded-full px-2 py-0.5 opacity-50">Typography</span>
+                            <span class="text-[10px] uppercase tracking-widest border border-current rounded-full px-2 py-0.5 opacity-50">Python/CS</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="glass-card accordion-card p-8 flex flex-col justify-between cursor-pointer group">
+                <div class="flex justify-between items-start whitespace-nowrap overflow-hidden">
+                    <span class="text-[10px] uppercase tracking-widest opacity-50 truncate">Editorial & Fashion</span>
+                    <span class="text-[10px] uppercase tracking-widest opacity-50">02</span>
+                </div>
+                
+                <div class="mt-auto overflow-hidden">
+                    <h2 class="text-4xl font-light tracking-tighter mb-4 truncate">Onyx<br>Display</h2>
+                    <div class="hairline mb-4 hidden md:block"></div>
+                    
+                    <p class="short-desc text-xs opacity-70 leading-relaxed md:block">High-contrast serif for editorials.</p>
+                    
+                    <div class="preview-content mt-4">
+                        <p class="text-sm font-light leading-relaxed mb-4 text-[var(--text-muted)] border-l-2 pl-4 border-[var(--text-muted)]">
+                            <strong class="font-medium text-[var(--text-main)] block mb-1">Preview Post: Type in the Frame</strong>
+                            A high-contrast display serif directly influenced by my experience as a model represented by CAT B and Clique Models. Understanding the geometry of fashion photography allowed me to create a typeface that acts as a natural extension of the editorial frame.
+                        </p>
+                        <div class="flex gap-2">
+                            <span class="text-[10px] uppercase tracking-widest border border-current rounded-full px-2 py-0.5 opacity-50">Art Direction</span>
+                            <span class="text-[10px] uppercase tracking-widest border border-current rounded-full px-2 py-0.5 opacity-50">Modeling</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ROW 3: Full Width, Tall -->
+        <div class="glass-card p-8 md:p-12 flex flex-col justify-between hover:-translate-y-2 hover:shadow-[0_20px_40px_var(--glass-hover-shadow)] transition-all duration-500 w-full h-auto min-h-[400px]">
+            <div class="text-[10px] uppercase tracking-widest opacity-50">Studio Practice</div>
+            
+            <div class="flex flex-col gap-4 mt-12 md:mt-24 mb-12">
+                <h2 class="text-5xl md:text-7xl font-light tracking-tight">
+                    Methodology.
+                </h2>
+                <div class="w-full max-w-2xl mt-4 text-sm font-light leading-relaxed text-[var(--text-muted)]">
+                    Based in Prague. Currently exploring the intersection of traditional typography and digital arts at UMPRUM. Our typefaces are built on strict algorithmic precision, developed during CS studies, but constantly refined through the human eye and a deep understanding of visual communications. We treat typography not just as a tool, but as the core architectural structure of any design.
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-end mt-auto">
+                <div class="flex flex-wrap gap-2 md:gap-4">
+                    <span class="text-[10px] md:text-xs uppercase tracking-widest border border-current px-3 py-1 rounded-full opacity-60">UMPRUM 2027</span>
+                    <span class="text-[10px] md:text-xs uppercase tracking-widest border border-current px-3 py-1 rounded-full opacity-60">Prague</span>
+                </div>
+                <span class="text-[10px] uppercase tracking-widest opacity-50">2026</span>
+            </div>
+        </div>
+
+        <!-- ROW 4: Flex Accordion (Second Interactive Row) -->
+        <div class="accordion-row">
+            
+            <!-- Card 3 -->
+            <div class="glass-card accordion-card p-8 flex flex-col justify-between cursor-pointer">
+                <div class="flex justify-between items-start whitespace-nowrap overflow-hidden">
+                    <span class="text-[10px] uppercase tracking-widest opacity-50 truncate">Journal</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+                </div>
+                
+                <div class="mt-auto overflow-hidden">
+                    <h3 class="text-2xl font-medium leading-snug mb-4 truncate">Generative Grids</h3>
+                    <div class="hairline mb-4 hidden md:block"></div>
+                    
+                    <p class="short-desc text-xs opacity-70 leading-relaxed md:block">Automated layouts using Python.</p>
+                    
+                    <div class="preview-content mt-4">
+                        <p class="text-sm font-light leading-relaxed mb-4 text-[var(--text-muted)] border-l-2 pl-4 border-[var(--text-muted)]">
+                            <strong class="font-medium text-[var(--text-main)] block mb-1">Preview: Coding the Specimen</strong>
+                            Combining KhNURE algorithms with UMPRUM layout theory. Using Drawbot to dynamically generate type specimen books where the grid calculates its own golden ratios based on the selected font weight.
+                        </p>
+                        <div class="text-[10px] uppercase tracking-widest font-semibold border-b border-current pb-1 inline-block opacity-70 hover:opacity-100">Read Article</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4 (Abstract) -->
+            <div class="glass-card accordion-card p-8 flex flex-col justify-center items-center text-center relative overflow-hidden cursor-pointer">
+                <!-- Abstract geometry -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none transition-transform duration-1000 scale-100 group-hover:scale-150">
+                    <div class="w-48 h-48 border border-current rounded-full mix-blend-overlay"></div>
+                    <div class="absolute w-32 h-32 border border-current rounded-full mix-blend-overlay"></div>
+                </div>
+                
+                <div class="z-10 w-full overflow-hidden">
+                    <h3 class="text-2xl md:text-4xl font-light tracking-tight mb-2 truncate">Custom<br>Inquiries</h3>
+                    
+                    <div class="preview-content mt-8 text-left max-w-xs mx-auto">
+                        <p class="text-sm font-light leading-relaxed mb-6 text-center text-[var(--text-muted)]">
+                            Available for custom type design, generative visual identities, and editorial collaborations.
+                        </p>
+                        <div class="flex justify-center">
+                            <a href="#" class="text-[10px] uppercase tracking-widest font-semibold border border-current px-6 py-2 rounded-full hover:bg-[var(--text-main)] hover:text-[var(--bg-base)] transition-colors">Contact Studio</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Only show if collapsed -->
+                    <span class="short-desc mt-4 text-[10px] uppercase tracking-widest border-b border-current pb-1 block w-fit mx-auto opacity-70">Connect</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- JS Scripts for Theme & Parallax -->
+    <script>
+        // 1. Theme Switcher Logic (Light -> Dark -> Color)
+        const themes = ['', 'dark', 'color'];
+        const themeLabels = ['LIGHT', 'DARK', 'COLOR'];
+        let currentTheme = 0; // Starts at 0 (Light)
+
+        const themeBtn = document.getElementById('themeToggle');
+        
+        themeBtn.addEventListener('click', () => {
+            currentTheme = (currentTheme + 1) % themes.length;
+            
+            // Apply class to body
+            document.body.className = `relative min-h-screen w-full box-border ${themes[currentTheme]}`;
+            
+            // Update button text
+            themeBtn.innerText = `THEME: ${themeLabels[currentTheme]}`;
+        });
+
+        // 2. Smooth Parallax Effect on Scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const parallaxLayers = document.querySelectorAll('.parallax-layer');
+            
+            window.requestAnimationFrame(() => {
+                parallaxLayers.forEach(layer => {
+                    const speed = layer.getAttribute('data-speed');
+                    const yPos = -(scrolled * speed);
+                    // Add slight rotation for extra fluid feel
+                    const rot = (scrolled * speed * 0.05);
+                    layer.style.transform = `translate3d(0, ${yPos}px, 0) rotate(${rot}deg)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

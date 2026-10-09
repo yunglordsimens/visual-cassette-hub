@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMPRUM TYPE — STUDIO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* ═══════════════════════════════════════════
+   EXTREME VARIABLES
+═══════════════════════════════════════════ */
+:root {
+  --bg: #f0f0f0;
+  --fg: #000000;
+  --fg-dim: #000000;
+  --accent: #000000; 
+  --accent-text: #f0f0f0;
+  
+  --font-mono: 'Space Mono', monospace;
+  --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  
+  --border-size: 2px;
+  --header-h: 60px;
+}
+
+[data-theme="dark"] {
+  --bg: #000000;
+  --fg: #ffffff;
+  --fg-dim: #ffffff;
+  --accent: #ffffff;
+  --accent-text: #000000;
+}
+
+[data-color="cyan"] { --accent: #00FFFF; --accent-text: #000000; }
+[data-color="magenta"] { --accent: #FF00FF; --accent-text: #000000; }
+[data-color="yellow"] { --accent: #FFFF00; --accent-text: #000000; }
+
+/* ═══════════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  transition: background 0.1s, color 0.1s;
+  text-transform: uppercase;
+}
+::selection { background: var(--fg); color: var(--bg); }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; text-transform: uppercase;}
+
+/* ═══════════════════════════════════════════
+   HEADER (MASSIVE & TIGHT)
+═══════════════════════════════════════════ */
+header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  display: flex;
+  background: var(--bg);
+  border-bottom: var(--border-size) solid var(--fg);
+  z-index: 2000;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 2vw, 24px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+.h-col {
+  display: flex;
+  align-items: center;
+  padding: 0 2vw;
+  border-right: var(--border-size) solid var(--fg);
+  white-space: nowrap;
+}
+.h-col:last-child { border-right: none; }
+
+.h-logo { flex-shrink: 0; cursor: pointer; background: var(--fg); color: var(--bg); }
+.h-nav { flex: 1; display: flex; gap: 4vw; overflow: hidden;}
+.h-nav a { position: relative; }
+.h-nav a:hover { opacity: 0.5; }
+
+.h-btn {
+  cursor: pointer;
+  width: var(--header-h);
+  justify-content: center;
+  padding: 0;
+  font-size: 24px;
+}
+.h-btn:hover { background: var(--fg); color: var(--bg); }
+
+/* ═══════════════════════════════════════════
+   GIANT MARQUEE (STUDIO DESCRIPTION)
+═══════════════════════════════════════════ */
+.marquee-wrapper {
+  margin-top: var(--header-h);
+  background: var(--bg);
+  border-bottom: var(--border-size) solid var(--fg);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  height: 25vh; /* HUGE HEIGHT */
+}
+.marquee-content {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 15s linear infinite;
+  font-size: 18vw; /* MASSIVE TEXT */
+  line-height: 0.85;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--fg);
+}
+.marquee-content span { padding: 0 4vw; }
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════════════════
+   MAIN CONTAINER
+═══════════════════════════════════════════ */
+main { width: 100%; }
+
+.section-title {
+  padding: 1vw 2vw;
+  font-size: clamp(24px, 4vw, 60px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  border-bottom: var(--border-size) solid var(--fg);
+  background: var(--fg);
+  color: var(--bg);
+  position: sticky;
+  top: var(--header-h);
+  z-index: 1000;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════
+   SLIDING GRID SYSTEM
+   1. Grid lines are made using gap + bg color (perfect overlap)
+   2. Hovering a cell expands it, shrinking others
+═══════════════════════════════════════════ */
+.sliding-grid {
+  display: flex;
+  flex-direction: column;
+  height: 150vh; /* Grid fills more than a screen, making squares massive */
+  width: 100%;
+  background: var(--fg); /* This creates the perfect brutalist grid lines via gap */
+  gap: var(--border-size);
+  border-bottom: var(--border-size) solid var(--fg);
+}
+
+.sliding-row {
+  display: flex;
+  flex: 1;
+  gap: var(--border-size);
+  transition: flex 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.sliding-cell {
+  flex: 1;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair;
+  transition: flex 0.6s cubic-bezier(0.19, 1, 0.22, 1), background 0.2s;
+}
+
+/* --- THE ACCORDION EXPANSION LOGIC --- */
+/* Expand the row if any cell inside is hovered */
+.sliding-grid:has(.sliding-row:hover) .sliding-row { flex: 1; }
+.sliding-grid:has(.sliding-row:hover) .sliding-row:hover { flex: 1.8; }
+
+/* Expand the specific cell horizontally */
+.sliding-row:has(.sliding-cell:hover) .sliding-cell { flex: 1; }
+.sliding-row:has(.sliding-cell:hover) .sliding-cell:hover { flex: 2.5; }
+
+/* ═══════════════════════════════════════════
+   INSIDE THE CELL: CURTAINS & GIANT TEXT
+═══════════════════════════════════════════ */
+/* 1. The Giant Name (Always visible, centered, difference blend mode) */
+.giant-name {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  padding: 0 2vw;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 18vw; /* MASSIVE TEXT */
+  line-height: 0.75; /* Crushed line height */
+  font-weight: 700;
+  letter-spacing: -0.06em; /* Ultra tight */
+  color: #ffffff; /* White combined with difference creates dynamic contrast */
+  mix-blend-mode: difference;
+  z-index: 4;
+  overflow-wrap: break-word;
+  word-break: break-all; /* SHATTERS THE WORDS TO FILL THE BLOCK */
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  pointer-events: none;
+  transition: font-size 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.sliding-cell:hover .giant-name {
+  font-size: 26vw; /* EXPLODES ON HOVER */
+}
+
+/* 2. The Split Images (Curtains) */
+.img-curtain {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 3;
+  filter: grayscale(100%) contrast(150%);
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+}
+[data-theme="dark"] .img-curtain { filter: grayscale(100%) contrast(150%) invert(1); }
+
+/* Left half crops right 50%, Right half crops left 50% */
+.img-left { clip-path: inset(0 50% 0 0); }
+.img-right { clip-path: inset(0 0 0 50%); }
+
+/* The Slide-Apart Effect */
+.sliding-cell:hover .img-left { transform: translateX(-100%); }
+.sliding-cell:hover .img-right { transform: translateX(100%); }
+
+/* 3. Revealed Content Underneath */
+.cell-underneath {
+  position: absolute;
+  inset: 0;
+  padding: 2vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.under-top, .under-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.under-top {
+  font-size: clamp(14px, 2vw, 32px);
+  transform: translateY(-20px);
+}
+.under-bottom {
+  font-size: clamp(12px, 1.5vw, 24px);
+  transform: translateY(20px);
+}
+
+.sliding-cell:hover .under-top,
+.sliding-cell:hover .under-bottom {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s; /* Waits for curtains to open slightly */
+}
+
+.brutal-btn {
+  display: inline-block;
+  padding: 1.5vw 3vw;
+.cell-title {
+  font-family: var(--font-sans);
+  font-size: 6vw; /* Massive text inside the cell */
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 2vw, 32px);
+  font-weight: 700;
+  border-bottom: var(--border-size) solid var(--fg);
+}
+.f-col {
+  flex: 1;
+  padding: 4vw;
+  border-right: var(--border-size) solid var(--fg);
+  text-align: center;
+}
+.f-col:last-child { border-right: none; }
+.f-col a:hover { background: var(--fg); color: var(--bg); padding: 0 1vw; }
+
+/* ═══════════════════════════════════════════
+   MOBILE ADJUSTMENTS
+═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  /* On mobile, turn off the flex scaling to prevent breaking layout, just keep the image splitting */
+  .sliding-grid { height: auto; }
+  .sliding-row { flex-direction: column; }
+  .sliding-cell { height: 50vh; border-right: none; border-bottom: var(--border-size) solid var(--fg); }
+  .sliding-grid:has(.sliding-row:hover) .sliding-row:hover { flex: 1; }
+  .sliding-row:has(.sliding-cell:hover) .sliding-cell:hover { flex: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="h-col h-logo" onclick="window.scrollTo(0,0)">UMPRUM TYPE</div>
+  <div class="h-col h-nav">
+    <a href="#typefaces">TYPEFACES</a>
+    <a href="#work">WORK</a>
+    <a href="#store">STORE</a>
+  </div>
+  <button class="h-col h-btn" id="colorToggle" title="Toggle Accent">◐</button>
+  <button class="h-col h-btn" id="themeToggle" title="Toggle Theme">☼</button>
+</header>
+
+<!-- GIANT MARQUEE -->
+<div class="marquee-wrapper">
+  <div class="marquee-content">
+    <span>STUDIO OF TYPOGRAPHY & VISUAL COMMUNICATION. AAAD PRAGUE. STUDENT-DEVELOPED TYPEFACES.</span>
+    <span>STUDIO OF TYPOGRAPHY & VISUAL COMMUNICATION. AAAD PRAGUE. STUDENT-DEVELOPED TYPEFACES.</span>
+  </div>
+</div>
+
+<main>
+  
+  <!-- ==========================================
+       GRID 1: TYPEFACES
+  =========================================== -->
+  <div class="section-title" id="typefaces">TYPEFACES [06]</div>
+  
+  <div class="sliding-grid">
+    
+    <!-- ROW 1 -->
+    <div class="sliding-row">
+      
+      <!-- FONT 1 -->
+      <div class="sliding-cell">
+        <!-- The split image curtains -->
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <!-- The Giant Name always on top -->
+        <div class="giant-name">ANANAS</div>
+        
+        <!-- The revealed content underneath -->
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>01</span>
+            <span>JAROMÍR KVĚTOŇ</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: REGULAR, ITALIC, BOLD<br>SUPPORT: LATIN, CYRILLIC</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FONT 2 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2574&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?q=80&w=2574&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">CHLEBICZECH</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>02</span>
+            <span>ŽOFIA KOSOVÁ</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: BLACK DISPLAY<br>SUPPORT: LATIN EXT</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FONT 3 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">KORCHMA</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>03</span>
+            <span>ANNA SHERLUPENKOVA</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: REGULAR, ITALIC<br>SUPPORT: CYRILLIC, LATIN</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End Row 1 -->
+
+    <!-- ROW 2 -->
+    <div class="sliding-row">
+      
+      <!-- FONT 4 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1621619856624-42fd193a0661?q=80&w=2658&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1621619856624-42fd193a0661?q=80&w=2658&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">MÄRZ GROTESK</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>04</span>
+            <span>ŠIMON VLASÁK</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: BOLD, HEAVY<br>SUPPORT: LATIN</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FONT 5 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">WALBERT</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>05</span>
+            <span>PAVLA NEČÁSKOVÁ</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: REGULAR<br>SUPPORT: LATIN EXT</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- FONT 6 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1590459529328-3e4b85d92828?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1590459529328-3e4b85d92828?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">BASTELEUR</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>06</span>
+            <span>STUDIO UMPRUM</span>
+          </div>
+          <div class="under-bottom">
+            <div>STYLES: REGULAR, BOLD<br>SUPPORT: LATIN</div>
+            <a href="#try" class="brutal-btn">TEST →</a>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- End Row 2 -->
+
+  </div> <!-- End Typefaces Grid -->
+
+  <!-- ==========================================
+       GRID 2: WORK & STORE
+  =========================================== -->
+  <div class="section-title" id="work">WORK & STORE [GRID]</div>
+  
+  <div class="sliding-grid">
+    
+    <div class="sliding-row">
+      <!-- POST 1 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">ANATOMY OF ANANAS</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>PROJECT</span>
+            <span>2025</span>
+          </div>
+          <div class="under-bottom">
+            <div>DOCUMENTING THE PROCESS OF CREATING<br>A SERIF COUNTERPART.</div>
+            <a href="#read" class="brutal-btn">READ →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- POST 2 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1600172454132-057053e18a99?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1600172454132-057053e18a99?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">CYRILLIC DESIGN</div>
+        
+        <div class="cell-underneath">
+          <div class="under-top">
+            <span>BLOG</span>
+            <span>2024</span>
+          </div>
+          <div class="under-bottom">
+            <div>CHALLENGES AND APPROACHES TO<br>NON-LATIN SCRIPTS.</div>
+            <a href="#read" class="brutal-btn">READ →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- POST 3 -->
+      <div class="sliding-cell">
+        <img src="https://images.unsplash.com/photo-1520616110034-73891461f008?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-left">
+        <img src="https://images.unsplash.com/photo-1520616110034-73891461f008?q=80&w=2670&auto=format&fit=crop" class="img-curtain img-right">
+        
+        <div class="giant-name">MÄRZ POSTER</div>
+        
+        <div class="cell-underneath" style="background: var(--fg); color: var(--bg);">
+          <div class="under-top">
+            <span>STORE</span>
+            <span>€15</span>
+          </div>
+          <div class="under-bottom">
+            <div>LIMITED A2 OFFSET PRINT.<br>SHIPS WORLDWIDE.</div>
+            <a href="#buy" class="brutal-btn" style="background: var(--bg); color: var(--fg);">BUY →</a>
+          </div>
+        </div>
+      </div>
+    </div> <!-- End Row 1 -->
+
+  </div> <!-- End Work Grid -->
+
+</main>
+
+<footer>
+  <div class="f-col">© 2026 UMPRUM TYPE</div>
+  <div class="f-col"><a href="mailto:info@typoumprum.cz">INFO@TYPOUMPRUM.CZ</a></div>
+  <div class="f-col"><a href="https://instagram.com" target="_blank">INSTAGRAM</a></div>
+  <div class="f-col">PRAGUE, CZ</div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   THEME TOGGLE
+═══════════════════════════════════════════ */
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const html = document.documentElement;
+  if (html.getAttribute('data-theme') === 'dark') {
+    html.setAttribute('data-theme', 'light');
+    themeToggle.textContent = '☼';
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☾';
+  }
+});
+
+/* ═══════════════════════════════════════════
+   ACETATE COLOR TOGGLE
+═══════════════════════════════════════════ */
+const colorToggle = document.getElementById('colorToggle');
+const colors = ['none', 'cyan', 'magenta', 'yellow'];
+let colorIndex = 0;
+
+colorToggle.addEventListener('click', () => {
+  colorIndex = (colorIndex + 1) % colors.length;
+  const color = colors[colorIndex];
+  
+  if (color === 'none') {
+    document.documentElement.removeAttribute('data-color');
+    colorToggle.style.color = '';
+  } else {
+    document.documentElement.setAttribute('data-color', color);
+    if(color === 'cyan') colorToggle.style.color = '#00FFFF';
+    if(color === 'magenta') colorToggle.style.color = '#FF00FF';
+    if(color === 'yellow') colorToggle.style.color = '#FFFF00';
+  }
+});
+</script>
+</body>
+</html>

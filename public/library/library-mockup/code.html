@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Design Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Базовые настройки для типографики, учитывая твой профиль */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+        :root {
+            --grid-item-size: 120px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Настройка адаптивной сетки */
+        #library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--grid-item-size), 1fr));
+            gap: 1rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .book-item {
+            aspect-ratio: 2 / 3;
+            background-color: #e5e7eb;
+            transition: opacity 0.4s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+
+        .book-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .book-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Состояние для фильтра (полупрозрачность) */
+        .book-item.dimmed {
+            opacity: 0.15;
+            pointer-events: none; /* чтобы не кликались полупрозрачные */
+        }
+
+        /* Номер на книжке как на референсе */
+        .book-number {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        /* Тултип, который следует за курсором */
+        #cursor-tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            /* Смещение от курсора, чтобы не перекрывать мышь */
+            transform: translate(15px, 15px); 
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            width: 200px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        #cursor-tooltip.visible {
+            opacity: 1;
+        }
+
+        /* Сайдбар с деталями книги */
+        #details-sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -10px 0 25px rgba(0, 0, 0, 0.05);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+            overflow-y: auto;
+        }
+
+        #details-sidebar.open {
+            transform: translateX(0);
+        }
+
+        /* Оверлей для затемнения фона при открытом сайдбаре */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            z-index: 90;
+        }
+
+        #overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Стилизуем ползунок */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 150px;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #1a1a1a;
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        /* Выпадающее окно фильтров */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            z-index: 40;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Навигация и контролы -->
+    <header class="sticky top-0 bg-white/90 backdrop-blur-md z-30 border-b border-gray-200 px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="text-xl font-semibold serif tracking-tight">Библиотека УМПРУМ</div>
+        
+        <div class="flex items-center gap-6">
+            <!-- Выпадающее окно с фильтрами -->
+            <div class="dropdown relative" id="filter-dropdown">
+                <button class="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium transition-colors" onclick="toggleDropdown()">
+                    <span id="current-filter">Все категории</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="dropdown-content py-2">
+                    <a href="#" class="filter-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-category="all">Все категории</a>
+                    <a href="#" class="filter-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-category="typography">Типографика</a>
+                    <a href="#" class="filter-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-category="design">Дизайн</a>
+                    <a href="#" class="filter-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-category="art">Искусство</a>
+                    <a href="#" class="filter-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" data-category="cs">Computer Science</a>
+                </div>
+            </div>
+
+            <!-- Зум (колесо увеличения/уменьшения) -->
+            <div class="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+                <input type="range" id="zoom-slider" min="40" max="300" value="120" title="Используйте колесико мыши или тяните">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Сетка с книгами -->
+    <main>
+        <div id="library-grid">
+            <!-- Книги генерируются через JS -->
+        </div>
+    </main>
+
+    <!-- Плавающий тултип возле курсора -->
+    <div id="cursor-tooltip">
+        <img id="tooltip-img" src="" alt="Cover" class="w-full h-32 object-cover rounded mb-2">
+        <h4 id="tooltip-title" class="font-bold text-sm leading-tight mb-1 serif"></h4>
+        <p id="tooltip-author" class="text-xs text-gray-500 mb-2"></p>
+        <span id="tooltip-category" class="inline-block px-2 py-1 bg-gray-100 text-[10px] font-medium rounded-full uppercase tracking-wider text-gray-600"></span>
+    </div>
+
+    <!-- Оверлей -->
+    <div id="overlay" onclick="closeSidebar()"></div>
+
+    <!-- Сайдбар с информацией -->
+    <aside id="details-sidebar" class="flex flex-col">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0 z-10">
+            <h2 class="text-lg font-medium text-gray-400 uppercase tracking-widest text-xs">Детали книги</h2>
+            <button onclick="closeSidebar()" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <div class="p-8 flex-1 overflow-y-auto">
+            <div class="aspect-[2/3] w-full max-w-[240px] mx-auto bg-gray-100 rounded-md overflow-hidden shadow-xl mb-8">
+                <img id="sidebar-img" src="" alt="Book Cover" class="w-full h-full object-cover">
+            </div>
+            
+            <span id="sidebar-category" class="inline-block px-3 py-1 bg-gray-100 text-xs font-semibold rounded-full uppercase tracking-wider text-gray-600 mb-4"></span>
+            
+            <h1 id="sidebar-title" class="text-3xl font-semibold serif mb-2 leading-tight">Название книги</h1>
+            <p id="sidebar-author" class="text-lg text-gray-600 mb-6 font-medium"></p>
+            
+            <div class="prose prose-sm text-gray-600 leading-relaxed">
+                <p id="sidebar-desc">Здесь будет длинное описание книги. Оно может включать в себя информацию о шрифтах, дизайне, авторе и другие важные детали, которые помогут читателю понять, о чем эта книга.</p>
+            </div>
+
+            <div class="mt-8 pt-8 border-t border-gray-100 flex gap-4">
+                <button class="flex-1 bg-black text-white py-3 rounded-md font-medium hover:bg-gray-800 transition-colors">Читать</button>
+                <button class="px-4 py-3 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <script>
+        // --- 1. ГЕНЕРАЦИЯ ФЕЙКОВЫХ ДАННЫХ (Mock Data) ---
+        // Генерируем 300 элементов как на твоей картинке
+        const categories = ['typography', 'design', 'art', 'cs'];
+        const categoryNames = {
+            'typography': 'Типографика',
+            'design': 'Дизайн',
+            'art': 'Искусство',
+            'cs': 'Computer Science'
+        };
+        
+        // Используем Unsplash Source для случайных обложек по темам (безопасные https ссылки)
+        const getCoverUrl = (category, id) => `https://images.unsplash.com/photo-${category === 'typography' ? '1610113175402-9961603511eb' : category === 'design' ? '1561070791-2526d3098f71' : category === 'art' ? '1543857778-c4a1a3e0b2eb' : '1555066931-4365d14bab8c'}?w=300&q=80&auto=format&fit=crop&sig=${id}`;
+
+        const books = Array.from({ length: 300 }, (_, i) => {
+            const id = i + 1;
+            const category = categories[Math.floor(Math.random() * categories.length)];
+            return {
+                id: id,
+                title: `Проект №${id} — ${categoryNames[category]}`,
+                author: `Автор ${id}`,
+                category: category,
+                coverUrl: getCoverUrl(category, id),
+                shortDesc: 'Краткое описание проекта. Идеально для тултипа.',
+                longDesc: `Это подробное описание проекта №${id}. В нем рассматриваются аспекты категории ${categoryNames[category]}. Этот текст появляется в боковой панели при клике на элемент сетки. Здесь можно разместить любую информацию о книге, шрифте или визуальном исследовании.`
+            };
+        });
+
+        // --- 2. ИНИЦИАЛИЗАЦИЯ И РЕНДЕР СЕТКИ ---
+        const grid = document.getElementById('library-grid');
+        let currentFilter = 'all';
+
+        function renderGrid() {
+            grid.innerHTML = '';
+            books.forEach(book => {
+                const item = document.createElement('div');
+                item.className = `book-item`;
+                item.dataset.category = book.category;
+                item.dataset.id = book.id;
+                
+                // Ленивая загрузка для оптимизации 300 картинок
+                item.innerHTML = `
+                    <div class="book-number">${book.id}</div>
+                    <img loading="lazy" src="${book.coverUrl}" alt="${book.title}">
+                `;
+
+                // Обработчик клика для сайдбара
+                item.addEventListener('click', () => openSidebar(book));
+                
+                grid.appendChild(item);
+            });
+            applyFilter(); // Применяем фильтр при рендере (на случай перерисовки)
+        }
+
+        renderGrid();
+
+        // --- 3. ЛОГИКА ФИЛЬТРАЦИИ ---
+        function toggleDropdown() {
+            document.getElementById('filter-dropdown').classList.toggle('active');
+        }
+
+        // Закрытие дропдауна при клике вне его
+        window.addEventListener('click', function(e) {
+            if (!document.getElementById('filter-dropdown').contains(e.target)) {
+                document.getElementById('filter-dropdown').classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.filter-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                currentFilter = e.target.dataset.category;
+                document.getElementById('current-filter').innerText = e.target.innerText;
+                document.getElementById('filter-dropdown').classList.remove('active');
+                applyFilter();
+            });
+        });
+
+        function applyFilter() {
+            const items = document.querySelectorAll('.book-item');
+            items.forEach(item => {
+                if (currentFilter === 'all' || item.dataset.category === currentFilter) {
+                    item.classList.remove('dimmed');
+                } else {
+                    item.classList.add('dimmed');
+                }
+            });
+        }
+
+        // --- 4. ЛОГИКА МАСШТАБИРОВАНИЯ (ЗУМ СЕТКИ) ---
+        const zoomSlider = document.getElementById('zoom-slider');
+        const TOOLTIP_THRESHOLD = 110; // Размер (в px), ниже которого показываем тултип
+
+        function updateGridSize() {
+            const size = zoomSlider.value;
+            document.documentElement.style.setProperty('--grid-item-size', `${size}px`);
+        }
+
+        zoomSlider.addEventListener('input', updateGridSize);
+        updateGridSize(); // Init
+
+        // Зум с помощью колесика мыши, когда курсор над ползунком или с зажатым Ctrl
+        document.addEventListener('wheel', (e) => {
+            if (e.ctrlKey || e.target.closest('#zoom-slider')) {
+                e.preventDefault();
+                let currentValue = parseInt(zoomSlider.value);
+                // Направление колесика (вверх - увеличить, вниз - уменьшить)
+                let delta = e.deltaY > 0 ? -10 : 10;
+                let newValue = Math.min(Math.max(currentValue + delta, zoomSlider.min), zoomSlider.max);
+                zoomSlider.value = newValue;
+                updateGridSize();
+            }
+        }, { passive: false });
+
+
+        // --- 5. ЛОГИКА ТУЛТИПА ---
+        const tooltip = document.getElementById('cursor-tooltip');
+        let currentTooltipId = null;
+
+        document.addEventListener('mousemove', (e) => {
+            // Проверяем, достаточно ли мелкая сетка для тултипа
+            if (parseInt(zoomSlider.value) > TOOLTIP_THRESHOLD) {
+                tooltip.classList.remove('visible');
+                currentTooltipId = null;
+                return;
+            }
+
+            const item = e.target.closest('.book-item:not(.dimmed)');
+            
+            if (item) {
+                const bookId = parseInt(item.dataset.id);
+                
+                // Обновляем контент только если навели на новую книгу
+                if (currentTooltipId !== bookId) {
+                    const book = books.find(b => b.id === bookId);
+                    document.getElementById('tooltip-img').src = book.coverUrl;
+                    document.getElementById('tooltip-title').innerText = book.title;
+                    document.getElementById('tooltip-author').innerText = book.author;
+                    document.getElementById('tooltip-category').innerText = categoryNames[book.category];
+                    currentTooltipId = bookId;
+                }
+
+                // Позиционируем тултип
+                // Проверяем, не уходит ли тултип за правый край экрана
+                let leftPos = e.clientX + 15;
+                let topPos = e.clientY + 15;
+                
+                if (leftPos + 200 > window.innerWidth) {
+                    leftPos = e.clientX - 215; // Сдвигаем влево
+                }
+                
+                if (topPos + 250 > window.innerHeight) {
+                    topPos = window.innerHeight - 260; // Сдвигаем вверх
+                }
+
+                tooltip.style.left = `${leftPos}px`;
+                tooltip.style.top = `${topPos}px`;
+                tooltip.classList.add('visible');
+            } else {
+                tooltip.classList.remove('visible');
+                currentTooltipId = null;
+            }
+        });
+
+        // Скрываем тултип, если мышь ушла за пределы окна
+        document.addEventListener('mouseleave', () => {
+            tooltip.classList.remove('visible');
+        });
+
+        // --- 6. ЛОГИКА САЙДБАРА (ВЫЕЗЖАЮЩЕГО ОКНА) ---
+        const sidebar = document.getElementById('details-sidebar');
+        const overlay = document.getElementById('overlay');
+
+        function openSidebar(book) {
+            // Заполняем данные
+            document.getElementById('sidebar-img').src = book.coverUrl;
+            document.getElementById('sidebar-category').innerText = categoryNames[book.category];
+            document.getElementById('sidebar-title').innerText = book.title;
+            document.getElementById('sidebar-author').innerText = book.author;
+            document.getElementById('sidebar-desc').innerText = book.longDesc;
+
+            // Скрываем тултип, если он был открыт
+            tooltip.classList.remove('visible');
+
+            // Показываем сайдбар и оверлей
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            
+            // Блокируем скролл основной страницы
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие по клавише Esc
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSidebar();
+        });
+
+    </script>
+</body>
+</html>

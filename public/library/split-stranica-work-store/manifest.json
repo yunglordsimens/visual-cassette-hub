@@ -1,0 +1,19 @@
+{
+  "id": "split-stranica-work-store",
+  "title": "Сплит-страница Work & Store",
+  "tags": [
+    "gemini",
+    "html"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-03-17",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/split-stranica-work-store/code.html",
+  "previewUrl": "library/split-stranica-work-store/code.html"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "bookarchive",
+  "title": "BookArchive",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "Инструменты"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-07",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/bookarchive/code.tsx",
+  "previewUrl": "library/bookarchive/preview.html"
+}

@@ -1,0 +1,21 @@
+{
+  "id": "portfolio-website-2",
+  "title": "Portfolio Website",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/portfolio-website-2/code.html",
+  "previewUrl": "library/portfolio-website-2/code.html"
+}

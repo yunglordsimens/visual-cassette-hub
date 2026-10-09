@@ -1,0 +1,20 @@
+{
+  "id": "post-details-wheel-gallery",
+  "title": "Post Details Wheel Gallery",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind"
+  ],
+  "groups": [
+    "3D / WebGL"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-13",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/post-details-wheel-gallery/code.tsx",
+  "previewUrl": "library/post-details-wheel-gallery/preview.html"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "aura-agency-concept",
+  "title": "Aura Agency Concept",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "scroll"
+  ],
+  "groups": [
+    "Лендинги",
+    "Анимация"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-03-24",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/aura-agency-concept/code.tsx",
+  "previewUrl": "library/aura-agency-concept/preview.html"
+}

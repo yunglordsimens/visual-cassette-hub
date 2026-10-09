@@ -1,0 +1,21 @@
+{
+  "id": "coffee-go",
+  "title": "Coffee & Go",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Эксперименты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-15",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/coffee-go/code.html",
+  "previewUrl": "library/coffee-go/code.html"
+}

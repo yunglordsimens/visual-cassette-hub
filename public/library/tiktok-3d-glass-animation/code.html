@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D TikTok Glass Effect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;0,900;1,900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #0d0d12;
+            margin: 0;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Ambient Background Glows */
+        .ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            animation: pulse-glow 6s infinite alternate;
+        }
+        .glow-cyan {
+            top: -10%;
+            left: -10%;
+            width: 60vw;
+            height: 60vh;
+            background: rgba(6, 182, 212, 0.4);
+        }
+        .glow-magenta {
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vh;
+            background: rgba(225, 29, 72, 0.4);
+            animation-delay: 3s;
+        }
+
+        /* 3D Container */
+        .scene {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .interactive-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Glass Bubble Layer */
+        .glass-bubble {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.6));
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            /* Усиленные блики и тени */
+            box-shadow: 
+                inset 0px 5px 20px rgba(255, 255, 255, 0.6),   /* Резкий белый блик сверху */
+                inset 0px -5px 20px rgba(255, 255, 255, 0.2),  /* Легкий рефлекс снизу */
+                inset 20px 0px 60px rgba(37, 244, 238, 0.5),   /* Cyan left rim */
+                inset -20px 0px 60px rgba(254, 44, 85, 0.5),   /* Magenta right rim */
+                0 30px 60px rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+
+        /* Glossy Reflection Overlay inside Bubble (Top) */
+        .glass-bubble::after {
+            content: '';
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Secondary Reflection Overlay (Bottom Right Crescent) */
+        .glass-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -5%;
+            right: -5%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.3) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Diagonal sharp glare */
+        .glare-diagonal {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 45%,
+                rgba(255, 255, 255, 0.05) 48%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0.05) 52%,
+                transparent 55%
+            );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* TikTok Logo 3D Layers */
+        .tiktok-logo-wrapper {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            transform: translateZ(50px); /* Pops out of the glass */
+            transform-style: preserve-3d;
+        }
+
+        .tk-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Cyan Layer (Bottom/Left) */
+        .tk-cyan {
+            color: #25F4EE;
+            transform: translate(-6px, -4px) translateZ(-10px);
+            filter: drop-shadow(0 0 20px rgba(37, 244, 238, 0.8));
+        }
+
+        /* Magenta Layer (Bottom/Right) */
+        .tk-magenta {
+            color: #FE2C55;
+            transform: translate(6px, 4px) translateZ(-5px);
+            filter: drop-shadow(0 0 20px rgba(254, 44, 85, 0.8));
+        }
+
+        /* Black Layer (Top/Front) */
+        .tk-black {
+            color: #0f0f12;
+            transform: translateZ(0);
+            /* Soft white rim to separate black from background */
+            filter: drop-shadow(1px 1px 0px rgba(255,255,255,0.3)) drop-shadow(-1px -1px 0px rgba(255,255,255,0.1));
+        }
+
+        /* Badges */
+        .badge-live {
+            position: absolute;
+            top: -20px;
+            transform: translateZ(70px);
+            background: linear-gradient(90deg, #FE2C55, #d9163e);
+            box-shadow: 0 0 25px rgba(254, 44, 85, 0.8), inset 0 2px 5px rgba(255,255,255,0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: pulse-badge 2s infinite;
+            overflow: hidden; /* Скрываем края блика */
+        }
+
+        /* Добавляем глянец на плашку LIVE */
+        .badge-live::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .badge-user {
+            position: absolute;
+            bottom: -30px;
+            transform: translateZ(80px);
+            background: linear-gradient(135deg, #FE2C55, #b80c2f);
+            box-shadow: 0 15px 35px rgba(254, 44, 85, 0.6), inset 0 2px 5px rgba(255,255,255,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            overflow: hidden; /* Скрываем края блика */
+        }
+        
+        /* Добавляем глянец на плашку пользователя */
+        .badge-user::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .badge-user:hover {
+            transform: translateZ(90px) scale(1.05);
+            box-shadow: 0 20px 45px rgba(254, 44, 85, 0.8), inset 0 2px 5px rgba(255,255,255,0.4);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.5; transform: scale(0.9); }
+            100% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { box-shadow: 0 0 20px rgba(254, 44, 85, 0.6), inset 0 2px 5px rgba(255,255,255,0.4); transform: translateZ(70px) scale(1); }
+            50% { box-shadow: 0 0 35px rgba(254, 44, 85, 1), inset 0 2px 5px rgba(255,255,255,0.4); transform: translateZ(70px) scale(1.05); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Световые пятна на фоне (Слой 1 & 2) -->
+    <div class="ambient-glow glow-cyan"></div>
+    <div class="ambient-glow glow-magenta"></div>
+
+    <!-- Основная 3D Сцена -->
+    <div class="scene" id="scene">
+        
+        <!-- Контейнер левитации и параллакса -->
+        <div class="interactive-container" id="interactive-container">
+            
+            <!-- Плашка LIVE (Верхний слой) -->
+            <div class="badge-live px-8 py-2 rounded-2xl z-50 text-white font-black italic text-3xl tracking-widest uppercase">
+                LIVE
+            </div>
+
+            <!-- Стеклянная сфера (Средний слой) -->
+            <div class="glass-bubble z-30">
+                
+                <!-- Диагональный блик -->
+                <div class="glare-diagonal"></div>
+
+                <!-- 3D Логотип TikTok внутри сферы -->
+                <div class="tiktok-logo-wrapper">
+                    <!-- SVG Path TikTok -->
+                    <!-- Слой 1: Бирюзовая тень -->
+                    <svg class="tk-layer tk-cyan" viewBox="0 0 448 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                    </svg>
+                    
+                    <!-- Слой 2: Малиновая тень -->
+                    <svg class="tk-layer tk-magenta" viewBox="0 0 448 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                    </svg>
+                    
+                    <!-- Слой 3: Черная основа (Фронтальная) -->
+                    <svg class="tk-layer tk-black" viewBox="0 0 448 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Плашка Пользователя (Верхний слой) -->
+            <div class="badge-user px-10 py-3 rounded-2xl z-50 flex flex-col items-center justify-center cursor-pointer">
+                <span class="text-[0.65rem] text-white/80 uppercase tracking-[0.2em] font-medium mb-1">
+                    Find me on TikTok
+                </span>
+                <span class="text-2xl text-white font-bold tracking-wide">
+                    @username
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Скрипт для интерактивности мыши (3D Parallax эффект) -->
+    <script>
+        const scene = document.getElementById('scene');
+        const container = document.getElementById('interactive-container');
+
+        scene.addEventListener('mousemove', (e) => {
+            // Вычисляем позицию мыши относительно центра экрана
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 20; 
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 20;
+            
+            // Применяем вращение к контейнеру
+            container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        // Возврат в исходное положение при уходе мыши
+        scene.addEventListener('mouseleave', () => {
+            container.style.transition = 'transform 0.5s ease';
+            container.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            
+            // Убираем transition чтобы не было задержки при следующем движении
+            setTimeout(() => {
+                container.style.transition = 'transform 0.1s ease-out';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

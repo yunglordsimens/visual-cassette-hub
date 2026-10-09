@@ -1,0 +1,22 @@
+{
+  "id": "generativnaya-tipografika",
+  "title": "Генеративная типографика",
+  "tags": [
+    "gemini",
+    "html",
+    "canvas",
+    "tailwind"
+  ],
+  "groups": [
+    "Типографика",
+    "Инструменты"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML · canvas",
+  "created": "2026-05-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/generativnaya-tipografika/code.html",
+  "previewUrl": "library/generativnaya-tipografika/code.html"
+}

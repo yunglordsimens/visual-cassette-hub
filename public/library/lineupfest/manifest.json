@@ -1,0 +1,22 @@
+{
+  "id": "lineupfest",
+  "title": "LineupFest",
+  "tags": [
+    "gemini",
+    "react",
+    "tailwind",
+    "svg"
+  ],
+  "groups": [
+    "Лендинги",
+    "Типографика"
+  ],
+  "type": "react",
+  "description": "Из библиотеки Gemini Canvas · React",
+  "created": "2026-05-02",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "tsx",
+  "codeUrl": "library/lineupfest/code.tsx",
+  "previewUrl": "library/lineupfest/preview.html"
+}

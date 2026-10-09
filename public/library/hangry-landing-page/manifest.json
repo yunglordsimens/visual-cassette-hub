@@ -1,0 +1,20 @@
+{
+  "id": "hangry-landing-page",
+  "title": "Hangry Landing Page",
+  "tags": [
+    "gemini",
+    "html",
+    "tailwind"
+  ],
+  "groups": [
+    "Лендинги"
+  ],
+  "type": "html",
+  "description": "Из библиотеки Gemini Canvas · HTML",
+  "created": "2026-08-27",
+  "author": "4rnbay",
+  "source": "gemini",
+  "lang": "html",
+  "codeUrl": "library/hangry-landing-page/code.html",
+  "previewUrl": "library/hangry-landing-page/code.html"
+}
