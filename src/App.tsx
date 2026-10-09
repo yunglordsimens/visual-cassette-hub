@@ -346,8 +346,8 @@ export default function App() {
                   <Compass className="w-4 h-4 text-violet-400" />
                   <span>CASSETTE VAULT</span>
                 </h2>
-                <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400">
-                  {filteredCassettes.length} of {cassettes.length} experiments
+                <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 whitespace-nowrap">
+                  {filteredCassettes.length}<span className="hidden sm:inline"> of {cassettes.length} experiments</span>
                 </span>
               </div>
 

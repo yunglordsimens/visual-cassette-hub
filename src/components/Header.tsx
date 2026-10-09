@@ -53,15 +53,39 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const isGitHubConfigured = Boolean(githubConfig.owner && githubConfig.repo);
 
+  const TABS: { id: NavigationTab; label: string; icon: React.FC<{ className?: string }>; count: number; on: string; badge: string }[] = [
+    { id: 'vault', label: 'Кассеты', icon: Code2, count: cassettesCount, on: 'bg-violet-600 shadow-violet-600/30', badge: 'bg-violet-800 text-violet-100' },
+    { id: 'references', label: 'Референсы', icon: ImageIcon, count: referencesCount, on: 'bg-pink-600 shadow-pink-600/30', badge: 'bg-pink-800 text-pink-100' },
+    { id: 'projects', label: 'Проекты', icon: Boxes, count: projectsCount, on: 'bg-amber-600 shadow-amber-600/30', badge: 'bg-amber-800 text-amber-100' }
+  ];
+
+  const tabs = TABS.map((t) => {
+    const Icon = t.icon;
+    const active = activeTab === t.id;
+    return (
+      <button
+        key={t.id}
+        onClick={() => onTabChange(t.id)}
+        className={`min-w-0 px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap ${
+          active ? `${t.on} text-white shadow-md` : 'text-slate-400 hover:text-slate-200'
+        }`}
+      >
+        <Icon className="w-3.5 h-3.5 shrink-0 hidden sm:block" />
+        <span>{t.label}</span>
+        <span className={`hidden sm:inline text-[10px] font-mono px-1.5 rounded-full ${active ? t.badge : 'bg-slate-800 text-slate-400'}`}>{t.count}</span>
+      </button>
+    );
+  });
+
   return (
-    <header className="sticky top-0 z-30 bg-[#0d0f14]/95 backdrop-blur-md border-b border-slate-800/80 px-3 sm:px-6 lg:px-8 py-3 transition-all">
-      <div className="max-w-7xl mx-auto flex flex-col gap-3">
+    <header className="sticky top-0 z-30 bg-[#0d0f14]/95 backdrop-blur-md border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3 transition-all">
+      <div className="max-w-7xl mx-auto flex flex-col gap-2.5">
         {/* Top Row: Logo, Search, Settings & Main Actions */}
         <div className="flex items-center justify-between gap-3">
           {/* Brand / Logo */}
           <div
             onClick={() => onTabChange('vault')}
-            className="flex items-center gap-2.5 min-w-max cursor-pointer group"
+            className="flex items-center gap-2.5 shrink-0 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 via-pink-600 to-amber-500 p-[1.5px] shadow-lg shadow-violet-500/20 flex-shrink-0 group-hover:scale-105 transition-transform">
               <div className="w-full h-full bg-[#0d0f14] rounded-[10px] flex items-center justify-center">
@@ -70,87 +94,23 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <h1 className="text-sm sm:text-base font-bold tracking-tight text-white font-mono">
+                <h1 className="text-sm sm:text-base font-bold tracking-tight text-white font-mono whitespace-nowrap">
                   ART<span className="text-violet-400 font-extrabold">PLAYGROUND</span>
                 </h1>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">
+              <p className="text-[11px] text-slate-400 hidden sm:block whitespace-nowrap">
                 Visual Lab & Generative Studio
               </p>
             </div>
           </div>
 
-          {/* Center Navigation Tabs (Desktop & Tablet) */}
-          <nav className="flex items-center bg-slate-900/90 border border-slate-800 rounded-xl p-1 shadow-inner">
-            {/* Tab 1: Vault / Cassettes */}
-            <button
-              onClick={() => onTabChange('vault')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                activeTab === 'vault'
-                  ? 'bg-violet-600 text-white shadow-md shadow-violet-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Code2 className="w-3.5 h-3.5" />
-              <span>Кассеты</span>
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                  activeTab === 'vault'
-                    ? 'bg-violet-800 text-violet-100'
-                    : 'bg-slate-800 text-slate-400'
-                }`}
-              >
-                {cassettesCount}
-              </span>
-            </button>
-
-            {/* Tab 2: Moodboard / References */}
-            <button
-              onClick={() => onTabChange('references')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                activeTab === 'references'
-                  ? 'bg-pink-600 text-white shadow-md shadow-pink-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <ImageIcon className="w-3.5 h-3.5" />
-              <span>Референсы</span>
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                  activeTab === 'references'
-                    ? 'bg-pink-800 text-pink-100'
-                    : 'bg-slate-800 text-slate-400'
-                }`}
-              >
-                {referencesCount}
-              </span>
-            </button>
-
-            {/* Tab 3: Projects / Assembler */}
-            <button
-              onClick={() => onTabChange('projects')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                activeTab === 'projects'
-                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Boxes className="w-3.5 h-3.5" />
-              <span>Проекты</span>
-              <span
-                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                  activeTab === 'projects'
-                    ? 'bg-amber-800 text-amber-100'
-                    : 'bg-slate-800 text-slate-400'
-                }`}
-              >
-                {projectsCount}
-              </span>
-            </button>
+          {/* Center Navigation Tabs (desktop) */}
+          <nav className="hidden lg:flex items-center bg-slate-900/90 border border-slate-800 rounded-xl p-1 shadow-inner">
+            {tabs}
           </nav>
 
           {/* Action Controls */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Gemini AI Settings Button */}
             <button
               onClick={onOpenGeminiSettings}
@@ -158,7 +118,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-violet-500/30 text-violet-300 text-xs font-medium transition-all flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5 text-violet-400 animate-pulse" />
-              <span className="hidden lg:inline">Gemini AI</span>
+              <span className="hidden lg:inline whitespace-nowrap">Gemini AI</span>
             </button>
 
             {/* GitHub Sync Status */}
@@ -193,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white text-xs font-medium transition-all"
             >
               <Download className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden xl:inline">Export ZIP</span>
+              <span className="hidden xl:inline whitespace-nowrap">Export ZIP</span>
             </button>
 
             {/* Primary Contextual "+ Add" Button */}
@@ -231,6 +191,11 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
         </div>
+
+        {/* Navigation Tabs (phones & tablets): full-width segmented control */}
+        <nav className="lg:hidden grid grid-cols-3 gap-1 bg-slate-900/90 border border-slate-800 rounded-xl p-1">
+          {tabs}
+        </nav>
       </div>
     </header>
   );

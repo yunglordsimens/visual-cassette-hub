@@ -97,8 +97,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Collections (semantic groups) */}
       {availableGroups.length > 0 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full no-scrollbar">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mr-1 shrink-0">Коллекции</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 mr-1 shrink-0 hidden sm:inline">Коллекции</span>
           {availableGroups.map(({ group, count }) => {
             const isSelected = selectedGroups.includes(group);
             return (
@@ -212,8 +212,8 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
       {/* Popular Tags Row */}
       {availableTags.length > 0 && (
-        <div className="flex items-center gap-1.5 flex-wrap pt-1">
-          <div className="flex items-center gap-1 text-slate-400 text-xs mr-1 font-mono">
+        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible pt-1">
+          <div className="flex items-center gap-1 text-slate-400 text-xs mr-1 font-mono shrink-0">
             <Tag className="w-3 h-3" />
             <span className="hidden sm:inline">Tags:</span>
           </div>
@@ -223,7 +223,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <button
                 key={tag}
                 onClick={() => toggleTag(tag)}
-                className={`px-2 py-0.5 rounded-md text-[11px] font-mono transition-all ${
+                className={`shrink-0 whitespace-nowrap px-2 py-0.5 rounded-md text-[11px] font-mono transition-all ${
                   isSelected
                     ? 'bg-pink-500/20 text-pink-300 border border-pink-500/40'
                     : 'bg-slate-900/80 text-slate-400 hover:text-slate-200 border border-slate-800 hover:border-slate-700'
